@@ -1,9 +1,13 @@
-const express = require('express');
-const appController = require('./appController');
+// const express = require('express');
+// const appController = require('./appController');
 
 // Load environment variables from .env file
 // Ensure your .env file has the required database credentials.
-const loadEnvFile = require('./utils/envUtil');
+// const loadEnvFile = require('./utils/envUtil');
+
+import express from 'express';
+import loadEnvFile from './utils/envUtil.js';
+import appController from './appController.js'; 
 const envVariables = loadEnvFile('./.env');
 
 const app = express();
