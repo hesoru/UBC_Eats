@@ -4,6 +4,7 @@
   "description": "The sample Node.js project for CPSC304.",
   "main": "server.js",
   "keywords": [],
+  "type": "module",
   "author": {
     "name": "Zoe Yuan"
   },
