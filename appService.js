@@ -1,4 +1,6 @@
-const oracledb = require('oracledb');
+//const oracledb = require('oracledb');
+import oracledb from 'oracledb';
+oracledb.initOracleClient({libDir: 'C:\\oracle\\instantclient_23_6'});
 const loadEnvFile = require('./utils/envUtil');
 
 const envVariables = loadEnvFile('./.env');

@@ -4,12 +4,13 @@
   "description": "The sample Node.js project for CPSC304.",
   "main": "server.js",
   "keywords": [],
+  "type": "module",
   "author": {
     "name": "Zoe Yuan"
   },
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.3",
+    "express": "^4.21.1",
     "oracledb": "^5.2.0"
   }
 }
