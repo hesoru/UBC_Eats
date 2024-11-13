@@ -1,7 +1,11 @@
-const oracledb = require('oracledb');
-const loadEnvFile = require('./utils/envUtil');
-
+//const oracledb = require('oracledb');
+import oracledb from "oracledb"
+import loadEnvFile from './utils/envUtil.js';
 const envVariables = loadEnvFile('./.env');
+
+// const loadEnvFile = require('./utils/envUtil');
+
+// const envVariables = loadEnvFile('./.env');
 
 // Database configuration setup. Ensure your .env file has the required database credentials.
 const dbConfig = {
@@ -78,7 +82,9 @@ async function testOracleConnection() {
 
 async function fetchDemotableFromDb() {
     return await withOracleDB(async (connection) => {
+        console.log("before connecting")
         const result = await connection.execute('SELECT * FROM DEMOTABLE');
+        console.log("after connecting")
         return result.rows;
     }).catch(() => {
         return [];
@@ -121,11 +127,14 @@ async function insertDemotable(id, name) {
 
 async function updateNameDemotable(oldName, newName) {
     return await withOracleDB(async (connection) => {
+        console.log("before update connecting")
         const result = await connection.execute(
             `UPDATE DEMOTABLE SET name=:newName where name=:oldName`,
             [newName, oldName],
             { autoCommit: true }
         );
+
+        console.log("after update connecting")
 
         return result.rowsAffected && result.rowsAffected > 0;
     }).catch(() => {

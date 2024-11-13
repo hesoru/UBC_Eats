@@ -1,5 +1,7 @@
-const express = require('express');
-const appService = require('./appService');
+//const express = require('express');
+import express from "express";
+import appService from './appService.js'; // Add .js extension if necessary
+// const appService = require('./appService');
 
 const router = express.Router();
 
