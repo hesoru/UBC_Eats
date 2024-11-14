@@ -1,8 +1,7 @@
 const oracledb = require('oracledb');
-// import oracledb from "oracledb"
-// import loadEnvFile from './utils/envUtil.js';
-//const envVariables = loadEnvFile('./.env');
+
 const loadEnvFile = require('./utils/envUtil');
+const envVariables = loadEnvFile('./.env');
 
  const envVariables = loadEnvFile('./.env');
 
