@@ -136,6 +136,34 @@ async function updateNameDemotable(event) {
     }
 }
 
+
+// List our restaurant names
+async function findRestaurantInfo(event) {
+    event.preventDefault();
+
+    const restaurantNameValue = document.getElementById('findRestaurantInfo').value;
+
+    const response = await fetch("/find-restaurants", {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            restaurantName: restaurantNameValue
+        })
+    });
+
+    const responseData = await response.json();
+    const messageElement = document.getElementById('restaurantInfoMsg');
+
+    if (responseData.success) {
+        messageElement.textContent = "Found Restaurant Successfull!";
+        fetchTableData();
+    } else {
+        messageElement.textContent = "Restaurant not found";
+    }
+}
+
 // Counts rows in the demotable.
 // Modify the function accordingly if using different aggregate functions or procedures.
 async function countDemotable() {
@@ -165,6 +193,8 @@ window.onload = function() {
     document.getElementById("insertDemotable").addEventListener("submit", insertDemotable);
     document.getElementById("updataNameDemotable").addEventListener("submit", updateNameDemotable);
     document.getElementById("countDemotable").addEventListener("click", countDemotable);
+    document.getElementById("findRestaurantInfo").addEventListener("submit", findRestaurantInfo);
+    
 };
 
 // General function to refresh the displayed table data. 

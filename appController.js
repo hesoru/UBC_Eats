@@ -51,8 +51,8 @@ router.post("/update-name-demotable", async (req, res) => {
     }
 });
 
-router.get('/count-demotable', async (req, res) => {
-    const tableCount = await appService.countDemotable();
+router.get('/initiate-all-tables', async (req, res) => {
+    const tableCount = await appService.loadExcelFileToOracle("./UBCEats Database.xlsx");
     if (tableCount >= 0) {
         res.json({ 
             success: true,  
@@ -63,6 +63,25 @@ router.get('/count-demotable', async (req, res) => {
             success: false, 
             count: tableCount
         });
+    }
+});
+
+router.post("/initiate-demotable", async (req, res) => {
+    const initiateResult = await appService.initiateDemotable();
+    if (initiateResult) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
+router.get("/find-restaurants", async (req, res) => {
+    const {restaurantName} = req.body;
+    const initiateResult = await appService.findRestaurant(restaurantName);
+    if (initiateResult) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
     }
 });
 
