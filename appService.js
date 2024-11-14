@@ -3,7 +3,6 @@ const oracledb = require('oracledb');
 const loadEnvFile = require('./utils/envUtil');
 const envVariables = loadEnvFile('./.env');
 
- const envVariables = loadEnvFile('./.env');
 
 // Database configuration setup. Ensure your .env file has the required database credentials.
 const dbConfig = {
