@@ -10,6 +10,10 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.21.1",
+<<<<<<< HEAD
     "oracledb": "^5.5.0"
+=======
+    "oracledb": "^5.2.0"
+>>>>>>> 0afbeb99290f271a0698b3310db3f985409e451f
   }
 }
