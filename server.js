@@ -34,16 +34,6 @@ function copyFileOnServerStart() {
 
 // vs
 
-const upload = multer({ dest: 'uploads/' });
-
-app.post('/upload', upload.toString('file'), (req, res) => {
-    if (!req.file) {
-        return res.status(400).send("No file uploaded.");
-    }
-    console.log("File uploaded successfully:", req.file);
-    res.send("File uploaded and saved!");
-});
-
 
 
 const PORT = envVariables.PORT || 65534;  // Adjust the PORT if needed (e.g., if you encounter a "port already occupied" error)

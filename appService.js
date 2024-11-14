@@ -150,56 +150,7 @@ async function countDemotable() {
     });
 }
 
-async function loadExcelFileToOracle(filePath) {
-    const workbook = xlsx.readFile(filePath);
-    console.log(`Loading data from ${filePath}...`);
 
-    // go through each sheet in excel file
-    for (const sheetName of workbook.SheetNames) {
-        const sheet = workbook.Sheets[sheetName];
-        // turn excel sheets to JSON file
-        const data = xlsx.utils.sheet_to_json(sheet, { defval: null });
-
-        // use sheet name = table name
-        const tableName = sheetName.replace(/\s+/g, '_').toUpperCase();
-        // taking each column and turning them to valid SQL column names with undescores
-        // TODO: modify to split last bit of name that is indication data type
-        const columns = Object.keys(data[0]).map(col => col.replace(/\s+/g, '_'));
-        console.log(`All column names:  ${columns}`)
-
-        //TODO: Include naming convention to include type in column name
-        const columnDefinitions = columns.map(col => `${col} VARCHAR2(255)`).join(', ');
-        const placeholders = columns.map((_, index) => `:col${index + 1}`).join(', ');
-
-        await withOracleDB(async (connection) => {
-            // drop existing table from past use
-            try {
-                await connection.execute(`BEGIN EXECUTE IMMEDIATE 'DROP TABLE ${tableName}'; EXCEPTION WHEN OTHERS THEN NULL; END;`);
-                console.log(`Dropped table ${tableName} if it existed.`);
-            } catch (err) {
-                console.error(`Error dropping table ${tableName}:`, err);
-            }
-
-            // create new table
-            const createTableSQL = `CREATE TABLE ${tableName} (${columnDefinitions})`;
-            await connection.execute(createTableSQL);
-            console.log(`Created table ${tableName}.`);
-
-            // insert data into the table
-            const insertSQL = `INSERT INTO ${tableName} (${columns.join(', ')}) VALUES (${placeholders})`;
-            const insertRows = data.map(row => columns.map(col => row[col] || null)); 
-
-            await connection.executeMany(insertSQL, insertRows.map(row => {
-                return row.reduce((acc, val, idx) => ({ ...acc, [`col${idx + 1}`]: val }), {});
-            }), { autoCommit: false });
-
-            // commit after inserting all rows for the table
-            await connection.commit();
-            console.log(`Loaded data into ${tableName} from sheet ${sheetName}.`);
-        });
-    }
-    console.log('All sheets have been loaded into Oracle DB.');
-}
 
 async function findMenuItem(foodName, menuID) {
     

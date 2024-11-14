@@ -97,25 +97,6 @@ router.post("/initiate-demotable", async (req, res) => {
     }
 });
 
-app.post('/upload', (req, res) => {
-    const data = req.body.fileData; // Replace with actual data source (e.g., file buffer or JSON content)
-    const serverFilePath = path.join(__dirname, 'uploads', 'uploadedFile.txt');
-
-    // Ensure uploads directory exists
-    fs.mkdirSync(path.join(__dirname, 'uploads'), { recursive: true });
-
-    // Write data to server file
-    fs.writeFile(serverFilePath, data, (err) => {
-        if (err) {
-            console.error("Error writing to server file", err);
-            res.status(500).send("Failed to write file.");
-        } else {
-            console.log("File saved to server successfully.");
-            res.send("File uploaded and saved!");
-        }
-    });
-});
-
 router.get("/find-restaurants/:restaurantName", async (req, res) => {
     const {restaurantName} = req.params;
     const initiateResult = await appService.findRestaurant(restaurantName);
