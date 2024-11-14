@@ -4,10 +4,22 @@ const express = require('express');
  const appService = require('./appService');
 
 const router = express.Router();
+const fs = require('fs');
+const FormData = require('form-data');
 
 // ----------------------------------------------------------
 // API endpoints
-// Modify or extend these routes based on your project's needs.
+const formData = new FormData
+formData.append('file', fs.createReadStream('CPSC304_Node_Project-main/UBCEats Database.xlsx'));
+
+router.post('/upload', formData, {
+    headers: formData.getHeaders(),
+}).then(response => {
+     console.log("File uploaded:", response.data);
+}).catch(error => {
+    console.error("Error uploading file:", error);
+});
+
 router.get('/check-db-connection', async (req, res) => {
     const isConnect = await appService.testOracleConnection();
     if (isConnect) {
@@ -52,18 +64,28 @@ router.post("/update-name-demotable", async (req, res) => {
 });
 
 router.get('/initiate-all-tables', async (req, res) => {
-    const tableCount = await appService.loadExcelFileToOracle("./UBCEats Database.xlsx");
-    if (tableCount >= 0) {
-        res.json({ 
-            success: true,  
-            count: tableCount
-        });
-    } else {
-        res.status(500).json({ 
-            success: false, 
-            count: tableCount
-        });
-    }
+        const filePath = path.join(__dirname, 'uploads', 'UBCEats Database.xlsx'); // Path to the file on the server
+    
+        // Check if the file exists
+        if (fs.existsSync(filePath)) {
+            try {
+                // Call your function and pass the file path
+                const tableCount = await appService.loadExcelFileToOracle(filePath); 
+    
+                if (tableCount >= 0) {
+                    res.json({ success: true, count: tableCount });
+                } else {
+                    res.status(500).json({ success: false, message: 'Error processing the file' });
+                }
+            } catch (error) {
+                console.error('Error processing the file:', error);
+                res.status(500).json({ success: false, message: 'Error during file processing' });
+            }
+        } else {
+            res.status(404).json({ success: false, message: 'File not found' });
+        }
+  
+    
 });
 
 router.post("/initiate-demotable", async (req, res) => {
@@ -75,8 +97,27 @@ router.post("/initiate-demotable", async (req, res) => {
     }
 });
 
-router.get("/find-restaurants", async (req, res) => {
-    const {restaurantName} = req.body;
+app.post('/upload', (req, res) => {
+    const data = req.body.fileData; // Replace with actual data source (e.g., file buffer or JSON content)
+    const serverFilePath = path.join(__dirname, 'uploads', 'uploadedFile.txt');
+
+    // Ensure uploads directory exists
+    fs.mkdirSync(path.join(__dirname, 'uploads'), { recursive: true });
+
+    // Write data to server file
+    fs.writeFile(serverFilePath, data, (err) => {
+        if (err) {
+            console.error("Error writing to server file", err);
+            res.status(500).send("Failed to write file.");
+        } else {
+            console.log("File saved to server successfully.");
+            res.send("File uploaded and saved!");
+        }
+    });
+});
+
+router.get("/find-restaurants/:restaurantName", async (req, res) => {
+    const {restaurantName} = req.params;
     const initiateResult = await appService.findRestaurant(restaurantName);
     if (initiateResult) {
         res.json({ success: true });

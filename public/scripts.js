@@ -73,6 +73,24 @@ async function resetDemotable() {
         const messageElement = document.getElementById('resetResultMsg');
         messageElement.textContent = "demotable initiated successfully!";
         fetchTableData();
+        resetAllTables();
+    } else {
+        alert("Error initiating table!");
+    }
+}
+
+// This function resets or initializes the demotable.
+async function resetAllTables() {
+    const response = await fetch("/initiate-all-tables", {
+        method: 'POST'
+    });
+    const responseData = await response.json();
+
+    if (responseData.success) {
+        const messageElement = document.getElementById('resetResultMsg');
+        messageElement.textContent = "all tables initiated successfully!";
+        fetchTableData();
+        
     } else {
         alert("Error initiating table!");
     }
@@ -143,14 +161,11 @@ async function findRestaurantInfo(event) {
 
     const restaurantNameValue = document.getElementById('findRestaurantInfo').value;
 
-    const response = await fetch("/find-restaurants", {
+    const response = await fetch(`/find-restaurants?restaurantName=${encodeURIComponent(restaurantNameValue)}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            restaurantName: restaurantNameValue
-        })
+        }
     });
 
     const responseData = await response.json();

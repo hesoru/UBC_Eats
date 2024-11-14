@@ -3,8 +3,7 @@ const oracledb = require('oracledb');
 // import loadEnvFile from './utils/envUtil.js';
 //const envVariables = loadEnvFile('./.env');
 const loadEnvFile = require('./utils/envUtil');
-
- const envVariables = loadEnvFile('./.env');
+const envVariables = loadEnvFile('./.env');
 
 
 // Database configuration setup. Ensure your .env file has the required database credentials.
@@ -206,11 +205,12 @@ async function findMenuItem(foodName, menuID) {
     
 }
 
-async function findRestaurant(locationName) {
+async function findRestaurant(restaurantName) {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
             `SELECT Location_Name, Street_Address, Postal_Code, Phone_Number, Average_Rating 
-            FROM Restaurant_Location_Has WHERE Location_Name=:LocationName `
+            FROM Restaurant_Location_Has WHERE Location_Name=:restaurantName `,
+            [restaurantName]
         );
 
         console.log("after update connecting")
