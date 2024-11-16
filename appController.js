@@ -4,21 +4,10 @@ const express = require('express');
  const appService = require('./appService');
 
 const router = express.Router();
-const fs = require('fs');
-const FormData = require('form-data');
+
 
 // ----------------------------------------------------------
 // API endpoints
-const formData = new FormData
-formData.append('file', fs.createReadStream('CPSC304_Node_Project-main/UBCEats Database.xlsx'));
-
-router.post('/upload', formData, {
-    headers: formData.getHeaders(),
-}).then(response => {
-     console.log("File uploaded:", response.data);
-}).catch(error => {
-    console.error("Error uploading file:", error);
-});
 
 router.get('/check-db-connection', async (req, res) => {
     const isConnect = await appService.testOracleConnection();
@@ -61,31 +50,6 @@ router.post("/update-name-demotable", async (req, res) => {
     } else {
         res.status(500).json({ success: false });
     }
-});
-
-router.get('/initiate-all-tables', async (req, res) => {
-        const filePath = path.join(__dirname, 'uploads', 'UBCEats Database.xlsx'); // Path to the file on the server
-    
-        // Check if the file exists
-        if (fs.existsSync(filePath)) {
-            try {
-                // Call your function and pass the file path
-                const tableCount = await appService.loadExcelFileToOracle(filePath); 
-    
-                if (tableCount >= 0) {
-                    res.json({ success: true, count: tableCount });
-                } else {
-                    res.status(500).json({ success: false, message: 'Error processing the file' });
-                }
-            } catch (error) {
-                console.error('Error processing the file:', error);
-                res.status(500).json({ success: false, message: 'Error during file processing' });
-            }
-        } else {
-            res.status(404).json({ success: false, message: 'File not found' });
-        }
-  
-    
 });
 
 router.post("/initiate-demotable", async (req, res) => {

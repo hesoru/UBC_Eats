@@ -180,7 +180,6 @@ module.exports = {
     insertDemotable, 
     updateNameDemotable, 
     countDemotable,
-    loadExcelFileToOracle,
     findMenuItem,
     findRestaurant
 
