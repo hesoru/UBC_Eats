@@ -1,5 +1,7 @@
 const oracledb = require('oracledb');
-
+// import oracledb from "oracledb"
+// import loadEnvFile from './utils/envUtil.js';
+//const envVariables = loadEnvFile('./.env');
 const loadEnvFile = require('./utils/envUtil');
 const envVariables = loadEnvFile('./.env');
 
@@ -148,11 +150,37 @@ async function countDemotable() {
     });
 }
 
+
+
+async function findMenuItem(foodName, menuID) {
+    
+}
+
+async function findRestaurant(restaurantName) {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `SELECT Location_Name, Street_Address, Postal_Code, Phone_Number, Average_Rating 
+            FROM Restaurant_Location_Has WHERE Location_Name=:restaurantName `,
+            [restaurantName]
+        );
+
+        console.log("after update connecting")
+
+        return result.rowsAffected && result.rowsAffected > 0;
+    }).catch(() => {
+        return false;
+    });
+}
+
+
 module.exports = {
     testOracleConnection,
     fetchDemotableFromDb,
     initiateDemotable, 
     insertDemotable, 
     updateNameDemotable, 
-    countDemotable
+    countDemotable,
+    findMenuItem,
+    findRestaurant
+
 };

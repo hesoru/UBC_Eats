@@ -5,9 +5,10 @@ const express = require('express');
 
 const router = express.Router();
 
+
 // ----------------------------------------------------------
 // API endpoints
-// Modify or extend these routes based on your project's needs.
+
 router.get('/check-db-connection', async (req, res) => {
     const isConnect = await appService.testOracleConnection();
     if (isConnect) {
@@ -51,18 +52,22 @@ router.post("/update-name-demotable", async (req, res) => {
     }
 });
 
-router.get('/count-demotable', async (req, res) => {
-    const tableCount = await appService.countDemotable();
-    if (tableCount >= 0) {
-        res.json({ 
-            success: true,  
-            count: tableCount
-        });
+router.post("/initiate-demotable", async (req, res) => {
+    const initiateResult = await appService.initiateDemotable();
+    if (initiateResult) {
+        res.json({ success: true });
     } else {
-        res.status(500).json({ 
-            success: false, 
-            count: tableCount
-        });
+        res.status(500).json({ success: false });
+    }
+});
+
+router.get("/find-restaurants/:restaurantName", async (req, res) => {
+    const {restaurantName} = req.params;
+    const initiateResult = await appService.findRestaurant(restaurantName);
+    if (initiateResult) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
     }
 });
 

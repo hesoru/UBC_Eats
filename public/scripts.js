@@ -73,6 +73,24 @@ async function resetDemotable() {
         const messageElement = document.getElementById('resetResultMsg');
         messageElement.textContent = "demotable initiated successfully!";
         fetchTableData();
+        resetAllTables();
+    } else {
+        alert("Error initiating table!");
+    }
+}
+
+// This function resets or initializes the demotable.
+async function resetAllTables() {
+    const response = await fetch("/initiate-all-tables", {
+        method: 'POST'
+    });
+    const responseData = await response.json();
+
+    if (responseData.success) {
+        const messageElement = document.getElementById('resetResultMsg');
+        messageElement.textContent = "all tables initiated successfully!";
+        fetchTableData();
+        
     } else {
         alert("Error initiating table!");
     }
@@ -136,6 +154,31 @@ async function updateNameDemotable(event) {
     }
 }
 
+
+// List our restaurant names
+async function findRestaurantInfo(event) {
+    event.preventDefault();
+
+    const restaurantNameValue = document.getElementById('findRestaurantInfo').value;
+
+    const response = await fetch(`/find-restaurants?restaurantName=${encodeURIComponent(restaurantNameValue)}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+
+    const responseData = await response.json();
+    const messageElement = document.getElementById('restaurantInfoMsg');
+
+    if (responseData.success) {
+        messageElement.textContent = "Found Restaurant Successfull!";
+        fetchTableData();
+    } else {
+        messageElement.textContent = "Restaurant not found";
+    }
+}
+
 // Counts rows in the demotable.
 // Modify the function accordingly if using different aggregate functions or procedures.
 async function countDemotable() {
@@ -165,6 +208,8 @@ window.onload = function() {
     document.getElementById("insertDemotable").addEventListener("submit", insertDemotable);
     document.getElementById("updataNameDemotable").addEventListener("submit", updateNameDemotable);
     document.getElementById("countDemotable").addEventListener("click", countDemotable);
+    document.getElementById("findRestaurantInfo").addEventListener("submit", findRestaurantInfo);
+    
 };
 
 // General function to refresh the displayed table data. 
