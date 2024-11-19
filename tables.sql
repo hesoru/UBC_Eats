@@ -43,13 +43,13 @@ CREATE TABLE Restaurant (
 );
 
 CREATE TABLE Restaurant_Location_Has (
+    Restaurant_Id VARCHAR2(30),
     Longitude NUMBER(9, 6),
     Latitude NUMBER(9, 6),
     City VARCHAR2(30),
     Province_or_State VARCHAR2(2),
     Street_Address VARCHAR2(50) NOT NULL UNIQUE,
     Postal_Code CHAR(6),
-    Restaurant_Id VARCHAR2(30),
     Location_Name VARCHAR2(30),
     Phone_Number VARCHAR2(15) UNIQUE,
     Average_Rating NUMBER(3, 2) CHECK (Average_Rating BETWEEN 0 AND 5),
@@ -96,7 +96,7 @@ CREATE TABLE Menu_Serves (
 );
 
 CREATE TABLE Menu_Item_On (
-    Menu_Name VARCHAR2(30),
+    Menu_Name VARCHAR2(60),
     Menu_Id VARCHAR2(30) NOT NULL,
     Description VARCHAR2(100),
     Menu_Type VARCHAR2(30),
@@ -115,7 +115,7 @@ CREATE TABLE Allergen (
 
 CREATE TABLE Contains_Diet (
     Diet_Type VARCHAR2(30),
-    Menu_Item_Name VARCHAR2(30),
+    Menu_Item_Name VARCHAR2(60),
     Menu_Id VARCHAR2(30),
     PRIMARY KEY (Diet_Type, Menu_Item_Name, Menu_Id),
     CONSTRAINT fk_diet FOREIGN KEY (Diet_Type) REFERENCES Diet(Diet_Type),
@@ -133,7 +133,7 @@ CREATE TABLE Stores_Diet (
 
 CREATE TABLE Contains_Allergen (
     Allergen_Type VARCHAR2(30),
-    Menu_Item_Name VARCHAR2(30),
+    Menu_Item_Name VARCHAR2(60),
     Menu_Id VARCHAR2(30),
     PRIMARY KEY (Allergen_Type, Menu_Item_Name, Menu_Id),
     CONSTRAINT fk_allergen FOREIGN KEY (Allergen_Type) REFERENCES Allergen(Allergen_Type),
