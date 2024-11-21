@@ -159,21 +159,22 @@ async function updateNameDemotable(event) {
 async function findRestaurantInfo(event) {
     event.preventDefault();
 
-    const restaurantNameValue = document.getElementById('findRestaurantInfo').value;
-
-    const response = await fetch(`/find-restaurants?restaurantName=${encodeURIComponent(restaurantNameValue)}`, {
+    const restaurantNameValue = document.getElementById('restaurantName').value;
+    const url = `/find-restaurants/${restaurantNameValue}`
+    //console.log(restaurantNameValue)
+    //console.log(url)
+   
+    const response = await fetch(url, {
         method: 'GET',
-        headers: {
-            'Content-Type': 'application/json'
-        }
     });
 
     const responseData = await response.json();
+    console.log(responseData)
     const messageElement = document.getElementById('restaurantInfoMsg');
 
     if (responseData.success) {
         messageElement.textContent = "Found Restaurant Successfull!";
-        fetchTableData();
+        //fetchTableData();
     } else {
         messageElement.textContent = "Restaurant not found";
     }

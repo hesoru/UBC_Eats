@@ -62,10 +62,12 @@ router.post("/initiate-demotable", async (req, res) => {
 });
 
 router.get("/find-restaurants/:restaurantName", async (req, res) => {
-    const {restaurantName} = req.params;
+    console.log("entered endpoint")
+    const {restaurantName} = req.params.restaurantName;
     const initiateResult = await appService.findRestaurant(restaurantName);
+    console.log(initiateResult)
     if (initiateResult) {
-        res.json({ success: true });
+        res.json({ success: true, result: initiateResult});
     } else {
         res.status(500).json({ success: false });
     }

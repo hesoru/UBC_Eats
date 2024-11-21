@@ -158,17 +158,15 @@ async function findMenuItem(foodName, menuID) {
 
 async function findRestaurant(restaurantName) {
     return await withOracleDB(async (connection) => {
+        console.log("before connecting")
         const result = await connection.execute(
             `SELECT Location_Name, Street_Address, Postal_Code, Phone_Number, Average_Rating 
-            FROM Restaurant_Location_Has WHERE Location_Name=:restaurantName `,
-            [restaurantName]
-        );
-
-        console.log("after update connecting")
-
-        return result.rowsAffected && result.rowsAffected > 0;
+            FROM Restaurant_Location_Has WHERE Location_Name=:restaurantName;`,
+            [restaurantName]);        
+            console.log("after connecting")
+        return result.rows;
     }).catch(() => {
-        return false;
+        return [];
     });
 }
 
