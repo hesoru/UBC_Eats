@@ -27,13 +27,30 @@
     <!-- Show 'Demotable'. 
         Data will be fetched and inserted here dynamically using JavaScript. -->
     <h2>Show Demotable</h2>
-    <h2>Test Front-End</h2>
     <table id="demotable" border="1">
         <thead>
             <tr>
                 <!--Table head, need to be adjusted accordingly to align with your own.-->
                 <th>ID</th>
                 <th>Name</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+
+    <!-- Hedie trying to test insert statements -->
+    <h2>Show Users</h2>
+    <table id="users" border="2">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Longitude</th>
+                <th>Latitude</th>
             </tr>
         </thead>
         <tbody>
@@ -48,12 +65,32 @@
     <!-- A placeholder to display messages related to the reset operation. -->
     <div id="resetResultMsg"></div>
 
+    <h2>Reset UsersTable</h2>
+    <p>If you wish to reset the table press on the reset button. If this is the first time you're running this page, you MUST use reset</p>
+    <button id="resetUsertable"> reset </button> <br>
+    <!-- A placeholder to display messages related to the reset operation. -->
+    <div id="resetResultMsg"></div>
+
     <br><hr><br> <!-- ========================================================================= -->
 
     <h2> Insert Values into DemoTable </h2>
     <form id="insertDemotable">
         ID: <input type="number" id="insertId" placeholder="Enter ID" required> <br><br>
         Name: <input type="text" id="insertName" placeholder="Enter Name" maxlength="20"> <br><br>
+
+        <button type="submit"> insert </button> <br>
+    </form>
+    <div id="insertResultMsg"></div>
+
+    <h2> Insert Values into UserTable </h2>
+    <form id="insertUserTable">
+        Username: <input type="text" id="insertUsername" placeholder="Enter Username" required> <br><br>
+        First Name: <input type="text" id="insertFirstName" placeholder="Enter First Name" maxlength="30"> <br><br>
+        Last Name: <input type="text" id="insertLastName" placeholder="Enter Last Name" maxlength="30"> <br><br>
+        Email: <input type="text" id="insertEmail" placeholder="Enter Email" maxlength="30"> <br><br>
+        <!--We're gonna need to figure out how to use an API to get these automatically when a user makes an account-->
+        Longitude: <input type="text" id="insertLongitude" placeholder="Enter Longitude" maxlength="20"> <br><br>
+        Latitude: <input type="number" id="insertLatitude" placeholder="Enter Latitude" maxlength="20"> <br><br>
 
         <button type="submit"> insert </button> <br>
     </form>

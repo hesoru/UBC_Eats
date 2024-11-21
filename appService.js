@@ -90,6 +90,18 @@ async function fetchDemotableFromDb() {
     });
 }
 
+async function fetchUserTableFromDb() {
+    return await withOracleDB(async (connection) => {
+        console.log("before connecting")
+        const result = await connection.execute('SELECT * FROM User_Has');
+        console.log("after connecting")
+        return result.rows;
+    }).catch(() => {
+        return [];
+    });
+}
+
+
 async function initiateDemotable() {
     return await withOracleDB(async (connection) => {
         try {
@@ -110,11 +122,54 @@ async function initiateDemotable() {
     });
 }
 
+async function initiateUserTable() {
+    return await withOracleDB(async (connection) => {
+        try {
+            await connection.execute(`DROP TABLE User_Has`);
+        } catch(err) {
+            console.log('Table might not exist, proceeding to create...');
+        }
+
+        const result = await connection.execute(`
+            CREATE TABLE User_Has (
+                Username VARCHAR2(30) PRIMARY KEY,
+                First_Name VARCHAR2(30),
+                Last_Name VARCHAR2(30),
+                Email VARCHAR2(30) NOT NULL UNIQUE,
+                User_Longitude NUMBER(9, 6) NOT NULL,
+                User_Latitude NUMBER(9, 6) NOT NULL,
+                CONSTRAINT fk_user_location FOREIGN KEY (User_Longitude, User_Latitude)
+                    REFERENCES User_Location(Longitude, Latitude)
+                    ON DELETE CASCADE
+            )
+        `);
+        return true;
+    }).catch(() => {
+        return false;
+    });
+}
+
+
 async function insertDemotable(id, name) {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
             `INSERT INTO DEMOTABLE (id, name) VALUES (:id, :name)`,
             [id, name],
+            { autoCommit: true }
+        );
+
+        return result.rowsAffected && result.rowsAffected > 0;
+    }).catch(() => {
+        return false;
+    });
+}
+
+
+async function insertUserTable(Username, First_Name, Last_Name, Email, User_Longitude, User_Latitude) {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `INSERT INTO User_Has (Username, First_Name, Last_Name, Email, User_Longitude, User_Latitude) VALUES (:Username, :First_Name, :Last_Name, :Email, :User_Longitude, :User_Latitude)`,
+            [Username, First_Name, Last_Name, Email, User_Longitude, User_Latitude],
             { autoCommit: true }
         );
 
@@ -181,6 +236,10 @@ module.exports = {
     updateNameDemotable, 
     countDemotable,
     findMenuItem,
-    findRestaurant
+    findRestaurant, 
+    fetchUserTableFromDb,
+    initiateUserTable,
+    insertUserTable,
+    
 
 };
