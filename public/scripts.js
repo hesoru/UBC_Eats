@@ -62,6 +62,32 @@ async function fetchAndDisplayUsers() {
     });
 }
 
+//HEDIE'S
+async function fetchAndDisplayUsersHedie() {
+    const tableElement = document.getElementById('usertable');
+    const tableBody = tableElement.querySelector('tbody');
+
+    const response = await fetch('/usertable', {
+        method: 'GET'
+    });
+
+    const responseData = await response.json();
+    const usertableContent = responseData.data;
+
+    // Always clear old, already fetched data before new fetching process.
+    if (tableBody) {
+        tableBody.innerHTML = '';
+    }
+
+    usertableContent.forEach(user => {
+        const row = tableBody.insertRow();
+        user.forEach((field, index) => {
+            const cell = row.insertCell(index);
+            cell.textContent = field;
+        });
+    });
+}
+
 // This function resets or initializes the demotable.
 async function resetDemotable() {
     const response = await fetch("/initiate-demotable", {
@@ -72,6 +98,23 @@ async function resetDemotable() {
     if (responseData.success) {
         const messageElement = document.getElementById('resetResultMsg');
         messageElement.textContent = "demotable initiated successfully!";
+        fetchTableData();
+        resetAllTables();
+    } else {
+        alert("Error initiating table!");
+    }
+}
+
+// HEDIE'S
+async function resetUsertable() {
+    const response = await fetch("/initiate-usertable", {
+        method: 'POST'
+    });
+    const responseData = await response.json();
+
+    if (responseData.success) {
+        const messageElement = document.getElementById('resetResultMsg');
+        messageElement.textContent = "usertable initiated successfully!";
         fetchTableData();
         resetAllTables();
     } else {
@@ -98,6 +141,25 @@ async function resetAllTables() {
 
 // Inserts new records into the demotable.
 async function insertDemotable(event) {
+    event.preventDefault();
+
+    const idValue = document.getElementById('insertId').value;
+    const nameValue = document.getElementById('insertName').value;
+
+    const response = await fetch('/insert-demotable', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            id: idValue,
+            name: nameValue
+        })
+    });
+}
+
+// HEDIE'S
+async function insertUsertable(event) {
     event.preventDefault();
 
     const idValue = document.getElementById('insertId').value;
@@ -216,4 +278,6 @@ window.onload = function() {
 // You can invoke this after any table-modifying operation to keep consistency.
 function fetchTableData() {
     fetchAndDisplayUsers();
+    fetchAndDisplayUsersHedie();
+
 }
