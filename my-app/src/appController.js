@@ -58,7 +58,7 @@ router.post("/insert-demotable", async (req, res) => {
 
 router.post("/insert-usertable", async (req, res) => {
     const { Username, First_Name, Last_Name, Email, User_Longitude, User_Latitude } = req.body;
-    const insertResult = await appService.insertUsertable(Username, First_Name, Last_Name, Email, User_Longitude, User_Latitude);
+    const insertResult = await appService.insertUserTable(Username, First_Name, Last_Name, Email, User_Longitude, User_Latitude);
     if (insertResult) {
         res.json({ success: true });
     } else {
