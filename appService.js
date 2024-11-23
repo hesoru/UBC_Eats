@@ -150,18 +150,126 @@ async function countDemotable() {
     });
 }
 
+async function updateReviewContent(oldContent, newContent, columnName, userName, restLong, restLat) {
+    // BE SURE TO ONLY BE ABLE TO UPDATE THE FOLOWING COLUMNS: Content (VARCHAR2),
+    // Rating (0 - 5)
+    return await withOracleDB(async (connection) => {
+        console.log("before update connecting")
+        const validColumns = ['Content', 'Rating']; 
+        if (!validColumns.includes(columnName)) {
+            throw new Error('Invalid column name');
+        }
+        const result = await connection.execute(
+            `UPDATE Review_For_Makes 
+            SET 
+            ${columnName}=:newContent,
+            Record_Date = SYSDATE,              
+            Record_Time = SYSTIMESTAMP 
+            where 
+            ${columnName}=:oldContent 
+            AND Username=:userName 
+            AND Restaurant_Longtitude=:restLong 
+            AND Restaurant_Latitude=:restLat`,
+            [newContent, oldContent, userName, restLong, restLat],
+            { autoCommit: true }
+        );
 
+        console.log("after update connecting")
 
-async function findMenuItem(foodName, menuID) {
-    
+        return result.rowsAffected && result.rowsAffected > 0;
+    }).catch(() => {
+        return false;
+    });
 }
+
+async function deleteReviewContent(content, userName, restLong, restLat) {
+    // TODO: when writing api endpoint of deleting user name, also delete all review associated
+    return await withOracleDB(async (connection) => {
+        console.log("before delete connecting");
+
+        const result = await connection.execute(
+            `DELETE FROM Review_For_Makes
+            WHERE Content = :content
+              AND Username = :userName
+              AND Restaurant_Longitude = :restLong
+              AND Restaurant_Latitude = :restLat`,
+            [content, userName, restLong, restLat],
+            { autoCommit: true }
+        );
+
+        console.log("after delete connecting");
+
+        // Check if any rows were affected
+        return result.rowsAffected && result.rowsAffected > 0;
+    }).catch((err) => {
+        console.error('Error deleting review content:', err);
+        return false;
+    });
+}
+
+
+async function addItemToDietaryProfile(foodType, userName, profileName) {
+    // 1) Check if DietType exists,
+    // TODO: 2) IF not, add to Diet or Allergen OR REJECT????
+    // 3) 
+    // const validFoodTypes = ['Vegan', 'Gluten', 'Vegetarian', 'Kosher', 'Halal']; 
+    // if (!validFoodTypes.includes(foodType)) {
+    //     console.error('Invalid food type');
+    //     return false;
+    // }
+    return await withOracleDB(async (connection) => {
+       
+        const result = await connection.execute(
+            `INSERT INTO Stores_${foodType} 
+            (Dietary_Profile_Name, User_Username, ${foodType}_Type) 
+            VALUES  
+            (:profileName, :userName, :foodType)`,
+            [profileName, userName, foodType],
+            { autoCommit: true }
+        );
+
+        return result.rowsAffected && result.rowsAffected > 0;
+    }).catch(() => {
+        return false;
+    });
+}
+
+async function removeItemFromDietaryProfile(foodType, userName, profileName) {
+    // const validFoodTypes = ['Vegan', 'Gluten', 'Vegetarian', 'Kosher', 'Halal']; 
+    // if (!validFoodTypes.includes(foodType)) {
+    //     console.error('Invalid food type');
+    //     return false;
+    // }
+
+    return await withOracleDB(async (connection) => {
+        
+        const query = `
+            DELETE FROM Stores_${foodType} 
+            WHERE Dietary_Profile_Name = :profileName
+              AND User_Username = :userName
+              AND ${foodType}_Type = :foodType
+        `;
+// TODO: MAKE SURE TO PROVIDE USER THE OPTION TO Pick "Allergen" or "Diet" -- CASE SENSITVIE FOR TABLE NAME
+        const result = await connection.execute(
+            query,
+            { profileName, userName, foodType },
+            { autoCommit: true }
+        );
+
+        return result.rowsAffected && result.rowsAffected > 0;
+    }).catch((err) => {
+        console.error('Error removing dietary profile item:', err);
+        return false;
+    });
+}
+
 
 async function findRestaurant(restaurantName) {
     return await withOracleDB(async (connection) => {
         console.log("before connecting")
         const result = await connection.execute(
             `SELECT Location_Name, Street_Address, Postal_Code, Phone_Number, Average_Rating 
-            FROM Restaurant_Location_Has WHERE Location_Name=:restaurantName`,
+            FROM Restaurant_Location_Has WHERE UPPER(Location_Name)=UPPER(:restaurantName)`,
             [restaurantName]);        
             console.log("after connecting", result.rows)
         return result.rows;
@@ -178,7 +286,10 @@ module.exports = {
     insertDemotable, 
     updateNameDemotable, 
     countDemotable,
-    findMenuItem,
-    findRestaurant
+    findRestaurant,
+    updateReviewContent,
+    addItemToDietaryProfile,
+    removeItemFromDietaryProfile,
+    deleteReviewContent
 
 };

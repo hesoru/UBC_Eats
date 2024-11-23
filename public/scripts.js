@@ -124,6 +124,23 @@ async function insertDemotable(event) {
         messageElement.textContent = "Error inserting data!";
     }
 }
+// Counts rows in the demotable.
+// Modify the function accordingly if using different aggregate functions or procedures.
+async function countDemotable() {
+    const response = await fetch("/count-demotable", {
+        method: 'GET'
+    });
+
+    const responseData = await response.json();
+    const messageElement = document.getElementById('countResultMsg');
+
+    if (responseData.success) {
+        const tupleCount = responseData.count;
+        messageElement.textContent = `The number of tuples in demotable: ${tupleCount}`;
+    } else {
+        alert("Error in count demotable!");
+    }
+}
 
 // Updates names in the demotable.
 async function updateNameDemotable(event) {
@@ -155,19 +172,16 @@ async function updateNameDemotable(event) {
 }
 
 
-// List our restaurant names
+// List restaurant locations based on given restaurant
 async function findRestaurantInfo(event) {
     event.preventDefault();
 
     const restaurantNameValue = document.getElementById('restaurantName').value;
     const url =`/find-restaurants?restaurantName=${encodeURIComponent(restaurantNameValue)}`;
-    //console.log(restaurantNameValue)
-    //console.log(url)
-   
+
     const response = await fetch(url, {
         method: 'GET'
     });
-
     const responseData = await response.json();
     console.log(responseData)
     const messageElement = document.getElementById('restaurantInfoMsg');
@@ -180,23 +194,41 @@ async function findRestaurantInfo(event) {
     }
 }
 
-// Counts rows in the demotable.
-// Modify the function accordingly if using different aggregate functions or procedures.
-async function countDemotable() {
-    const response = await fetch("/count-demotable", {
-        method: 'GET'
+//TODO
+async function updateUserReview(event) {
+    event.preventDefault();
+/// Have FRONT END ENSURE IF RATING IS BEING CHANGED THAT ONLY THE NUMBER VALUE IS BETWEEN 0 -5
+/// AND CONTENT CHAR LENGTH < 200 char
+    const oldContent = document.getElementById('....').value;
+    const newContent = document.getElementById('.....').value;
+
+    const response = await fetch('/update-review-content', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            newContent: newContent,
+            oldContent: oldContent,
+            columnName: columnName,
+            username: userName,
+            restLong: restLong,
+            restLat: restLat
+        })
     });
 
     const responseData = await response.json();
-    const messageElement = document.getElementById('countResultMsg');
+    const messageElement = document.getElementById('updateNameResultMsg');
 
     if (responseData.success) {
-        const tupleCount = responseData.count;
-        messageElement.textContent = `The number of tuples in demotable: ${tupleCount}`;
+        messageElement.textContent = "Name updated successfully!";
+        fetchTableData();
     } else {
-        alert("Error in count demotable!");
+        messageElement.textContent = "Error updating name!";
     }
 }
+
+
 
 
 // ---------------------------------------------------------------
