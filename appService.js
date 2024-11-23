@@ -161,9 +161,9 @@ async function findRestaurant(restaurantName) {
         console.log("before connecting")
         const result = await connection.execute(
             `SELECT Location_Name, Street_Address, Postal_Code, Phone_Number, Average_Rating 
-            FROM Restaurant_Location_Has WHERE Location_Name=:restaurantName;`,
+            FROM Restaurant_Location_Has WHERE Location_Name=:restaurantName`,
             [restaurantName]);        
-            console.log("after connecting")
+            console.log("after connecting", result.rows)
         return result.rows;
     }).catch(() => {
         return [];

@@ -160,12 +160,12 @@ async function findRestaurantInfo(event) {
     event.preventDefault();
 
     const restaurantNameValue = document.getElementById('restaurantName').value;
-    const url = `/find-restaurants/${restaurantNameValue}`
+    const url =`/find-restaurants?restaurantName=${encodeURIComponent(restaurantNameValue)}`;
     //console.log(restaurantNameValue)
     //console.log(url)
    
     const response = await fetch(url, {
-        method: 'GET',
+        method: 'GET'
     });
 
     const responseData = await response.json();
