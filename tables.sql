@@ -10,9 +10,9 @@ DROP TABLE Contains_Allergen CASCADE CONSTRAINTS;
 DROP TABLE Contains_Diet CASCADE CONSTRAINTS;
 DROP TABLE Allergen CASCADE CONSTRAINTS;
 DROP TABLE Diet CASCADE CONSTRAINTS;
+DROP TABLE Dietary_Profile_Can_Save CASCADE CONSTRAINTS;
 DROP TABLE Stores_Allergen CASCADE CONSTRAINTS;
 DROP TABLE Stores_Diet CASCADE CONSTRAINTS;
-DROP TABLE Dietary_Profile_Can_Save CASCADE CONSTRAINTS;
 
 
 CREATE TABLE User_Location (
@@ -122,14 +122,20 @@ CREATE TABLE Contains_Diet (
     CONSTRAINT fk_menu_diet FOREIGN KEY (Menu_Item_Name, Menu_Id) REFERENCES Menu_Item_On(Menu_Name, Menu_Id)
 );
 
+CREATE TABLE Dietary_Profile_Can_Save (
+    Profile_Name VARCHAR2(30),
+    Username VARCHAR2(30) NOT NULL,
+    PRIMARY KEY (Profile_Name, Username),
+    CONSTRAINT fk_user_profile FOREIGN KEY (Username) REFERENCES User_Has(Username)
+);
+
 CREATE TABLE Stores_Diet (
     Dietary_Profile_Name VARCHAR2(30),
-    User_Username VARCHAR2(30),
+    User_Username VARCHAR2(30) NOT NULL,
     Diet_Type VARCHAR2(30),
     PRIMARY KEY (Dietary_Profile_Name, User_Username, Diet_Type),
     CONSTRAINT fk_diet_user FOREIGN KEY (Diet_Type) REFERENCES Diet(Diet_Type),
-    CONSTRAINT fk_user_diet FOREIGN KEY (User_Username) REFERENCES User_Has(Username)
-    CONSTRAINT fk_dietary_profile FOREIGN KEY (Dietary_Profile_Name) REFERENCES Dietary_Profile_Can_Save(Profile_Name)
+    CONSTRAINT fk_dietary_profile_Diet FOREIGN KEY (Dietary_Profile_Name, User_Username) REFERENCES Dietary_Profile_Can_Save(Profile_Name, Username)
 );
 
 CREATE TABLE Contains_Allergen (
@@ -147,13 +153,6 @@ CREATE TABLE Stores_Allergen (
     Allergen_Type VARCHAR2(30),
     PRIMARY KEY (Dietary_Profile_Name, User_Username, Allergen_Type),
     CONSTRAINT fk_allergen_user FOREIGN KEY (Allergen_Type) REFERENCES Allergen(Allergen_Type),
-    CONSTRAINT fk_user_allergen FOREIGN KEY (User_Username) REFERENCES User_Has(Username)
-    CONSTRAINT fk_dietary_profile FOREIGN KEY (Dietary_Profile_Name) REFERENCES Dietary_Profile_Can_Save(Profile_Name)
-);
-
-CREATE TABLE Dietary_Profile_Can_Save (
-    Profile_Name CHAR(20),
-    Username VARCHAR2(30) NOT NULL,
-    PRIMARY KEY (Profile_Name, Username),
-    CONSTRAINT fk_user_profile FOREIGN KEY (Username) REFERENCES User_Has(Username)
+    CONSTRAINT fk_user_allergen FOREIGN KEY (User_Username) REFERENCES User_Has(Username),
+    CONSTRAINT fk_dietary_profile_Allergen FOREIGN KEY (Dietary_Profile_Name, User_Username) REFERENCES Dietary_Profile_Can_Save(Profile_Name, Username)
 );
