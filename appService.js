@@ -3,23 +3,43 @@ const oracledb = require('oracledb');
 // import loadEnvFile from './utils/envUtil.js';
 //const envVariables = loadEnvFile('./.env');
 const loadEnvFile = require('./utils/envUtil');
-const envVariables = loadEnvFile('./.env');
+//const envVariables = loadEnvFile('./.env');
+require('dotenv').config();
 
 
 // Database configuration setup. Ensure your .env file has the required database credentials.
+// const dbConfig = {
+//     user: envVariables.ORACLE_USER,
+//     password: envVariables.ORACLE_PASS,
+//     connectString: `${envVariables.ORACLE_HOST}:${envVariables.ORACLE_PORT}/${envVariables.ORACLE_DBNAME}`,
+//     poolMin: 1,
+//     poolMax: 3,
+//     poolIncrement: 1,
+//     poolTimeout: 60
+// };
 const dbConfig = {
-    user: envVariables.ORACLE_USER,
-    password: envVariables.ORACLE_PASS,
-    connectString: `${envVariables.ORACLE_HOST}:${envVariables.ORACLE_PORT}/${envVariables.ORACLE_DBNAME}`,
+    user: process.env.ORACLE_USER,
+    password: process.env.ORACLE_PASS,
+    connectString: `${process.env.ORACLE_HOST}:${process.env.ORACLE_PORT}/${process.env.ORACLE_DBNAME}`,
     poolMin: 1,
     poolMax: 3,
     poolIncrement: 1,
     poolTimeout: 60
 };
 
+
 // initialize connection pool
+// async function initializeConnectionPool() {
+//     try {
+//         await oracledb.createPool(dbConfig);
+//         console.log('Connection pool started');
+//     } catch (err) {
+//         console.error('Initialization error: ' + err.message);
+//     }
+// }
 async function initializeConnectionPool() {
     try {
+        oracledb.initOracleClient({ libDir: process.env.ORACLE_DIR })
         await oracledb.createPool(dbConfig);
         console.log('Connection pool started');
     } catch (err) {
@@ -223,7 +243,7 @@ async function updateReviewContent(oldContent, newContent, columnName, userName,
             where 
             ${columnName}=:oldContent 
             AND Username=:userName 
-            AND Restaurant_Longtitude=:restLong 
+            AND RESTAURANT_LONGITUDE=:restLong 
             AND Restaurant_Latitude=:restLat`,
             [newContent, oldContent, userName, restLong, restLat],
             { autoCommit: true }
@@ -339,13 +359,10 @@ module.exports = {
     fetchDemotableFromDb,
     initiateDemotable, 
     insertDemotable, 
-    updateNameDemotable, 
-    countDemotable,
-    findMenuItem,
+    updateNameDemotable,
     findRestaurant,
     fetchUserTableFromDb,
     initiateUserTable,
-    insertUserTable,
     updateReviewContent,
     addItemToDietaryProfile,
     removeItemFromDietaryProfile,
