@@ -90,6 +90,18 @@ async function fetchDemotableFromDb() {
     });
 }
 
+async function fetchUserTableFromDb() {
+    return await withOracleDB(async (connection) => {
+        console.log("before connecting")
+        const result = await connection.execute('SELECT * FROM User_Has');
+        console.log("after connecting")
+        return result.rows;
+    }).catch(() => {
+        return [];
+    });
+}
+
+
 async function initiateDemotable() {
     return await withOracleDB(async (connection) => {
         try {
@@ -110,11 +122,54 @@ async function initiateDemotable() {
     });
 }
 
+async function initiateUserTable() {
+    return await withOracleDB(async (connection) => {
+        try {
+            await connection.execute(`DROP TABLE User_Has`);
+        } catch(err) {
+            console.log('Table might not exist, proceeding to create...');
+        }
+
+        const result = await connection.execute(`
+            CREATE TABLE User_Has (
+                Username VARCHAR2(30) PRIMARY KEY,
+                First_Name VARCHAR2(30),
+                Last_Name VARCHAR2(30),
+                Email VARCHAR2(30) NOT NULL UNIQUE,
+                User_Longitude NUMBER(9, 6) NOT NULL,
+                User_Latitude NUMBER(9, 6) NOT NULL,
+                CONSTRAINT fk_user_location FOREIGN KEY (User_Longitude, User_Latitude)
+                    REFERENCES User_Location(Longitude, Latitude)
+                    ON DELETE CASCADE
+            )
+        `);
+        return true;
+    }).catch(() => {
+        return false;
+    });
+}
+
+
 async function insertDemotable(id, name) {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
             `INSERT INTO DEMOTABLE (id, name) VALUES (:id, :name)`,
             [id, name],
+            { autoCommit: true }
+        );
+
+        return result.rowsAffected && result.rowsAffected > 0;
+    }).catch(() => {
+        return false;
+    });
+}
+
+
+async function insertUserTable(Username, First_Name, Last_Name, Email, User_Longitude, User_Latitude) {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `INSERT INTO User_Has (Username, First_Name, Last_Name, Email, User_Longitude, User_Latitude) VALUES (:Username, :First_Name, :Last_Name, :Email, :User_Longitude, :User_Latitude)`,
+            [Username, First_Name, Last_Name, Email, User_Longitude, User_Latitude],
             { autoCommit: true }
         );
 
@@ -155,7 +210,7 @@ async function updateReviewContent(oldContent, newContent, columnName, userName,
     // Rating (0 - 5)
     return await withOracleDB(async (connection) => {
         console.log("before update connecting")
-        const validColumns = ['Content', 'Rating']; 
+        const validColumns = ['Content', 'Rating'];
         if (!validColumns.includes(columnName)) {
             throw new Error('Invalid column name');
         }
@@ -211,14 +266,14 @@ async function deleteReviewContent(content, userName, restLong, restLat) {
 async function addItemToDietaryProfile(foodType, userName, profileName) {
     // 1) Check if DietType exists,
     // TODO: 2) IF not, add to Diet or Allergen OR REJECT????
-    // 3) 
-    // const validFoodTypes = ['Vegan', 'Gluten', 'Vegetarian', 'Kosher', 'Halal']; 
+    // 3)
+    // const validFoodTypes = ['Vegan', 'Gluten', 'Vegetarian', 'Kosher', 'Halal'];
     // if (!validFoodTypes.includes(foodType)) {
     //     console.error('Invalid food type');
     //     return false;
     // }
     return await withOracleDB(async (connection) => {
-       
+
         const result = await connection.execute(
             `INSERT INTO Stores_${foodType} 
             (Dietary_Profile_Name, User_Username, ${foodType}_Type) 
@@ -235,14 +290,14 @@ async function addItemToDietaryProfile(foodType, userName, profileName) {
 }
 
 async function removeItemFromDietaryProfile(foodType, userName, profileName) {
-    // const validFoodTypes = ['Vegan', 'Gluten', 'Vegetarian', 'Kosher', 'Halal']; 
+    // const validFoodTypes = ['Vegan', 'Gluten', 'Vegetarian', 'Kosher', 'Halal'];
     // if (!validFoodTypes.includes(foodType)) {
     //     console.error('Invalid food type');
     //     return false;
     // }
 
     return await withOracleDB(async (connection) => {
-        
+
         const query = `
             DELETE FROM Stores_${foodType} 
             WHERE Dietary_Profile_Name = :profileName
@@ -270,7 +325,7 @@ async function findRestaurant(restaurantName) {
         const result = await connection.execute(
             `SELECT Location_Name, Street_Address, Postal_Code, Phone_Number, Average_Rating 
             FROM Restaurant_Location_Has WHERE UPPER(Location_Name)=UPPER(:restaurantName)`,
-            [restaurantName]);        
+            [restaurantName]);
             console.log("after connecting", result.rows)
         return result.rows;
     }).catch(() => {
@@ -286,7 +341,11 @@ module.exports = {
     insertDemotable, 
     updateNameDemotable, 
     countDemotable,
+    findMenuItem,
     findRestaurant,
+    fetchUserTableFromDb,
+    initiateUserTable,
+    insertUserTable,
     updateReviewContent,
     addItemToDietaryProfile,
     removeItemFromDietaryProfile,
