@@ -129,6 +129,7 @@ CREATE TABLE Stores_Diet (
     PRIMARY KEY (Dietary_Profile_Name, User_Username, Diet_Type),
     CONSTRAINT fk_diet_user FOREIGN KEY (Diet_Type) REFERENCES Diet(Diet_Type),
     CONSTRAINT fk_user_diet FOREIGN KEY (User_Username) REFERENCES User_Has(Username)
+    CONSTRAINT fk_dietary_profile FOREIGN KEY (Dietary_Profile_Name) REFERENCES Dietary_Profile_Can_Save(Profile_Name)
 );
 
 CREATE TABLE Contains_Allergen (
@@ -147,6 +148,7 @@ CREATE TABLE Stores_Allergen (
     PRIMARY KEY (Dietary_Profile_Name, User_Username, Allergen_Type),
     CONSTRAINT fk_allergen_user FOREIGN KEY (Allergen_Type) REFERENCES Allergen(Allergen_Type),
     CONSTRAINT fk_user_allergen FOREIGN KEY (User_Username) REFERENCES User_Has(Username)
+    CONSTRAINT fk_dietary_profile FOREIGN KEY (Dietary_Profile_Name) REFERENCES Dietary_Profile_Can_Save(Profile_Name)
 );
 
 CREATE TABLE Dietary_Profile_Can_Save (

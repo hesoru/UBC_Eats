@@ -23,8 +23,22 @@ router.get('/demotable', async (req, res) => {
     res.json({data: tableContent});
 });
 
+router.get('/usertable', async (req, res) => {
+    const tableContent = await appService.fetchUserTableFromDb();
+    res.json({data: tableContent});
+});
+
 router.post("/initiate-demotable", async (req, res) => {
     const initiateResult = await appService.initiateDemotable();
+    if (initiateResult) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
+router.post("/initiate-usertable", async (req, res) => {
+    const initiateResult = await appService.initiateUserTable();
     if (initiateResult) {
         res.json({ success: true });
     } else {
@@ -35,6 +49,16 @@ router.post("/initiate-demotable", async (req, res) => {
 router.post("/insert-demotable", async (req, res) => {
     const { id, name } = req.body;
     const insertResult = await appService.insertDemotable(id, name);
+    if (insertResult) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
+router.post("/insert-usertable", async (req, res) => {
+    const { Username, First_Name, Last_Name, Email, User_Longitude, User_Latitude } = req.body;
+    const insertResult = await appService.insertUsertable(Username, First_Name, Last_Name, Email, User_Longitude, User_Latitude);
     if (insertResult) {
         res.json({ success: true });
     } else {
