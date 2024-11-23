@@ -340,8 +340,6 @@ module.exports = {
     initiateDemotable, 
     insertDemotable, 
     updateNameDemotable, 
-    countDemotable,
-    findMenuItem,
     findRestaurant,
     fetchUserTableFromDb,
     initiateUserTable,
