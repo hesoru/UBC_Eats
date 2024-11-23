@@ -85,15 +85,60 @@ router.post("/initiate-demotable", async (req, res) => {
     }
 });
 
-router.get("/find-restaurants/:restaurantName", async (req, res) => {
-    const {restaurantName} = req.params;
+router.get("/find-restaurants", async (req, res) => {
+    console.log("entered endpoint")
+    const restaurantName = req.query.restaurantName;
     const initiateResult = await appService.findRestaurant(restaurantName);
+    console.log(initiateResult)
     if (initiateResult) {
+        res.json({ success: true, result: initiateResult});
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
+router.post("/update-review-content", async (req, res) => {
+    const { oldContent, newContent, userName, restLong, restLat} = req.body;
+    const updateResult = await appService.updateReviewContent(oldContent, newContent, userName, restLong, restLat);
+    if (updateResult) {
         res.json({ success: true });
     } else {
         res.status(500).json({ success: false });
     }
 });
+
+router.post("/add-to-dietary-profile", async (req, res) => {
+    const {foodType, userName, profileName} = req.body;
+    const updateResult = await appService.addItemToDietaryProfile(foodType, userName, profileName)
+    if (updateResult) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
+router.delete("/remove-from-dietary-profile", async (req, res) => {
+    const {foodType, userName, profileName} = req.body;
+    const updateResult = await appService.removeItemFromDietaryProfile(foodType, userName, profileName)
+    if (updateResult) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
+router.delete("/remove-review-content", async (req, res) => {
+    const {content, userName, restLong, restLat} = req.body;
+    const updateResult = await appService.deleteReviewContent(content, userName, restLong, restLat);
+    if (updateResult) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
+
+
 
 
 module.exports = router;
