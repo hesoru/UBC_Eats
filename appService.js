@@ -351,6 +351,29 @@ async function findRestaurant(restaurantName) {
     });
 }
 
+async function fetchAllRestaurantsFromDb() {
+    return await withOracleDB(async (connection) => {
+        console.log("before connecting")
+        const result = await connection.execute('SELECT Location_Name,\n' +
+            '    CITY,\n' +
+            '    PROVINCE_OR_STATE,\n' +
+            '    STREET_ADDRESS,\n' +
+            '    POSTAL_CODE,\n' +
+            '    PHONE_NUMBER,\n' +
+            '    AVERAGE_RATING,\n' +
+            'COUNT(*) AS Total_Rows\n' +
+            'FROM Restaurant_Location_Has\n' +
+            'GROUP BY Location_Name, CITY, PROVINCE_OR_STATE, STREET_ADDRESS, POSTAL_CODE, PHONE_NUMBER, AVERAGE_RATING;\n');
+        console.log("after connecting")
+        return result.rows;
+    }).catch(() => {
+        return [];
+    });
+}
+
+
+
+
 
 module.exports = {
     testOracleConnection,
@@ -364,6 +387,6 @@ module.exports = {
     updateReviewContent,
     addItemToDietaryProfile,
     removeItemFromDietaryProfile,
-    deleteReviewContent
-
+    deleteReviewContent,
+    fetchAllRestaurantsFromDb
 };

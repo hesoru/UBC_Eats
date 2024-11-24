@@ -11,6 +11,7 @@ const router = express.Router();
 
 router.get('/check-db-connection', async (req, res) => {
     const isConnect = await appService.testOracleConnection();
+    console.log(isConnect)
     if (isConnect) {
         res.send('connected');
     } else {
