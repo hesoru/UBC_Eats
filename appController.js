@@ -1,7 +1,7 @@
 const express = require('express');
 // import express from "express";
 // import appService from './appService.js'; // Add .js extension if necessary
- const appService = require('./appService');
+const appService = require('./appService');
 
 const router = express.Router();
 
@@ -11,6 +11,7 @@ const router = express.Router();
 
 router.get('/check-db-connection', async (req, res) => {
     const isConnect = await appService.testOracleConnection();
+    console.log(isConnect)
     if (isConnect) {
         res.send('connected');
     } else {
@@ -89,6 +90,17 @@ router.get("/find-restaurants", async (req, res) => {
     console.log("entered endpoint")
     const restaurantName = req.query.restaurantName;
     const initiateResult = await appService.findRestaurant(restaurantName);
+    console.log(initiateResult)
+    if (initiateResult) {
+        res.json({ success: true, result: initiateResult});
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
+router.get("/fetch-all-restaurants", async (req, res) => {
+
+    const initiateResult = await appService.fetchAllRestaurantsFromDb();
     console.log(initiateResult)
     if (initiateResult) {
         res.json({ success: true, result: initiateResult});
