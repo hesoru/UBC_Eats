@@ -38,14 +38,26 @@ export async function fetchAllRestaurants() {
         return [];
     }
 }
+
+export async function fetchUsersReviews(userName) {
+    const response = await fetch('http://localhost:50001/update-user-review', {
+        method: 'GET',
+        body: JSON.stringify({
+            userName: userName,
+        })
+    });
+
+    if (!response.success) {
+        throw new Error(`Request failed with status ${response.status}: ${response.statusText}`);
+    }
+    return await response.json();
+}
 export async function updateUserReview(event) {
     event.preventDefault();
 /// Have FRONT END ENSURE IF RATING IS BEING CHANGED THAT ONLY THE NUMBER VALUE IS BETWEEN 0 -5
 /// AND CONTENT CHAR LENGTH < 200 char
-    const oldContent = document.getElementById('....').value;
-    const newContent = document.getElementById('.....').value;
 
-    const response = await fetch('/update-review-content', {
+    const response = await fetch('http://localhost:50001/update-user-review', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -54,21 +66,14 @@ export async function updateUserReview(event) {
             newContent: newContent,
             oldContent: oldContent,
             columnName: columnName,
-            username: userName,
-            restLong: restLong,
-            restLat: restLat
+            rID: reviewID,
         })
     });
 
-    const responseData = await response.json();
-    const messageElement = document.getElementById('updateNameResultMsg');
-
-    if (responseData.success) {
-        messageElement.textContent = "Name updated successfully!";
-        fetchTableData();
-    } else {
-        messageElement.textContent = "Error updating name!";
-    }
+      if (!response.success) {
+          throw new Error(`Request failed with status ${response.status}: ${response.statusText}`);
+      }
+    return await response.json();
 }
 
 // List restaurant locations based on given restaurant
