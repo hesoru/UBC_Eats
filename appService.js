@@ -1,25 +1,43 @@
 const oracledb = require('oracledb');
-// import oracledb from "oracledb"
-// import loadEnvFile from './utils/envUtil.js';
-//const envVariables = loadEnvFile('./.env');
+//import oracledb from "oracledb"
 const loadEnvFile = require('./utils/envUtil');
-const envVariables = loadEnvFile('./.env');
+//const envVariables = loadEnvFile('./.env');
+require('dotenv').config();
 
 
 // Database configuration setup. Ensure your .env file has the required database credentials.
+// const dbConfig = {
+//     user: envVariables.ORACLE_USER,
+//     password: envVariables.ORACLE_PASS,
+//     connectString: `${envVariables.ORACLE_HOST}:${envVariables.ORACLE_PORT}/${envVariables.ORACLE_DBNAME}`,
+//     poolMin: 1,
+//     poolMax: 3,
+//     poolIncrement: 1,
+//     poolTimeout: 60
+// };
 const dbConfig = {
-    user: envVariables.ORACLE_USER,
-    password: envVariables.ORACLE_PASS,
-    connectString: `${envVariables.ORACLE_HOST}:${envVariables.ORACLE_PORT}/${envVariables.ORACLE_DBNAME}`,
+    user: process.env.ORACLE_USER,
+    password: process.env.ORACLE_PASS,
+    connectString: `${process.env.ORACLE_HOST}:${process.env.ORACLE_PORT}/${process.env.ORACLE_DBNAME}`,
     poolMin: 1,
     poolMax: 3,
     poolIncrement: 1,
     poolTimeout: 60
 };
 
+
 // initialize connection pool
+// async function initializeConnectionPool() {
+//     try {
+//         await oracledb.createPool(dbConfig);
+//         console.log('Connection pool started');
+//     } catch (err) {
+//         console.error('Initialization error: ' + err.message);
+//     }
+// }
 async function initializeConnectionPool() {
     try {
+        oracledb.initOracleClient({ libDir: process.env.ORACLE_DIR })
         await oracledb.createPool(dbConfig);
         console.log('Connection pool started');
     } catch (err) {
@@ -223,7 +241,7 @@ async function updateReviewContent(oldContent, newContent, columnName, userName,
             where 
             ${columnName}=:oldContent 
             AND Username=:userName 
-            AND Restaurant_Longtitude=:restLong 
+            AND RESTAURANT_LONGITUDE=:restLong 
             AND Restaurant_Latitude=:restLat`,
             [newContent, oldContent, userName, restLong, restLat],
             { autoCommit: true }
@@ -333,20 +351,57 @@ async function findRestaurant(restaurantName) {
     });
 }
 
+async function fetchAllRestaurantsFromDb() {
+    return await withOracleDB(async (connection) => {
+        console.log("before connecting")
+        const result = await connection.execute(
+           "SELECT rl.Location_Name,\n" +
+            "       rl.STREET_ADDRESS,\n" +
+            "       rl.CITY,\n" +
+            "       rl.PROVINCE_OR_STATE,\n" +
+            "       rl.POSTAL_CODE,\n" +
+            "       rl.PHONE_NUMBER,\n" +
+            "       r.Cuisine_Type,\n" +
+            "       r.Average_Price,  -- Added Average_Price\n" +
+            "       rl.AVERAGE_RATING,\n" +
+            "       COUNT(*) AS Total_Rows\n" +
+            "FROM Restaurant_Location_Has rl\n" +
+            "JOIN Restaurant r ON rl.Restaurant_Id = r.Id\n" +
+            "GROUP BY rl.Location_Name,\n" +
+            "         rl.STREET_ADDRESS,\n" +
+            "         rl.CITY,\n" +
+            "         rl.PROVINCE_OR_STATE,\n" +
+            "         rl.POSTAL_CODE,\n" +
+            "         rl.PHONE_NUMBER,\n" +
+            "         r.Cuisine_Type,\n" +
+            "         r.Average_Price,\n" +
+            "         rl.AVERAGE_RATING\n",
+            []  // Empty array????
+        );
+        console.log("after connecting")
+        return result;
+
+    }).catch(() => {
+        return [];
+    });
+}
+
+
+
+
 
 module.exports = {
     testOracleConnection,
     fetchDemotableFromDb,
     initiateDemotable, 
     insertDemotable, 
-    updateNameDemotable, 
+    updateNameDemotable,
     findRestaurant,
     fetchUserTableFromDb,
     initiateUserTable,
-    insertUserTable,
     updateReviewContent,
     addItemToDietaryProfile,
     removeItemFromDietaryProfile,
-    deleteReviewContent
-
+    deleteReviewContent,
+    fetchAllRestaurantsFromDb
 };
