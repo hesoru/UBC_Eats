@@ -1,6 +1,6 @@
 const express = require('express');
 const appController = require('./appController');
-
+require('dotenv').config();
 // Load environment variables from .env file
 // Ensure your .env file has the required database credentials.
 const loadEnvFile = require('./utils/envUtil');
@@ -10,8 +10,8 @@ const loadEnvFile = require('./utils/envUtil');
 const envVariables = loadEnvFile('./.env');
 const app = express();
 
-const PORT = envVariables.PORT || 65534;  // Adjust the PORT if needed (e.g., if you encounter a "port already occupied" error)
-
+//const PORT = envVariables.PORT || 65534;  // Adjust the PORT if needed (e.g., if you encounter a "port already occupied" error)
+const PORT = process.env.PORT || 65534;
 // Middleware setup
 app.use(express.static('public'));  // Serve static files from the 'public' directory
 app.use(express.json());             // Parse incoming JSON payloads

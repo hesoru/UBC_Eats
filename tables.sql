@@ -32,7 +32,7 @@ CREATE TABLE User_Has (
                           User_Latitude NUMBER(9, 6) NOT NULL,
                           CONSTRAINT fk_user_location FOREIGN KEY (User_Longitude, User_Latitude)
                               REFERENCES User_Location(Longitude, Latitude)
-                                  ON DELETE CASCADE
+                              ON DELETE CASCADE
 );
 
 CREATE TABLE Restaurant (
@@ -153,5 +153,6 @@ CREATE TABLE Stores_Allergen (
                                  Allergen_Type VARCHAR2(30),
                                  PRIMARY KEY (Dietary_Profile_Name, User_Username, Allergen_Type),
                                  CONSTRAINT fk_allergen_user FOREIGN KEY (Allergen_Type) REFERENCES Allergen(Allergen_Type),
+                                 CONSTRAINT fk_user_allergen FOREIGN KEY (User_Username) REFERENCES User_Has(Username),
                                  CONSTRAINT fk_dietary_profile_Allergen FOREIGN KEY (Dietary_Profile_Name, User_Username) REFERENCES Dietary_Profile_Can_Save(Profile_Name, Username)
 );
