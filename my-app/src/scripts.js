@@ -27,7 +27,6 @@ export async function fetchAllRestaurants() {
             method: "GET"
         });
 
-        // Check if the response is successful (status code 200-299)
         if (!response.ok) {
             throw new Error(`Request failed with status ${response.status}: ${response.statusText}`);
         }
@@ -37,6 +36,60 @@ export async function fetchAllRestaurants() {
     } catch (error) {
         console.error("Error fetching all restaurants:", error);
         return [];
+    }
+}
+export async function updateUserReview(event) {
+    event.preventDefault();
+/// Have FRONT END ENSURE IF RATING IS BEING CHANGED THAT ONLY THE NUMBER VALUE IS BETWEEN 0 -5
+/// AND CONTENT CHAR LENGTH < 200 char
+    const oldContent = document.getElementById('....').value;
+    const newContent = document.getElementById('.....').value;
+
+    const response = await fetch('/update-review-content', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            newContent: newContent,
+            oldContent: oldContent,
+            columnName: columnName,
+            username: userName,
+            restLong: restLong,
+            restLat: restLat
+        })
+    });
+
+    const responseData = await response.json();
+    const messageElement = document.getElementById('updateNameResultMsg');
+
+    if (responseData.success) {
+        messageElement.textContent = "Name updated successfully!";
+        fetchTableData();
+    } else {
+        messageElement.textContent = "Error updating name!";
+    }
+}
+
+// List restaurant locations based on given restaurant
+export async function findRestaurantInfo(event) {
+    event.preventDefault();
+
+    const restaurantNameValue = document.getElementById('restaurantName').value;
+    const url =`/find-restaurants?restaurantName=${encodeURIComponent(restaurantNameValue)}`;
+
+    const response = await fetch(url, {
+        method: 'GET'
+    });
+    const responseData = await response.json();
+    console.log(responseData)
+    const messageElement = document.getElementById('restaurantInfoMsg');
+
+    if (responseData.success) {
+        messageElement.textContent = "Found Restaurant Successfull!";
+        //fetchTableData();
+    } else {
+        messageElement.textContent = "Restaurant not found";
     }
 }
 
@@ -64,23 +117,6 @@ export async function fetchAndDisplayUsersHedie() {
             cell.textContent = field;
         });
     });
-}
-
-// This function resets or initializes the demotable.
-export async function resetDemotable() {
-    const response = await fetch("/initiate-demotable", {
-        method: 'POST'
-    });
-    const responseData = await response.json();
-
-    if (responseData.success) {
-        const messageElement = document.getElementById('resetResultMsg');
-        messageElement.textContent = "demotable initiated successfully!";
-        fetchTableData();
-        resetAllTables();
-    } else {
-        alert("Error initiating table!");
-    }
 }
 
 // HEDIE'S
@@ -117,24 +153,6 @@ export async function resetAllTables() {
     }
 }
 
-// Inserts new records into the demotable.
-export async function insertDemotable(event) {
-    event.preventDefault();
-
-    const idValue = document.getElementById('insertId').value;
-    const nameValue = document.getElementById('insertName').value;
-
-    const response = await fetch('/insert-demotable', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            id: idValue,
-            name: nameValue
-        })
-    });
-}
 
 // HEDIE'S
 export async function insertUsertable(event) {
@@ -164,23 +182,7 @@ export async function insertUsertable(event) {
         messageElement.textContent = "Error inserting data!";
     }
 }
-// Counts rows in the demotable.
-// Modify the function accordingly if using different aggregate functions or procedures.
-export async function countDemotable() {
-    const response = await fetch("/count-demotable", {
-        method: 'GET'
-    });
 
-    const responseData = await response.json();
-    const messageElement = document.getElementById('countResultMsg');
-
-    if (responseData.success) {
-        const tupleCount = responseData.count;
-        messageElement.textContent = `The number of tuples in demotable: ${tupleCount}`;
-    } else {
-        alert("Error in count demotable!");
-    }
-}
 
 // Updates names in the demotable.
 export async function updateNameDemotable(event) {
@@ -212,27 +214,7 @@ export async function updateNameDemotable(event) {
 }
 
 
-// List restaurant locations based on given restaurant
-export async function findRestaurantInfo(event) {
-    event.preventDefault();
 
-    const restaurantNameValue = document.getElementById('restaurantName').value;
-    const url =`/find-restaurants?restaurantName=${encodeURIComponent(restaurantNameValue)}`;
-
-    const response = await fetch(url, {
-        method: 'GET'
-    });
-    const responseData = await response.json();
-    console.log(responseData)
-    const messageElement = document.getElementById('restaurantInfoMsg');
-
-    if (responseData.success) {
-        messageElement.textContent = "Found Restaurant Successfull!";
-        //fetchTableData();
-    } else {
-        messageElement.textContent = "Restaurant not found";
-    }
-}
 // Fetches data from the demotable and displays it.
 async function fetchAndDisplayUsers() {
     const tableElement = document.getElementById('demotable');
@@ -261,39 +243,7 @@ async function fetchAndDisplayUsers() {
 
 
 //TODO
-// export async function updateUserReview(event) {
-//     event.preventDefault();
-// /// Have FRONT END ENSURE IF RATING IS BEING CHANGED THAT ONLY THE NUMBER VALUE IS BETWEEN 0 -5
-// /// AND CONTENT CHAR LENGTH < 200 char
-//     const oldContent = document.getElementById('....').value;
-//     const newContent = document.getElementById('.....').value;
-//
-//     const response = await fetch('/update-review-content', {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json'
-//         },
-//         body: JSON.stringify({
-//             newContent: newContent,
-//             oldContent: oldContent,
-//             columnName: columnName,
-//             username: userName,
-//             restLong: restLong,
-//             restLat: restLat
-//         })
-//     });
-//
-//     const responseData = await response.json();
-//     const messageElement = document.getElementById('updateNameResultMsg');
-//
-//     if (responseData.success) {
-//         messageElement.textContent = "Name updated successfully!";
-//         fetchTableData();
-//     } else {
-//         messageElement.textContent = "Error updating name!";
-//     }
-// }
-//
+
 
 
 

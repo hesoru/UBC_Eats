@@ -1,185 +1,199 @@
-import FilterListIcon from "@mui/icons-material/FilterList";
-import { Box, Button, Typography } from "@mui/material";
 import React from "react";
-import restuarant1 from "./restuarant-1.svg";
+import restuarant1 from "./restaurant-1.svg";
 
-const RestaurantPage = ({restaurant}) => {
+const RestaurantPage = ({ restaurant }) => {
     return (
-        <Box
-            sx={{
+        <div
+            style={{
                 backgroundColor: "#c2e5ee",
                 display: "flex",
                 justifyContent: "center",
                 width: "100%",
             }}
         >
-            <Box
-                sx={{
+            <div
+                style={{
                     backgroundColor: "#c2e5ee",
-                    width: 1440,
-                    height: 1024,
+                    width: "1440px",
+                    height: "1024px",
                     position: "relative",
                 }}
             >
-                <Box
-                    sx={{
+                <div
+                    style={{
                         position: "absolute",
-                        width: 238,
-                        height: 70,
-                        top: 159,
-                        left: 22,
+                        width: "238px",
+                        height: "70px",
+                        top: "159px",
+                        left: "22px",
                     }}
                 >
-                    <Button
-                        variant="contained"
-                        startIcon={<FilterListIcon />}
-                        sx={{
-                            width: 236,
-                            height: 70,
+                    <button
+                        style={{
+                            width: "236px",
+                            height: "70px",
                             backgroundColor: "#012046",
                             color: "#fff",
-                            fontSize: 40,
+                            fontSize: "40px",
                             fontFamily: "Gabarito-Regular, Helvetica",
+                            border: "none",
+                            cursor: "pointer",
                         }}
                     >
                         FILTER
-                    </Button>
-                </Box>
+                    </button>
+                </div>
 
-                <Box
-                    sx={{
+                <div
+                    style={{
                         position: "absolute",
-                        width: 298,
-                        height: 70,
-                        top: 159,
-                        left: 302,
+                        width: "298px",
+                        height: "70px",
+                        top: "159px",
+                        left: "302px",
                     }}
                 >
-                    <Button
-                        variant="contained"
-                        startIcon={<FilterListIcon />}
-                        sx={{
-                            width: 296,
-                            height: 70,
+                    <button
+                        style={{
+                            width: "296px",
+                            height: "70px",
                             backgroundColor: "#012046",
                             color: "#fff",
-                            fontSize: 40,
+                            fontSize: "40px",
                             fontFamily: "Gabarito-Regular, Helvetica",
+                            border: "none",
+                            cursor: "pointer",
                         }}
                     >
                         EDIT VIEW
-                    </Button>
-                </Box>
-                {restaurant.AVERAGE_PRICE},  {restaurant.AVERAGE_RATING},
-                <Box
-                    sx={{
+
+                    </button>
+                </div>
+                <div style={{
+                    backgroundColor: "#c2e5ee",
+                    display: "flex",
+                    justifyContent: "center",
+                    width: "40%",
+                    padding: "20px",
+                    fontSize: 30,
+                    fontStyle: "-moz-initial",
+                    flexDirection: "column",
+                    alignItems: "center", }} >
+                    Average Price: {restaurant.AVERAGE_PRICE},
+                    Average Rating: {restaurant.AVERAGE_RATING}
+                </div>
+                <div
+                    style={{
                         position: "absolute",
-                        width: 1121,
-                        height: 755,
-                        top: 269,
-                        left: 159,
+                        width: "1121px",
+                        height: "755px",
+                        top: "269px",
+                        left: "159px",
+                        backgroundColor: "#fff",
                     }}
                 >
-                    <Box
-                        sx={{
-                            height: 770,
-                            backgroundColor: "#fff",
-                            position: "relative",
+                    <div
+                        style={{
+                            position: "absolute",
+                            width: "1020px",
+                            height: "174px",
+                            top: "52px",
+                            left: "53px",
                         }}
                     >
-                        <Box
-                            sx={{
+                        <div
+                            style={{
                                 position: "absolute",
-                                width: 1020,
-                                height: 174,
-                                top: 52,
-                                left: 53,
+                                width: "1020px",
+                                height: "58px",
+                                top: "88px",
+                                left: "0",
                             }}
                         >
-                            <Box
-                                sx={{
+                            <p
+                                style={{
                                     position: "absolute",
-                                    width: 1020,
-                                    height: 58,
-                                    top: 88,
-                                    left: 0,
-                                }}
-                            >
-                                <Typography
-                                    sx={{
-                                        position: "absolute",
-                                        width: 300,
-                                        top: 0,
-                                        left: 716,
-                                        fontFamily: "Gabarito-Regular, Helvetica",
-                                        fontSize: "2.5rem",
-                                        color: "#000",
-                                    }}
-                                >
-                                    {restaurant.PHONE_NUMBER}
-                                </Typography>
-
-                                <Typography
-                                    sx={{
-                                        position: "absolute",
-                                        top: 0,
-                                        left: 0,
-                                        fontFamily: "Gabarito-Regular, Helvetica",
-                                        fontSize: "2.5rem",
-                                        color: "#000",
-                                    }}
-                                >
-                                    {restaurant.CUISINE_TYPE}
-                                </Typography>
-                            </Box>
-
-                            <Typography
-                                sx={{
-                                    position: "absolute",
-                                    width: 715,
-                                    top: 0,
-                                    left: 150,
+                                    width: "300px",
+                                    top: "0",
+                                    left: "716px",
                                     fontFamily: "Gabarito-Regular, Helvetica",
                                     fontSize: "2.5rem",
                                     color: "#000",
                                 }}
                             >
-                                {restaurant.STREET_ADDRESS}, {restaurant.CITY},{restaurant.PROVINCE_OR_STATE}, {restaurant.POSTAL_CODE},
-                            </Typography>
-                        </Box>
+                                {restaurant.PHONE_NUMBER}
+                            </p>
 
-                        <Box
-                            component="img"
-                            sx={{
+                            <p
+                                style={{
+                                    position: "absolute",
+                                    top: "0",
+                                    left: "0",
+                                    fontFamily: "Gabarito-Regular, Helvetica",
+                                    fontSize: "2.5rem",
+                                    color: "#000",
+                                }}
+                            >
+                                {restaurant.CUISINE_TYPE}
+                            </p>
+                        </div>
+
+                        <p
+                            style={{
                                 position: "absolute",
-                                width: 798,
-                                height: 448,
-                                top: 251,
-                                left: 162,
-                                objectFit: "cover",
+                                width: "715px",
+                                top: "0",
+                                left: "150px",
+                                fontFamily: "Gabarito-Regular, Helvetica",
+                                fontSize: "2.5rem",
+                                color: "#000",
                             }}
-                            alt="Restaurant"
-                            src={restuarant1}
-                        />
-                    </Box>
-                </Box>
+                        >
+                            {restaurant.STREET_ADDRESS}, {restaurant.CITY}, {restaurant.PROVINCE_OR_STATE}, {restaurant.POSTAL_CODE}
+                        </p>
+                    </div>
 
-                <Typography
-                    sx={{
+                    <img
+                        style={{
+                            position: "absolute",
+                            width: "798px",
+                            height: "448px",
+                            top: "251px",
+                            left: "162px",
+                            objectFit: "cover",
+                        }}
+                        alt="Restaurant"
+                        src={restuarant1}
+                    />
+                </div>
+
+                <h1
+                    style={{
                         position: "absolute",
-                        top: 5,
-                        left: 507,
+                        top: "5px",
+                        left: "507px",
                         fontFamily: "Gabarito-Regular, Helvetica",
                         fontSize: "4rem",
                         color: "#000",
                         whiteSpace: "nowrap",
                     }}
                 >
-                    {restaurant.LOCATION_NAME},
-                    Number of Locations: {restaurant.TOTAL_ROWS};
-                </Typography>
-            </Box>
-        </Box>
+                    {restaurant.LOCATION_NAME}
+                </h1>
+                <p
+                    style={{
+                        position: "absolute",
+                        top: "80px",
+                        left: "507px",
+                        fontFamily: "Gabarito-Regular, Helvetica",
+                        fontSize: "1.5rem",
+                        color: "#000",
+                    }}
+                >
+                    Number of Locations: {restaurant.TOTAL_ROWS}
+                </p>
+            </div>
+        </div>
     );
 };
 
