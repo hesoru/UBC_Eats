@@ -21,6 +21,25 @@ export async function checkDbConnection() {
     return await response.text();
 }
 
+export async function fetchAllRestaurants() {
+    try {
+        const response = await fetch('http://localhost:50001/fetch-all-restaurants', {
+            method: "GET"
+        });
+
+        // Check if the response is successful (status code 200-299)
+        if (!response.ok) {
+            throw new Error(`Request failed with status ${response.status}: ${response.statusText}`);
+        }
+
+        return await response.json();
+
+    } catch (error) {
+        console.error("Error fetching all restaurants:", error);
+        return [];
+    }
+}
+
 //HEDIE'S
 export async function fetchAndDisplayUsersHedie() {
     const tableElement = document.getElementById('usertable');

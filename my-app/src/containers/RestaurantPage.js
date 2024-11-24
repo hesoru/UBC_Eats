@@ -3,7 +3,7 @@ import { Box, Button, Typography } from "@mui/material";
 import React from "react";
 import restuarant1 from "./restuarant-1.svg";
 
-const RestaurantInfoOre = () => {
+const RestaurantPage = ({restaurant}) => {
     return (
         <Box
             sx={{
@@ -70,7 +70,7 @@ const RestaurantInfoOre = () => {
                         EDIT VIEW
                     </Button>
                 </Box>
-
+                {restaurant.AVERAGE_PRICE},  {restaurant.AVERAGE_RATING},
                 <Box
                     sx={{
                         position: "absolute",
@@ -116,7 +116,7 @@ const RestaurantInfoOre = () => {
                                         color: "#000",
                                     }}
                                 >
-                                    123 - 456 - 789
+                                    {restaurant.PHONE_NUMBER}
                                 </Typography>
 
                                 <Typography
@@ -129,7 +129,7 @@ const RestaurantInfoOre = () => {
                                         color: "#000",
                                     }}
                                 >
-                                    Cuisine Type
+                                    {restaurant.CUISINE_TYPE}
                                 </Typography>
                             </Box>
 
@@ -144,7 +144,7 @@ const RestaurantInfoOre = () => {
                                     color: "#000",
                                 }}
                             >
-                                Street Address, City, Postal Code,
+                                {restaurant.STREET_ADDRESS}, {restaurant.CITY},{restaurant.PROVINCE_OR_STATE}, {restaurant.POSTAL_CODE},
                             </Typography>
                         </Box>
 
@@ -175,11 +175,12 @@ const RestaurantInfoOre = () => {
                         whiteSpace: "nowrap",
                     }}
                 >
-                    ROMANO
+                    {restaurant.LOCATION_NAME},
+                    Number of Locations: {restaurant.TOTAL_ROWS};
                 </Typography>
             </Box>
         </Box>
     );
 };
 
-export default RestaurantInfoOre;
+export default RestaurantPage;

@@ -354,18 +354,33 @@ async function findRestaurant(restaurantName) {
 async function fetchAllRestaurantsFromDb() {
     return await withOracleDB(async (connection) => {
         console.log("before connecting")
-        const result = await connection.execute('SELECT Location_Name,\n' +
-            '    CITY,\n' +
-            '    PROVINCE_OR_STATE,\n' +
-            '    STREET_ADDRESS,\n' +
-            '    POSTAL_CODE,\n' +
-            '    PHONE_NUMBER,\n' +
-            '    AVERAGE_RATING,\n' +
-            'COUNT(*) AS Total_Rows\n' +
-            'FROM Restaurant_Location_Has\n' +
-            'GROUP BY Location_Name, CITY, PROVINCE_OR_STATE, STREET_ADDRESS, POSTAL_CODE, PHONE_NUMBER, AVERAGE_RATING;\n');
+        const result = await connection.execute(
+           "SELECT rl.Location_Name,\n" +
+            "       rl.STREET_ADDRESS,\n" +
+            "       rl.CITY,\n" +
+            "       rl.PROVINCE_OR_STATE,\n" +
+            "       rl.POSTAL_CODE,\n" +
+            "       rl.PHONE_NUMBER,\n" +
+            "       r.Cuisine_Type,\n" +
+            "       r.Average_Price,  -- Added Average_Price\n" +
+            "       rl.AVERAGE_RATING,\n" +
+            "       COUNT(*) AS Total_Rows\n" +
+            "FROM Restaurant_Location_Has rl\n" +
+            "JOIN Restaurant r ON rl.Restaurant_Id = r.Id\n" +
+            "GROUP BY rl.Location_Name,\n" +
+            "         rl.STREET_ADDRESS,\n" +
+            "         rl.CITY,\n" +
+            "         rl.PROVINCE_OR_STATE,\n" +
+            "         rl.POSTAL_CODE,\n" +
+            "         rl.PHONE_NUMBER,\n" +
+            "         r.Cuisine_Type,\n" +
+            "         r.Average_Price,\n" +
+            "         rl.AVERAGE_RATING\n",
+            []  // Empty array????
+        );
         console.log("after connecting")
-        return result.rows;
+        return result;
+
     }).catch(() => {
         return [];
     });

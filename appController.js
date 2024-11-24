@@ -98,6 +98,17 @@ router.get("/find-restaurants", async (req, res) => {
     }
 });
 
+router.get("/fetch-all-restaurants", async (req, res) => {
+
+    const initiateResult = await appService.fetchAllRestaurantsFromDb();
+    console.log(initiateResult)
+    if (initiateResult) {
+        res.json({ success: true, result: initiateResult});
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
 router.post("/update-review-content", async (req, res) => {
     const { oldContent, newContent, userName, restLong, restLat} = req.body;
     const updateResult = await appService.updateReviewContent(oldContent, newContent, userName, restLong, restLat);

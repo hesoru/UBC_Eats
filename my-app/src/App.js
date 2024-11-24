@@ -3,6 +3,7 @@ import './App.css';
 import React, { useState } from 'react';
 import './index.css';
 import { checkDbConnection } from './scripts';
+import RestaurantsContainer from "./containers/RestaurantsContainer";
 
 function App() {
     const [dbStatus, setDbStatus] = useState('');
@@ -59,7 +60,7 @@ function App() {
                 <button type="submit">Find Restaurant</button>
             </form>
 
-            {restaurantInfo && <p>{restaurantInfo}</p>}
+            {restaurantInfo && <p>{restaurantInfo}</p>}<RestaurantsContainer />
         </div>
     );
 }
