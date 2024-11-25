@@ -40,18 +40,29 @@ export async function fetchAllRestaurants() {
 }
 
 export async function fetchUsersReviews(userName) {
-    const response = await fetch('http://localhost:50001/update-user-review', {
-        method: 'GET',
-        body: JSON.stringify({
-            userName: userName,
-        })
+    const response = await fetch(`http://localhost:50001/fetch-user-reviews${userName}`, {
+        method: 'GET'
     });
 
-    if (!response.ok) {
+
+    if (!response.success) {
         throw new Error(`Request failed with status ${response.status}: ${response.statusText}`);
     }
     return await response.json();
 }
+
+export async function fetchReviewContent(reviewID) {
+        const response = await fetch(`http://localhost:50001/fetch-user-review/${reviewID}`, {
+            method: 'GET'
+        });
+
+           if (!response.success) {
+              throw new Error(`Request failed with status ${response.status}: ${response.statusText}`);
+           }
+       return await response.json();
+}
+
+
 export async function updateUserReview(newContent, oldContent, columnName, reviewID) {
 
 /// Have FRONT END ENSURE IF RATING IS BEING CHANGED THAT ONLY THE NUMBER VALUE IS BETWEEN 0 -5

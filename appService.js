@@ -409,7 +409,7 @@ async function findRestaurant(restaurantName) {
 async function fetchAUserReview(reviewID) {
     return await withOracleDB(async (connection) => {
         console.log("before connecting")
-        const result = await connection.execute('SELECT Id FROM REVIEW_FOR_MAKES WHERE Id=:reviewID', [reviewID]);
+        const result = await connection.execute('SELECT Id, CONTENT, RATING, RECORD_DATE, RECORD_TIME FROM REVIEW_FOR_MAKES WHERE Id=:reviewID', [reviewID]);
         console.log("after connecting")
         return result.rows;
 
@@ -419,8 +419,9 @@ async function fetchAUserReview(reviewID) {
 }
 async function fetchAllReviewsFromUser(userName) {
     return await withOracleDB(async (connection) => {
+
         console.log("before connecting")
-        const result = await connection.execute('SELECT Id FROM REVIEW_FOR_MAKES WHERE USERNAME=:userName', [userName]);
+        const result = await connection.execute('SELECT ID FROM REVIEW_FOR_MAKES WHERE USERNAME=:userName', [userName]);
         console.log("after connecting")
         return result.rows;
 

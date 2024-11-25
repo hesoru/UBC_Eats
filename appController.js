@@ -131,15 +131,15 @@ router.post('/addUserLocation', async (req, res) => {
     }
 });
 
-// router.post("/update-review-content", async (req, res) => {
-//     const { oldContent, newContent, columnName, reviewID} = req.body;
-//     const updateResult = await appService.updateReviewContent(oldContent, newContent, columnName, reviewID);
-//     if (updateResult) {
-//         res.json({ success: true });
-//     } else {
-//         res.status(500).json({ success: false });
-//     }
-// });
+router.post("/update-user-review", async (req, res) => {
+    const { oldContent, newContent, columnName, reviewID} = req.body;
+    const updateResult = await appService.updateReviewContent(oldContent, newContent, columnName, reviewID);
+    if (updateResult) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
 
 
 router.get("/find-restaurants", async (req, res) => {
@@ -153,8 +153,8 @@ router.get("/find-restaurants", async (req, res) => {
         res.status(500).json({ success: false });
     }
 });
-router.get("/fetch-user-review", async (req, res) => {
-    const reviewID = req.query.reviewID;
+router.get("/fetch-user-review/:reviewID", async (req, res) => {
+    const reviewID = req.params.reviewID;
     const initiateResult = await appService.fetchAUserReview(reviewID);
     console.log(initiateResult)
     if (initiateResult) {
@@ -164,8 +164,9 @@ router.get("/fetch-user-review", async (req, res) => {
     }
 });
 
-router.get("/fetch-user-reviews", async (req, res) => {
-    const userName = req.query.userName;
+router.get("/fetch-user-reviews/:userName", async (req, res) => {
+    const userName  = req.params.userName;
+    console.log(userName)
     const initiateResult = await appService.fetchAllReviewsFromUser(userName);
     console.log(initiateResult)
     if (initiateResult) {

@@ -5,8 +5,10 @@ import './index.css';
 import { checkDbConnection } from './scripts';
 import RestaurantsContainer from "./containers/RestaurantsContainer";
 import SignUp from "../src/components/signup";
+import UserReview from "./containers/UserReview";
 
 function App() {
+    const currentUser = "oreo"
     const [dbStatus, setDbStatus] = useState('');
     const [demotableData, setDemotableData] = useState([]);
     const [usertableData, setUsertableData] = useState([]);
@@ -62,13 +64,16 @@ function App() {
             {/*</form>*/}
 
             {/*{restaurantInfo && <p>{restaurantInfo}</p>}<RestaurantsContainer />*/}
-            <div className={"SignupPage"}>
-                <SignUp></SignUp>
+            {/*<div className={"SignupPage"}>*/}
+            {/*    <SignUp></SignUp>*/}
+            {/*</div>*/}
+            <div className={"UserReview"}>
+                <UserReview userName={currentUser}/>
             </div>
 
-</div>
-)
-    ;
+        </div>
+    )
+        ;
 }
 
 export default App;

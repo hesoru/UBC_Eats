@@ -10,16 +10,16 @@ DROP TABLE Contains_Allergen CASCADE CONSTRAINTS;
 DROP TABLE Contains_Diet CASCADE CONSTRAINTS;
 DROP TABLE Allergen CASCADE CONSTRAINTS;
 DROP TABLE Diet CASCADE CONSTRAINTS;
+DROP TABLE Dietary_Profile_Can_Save CASCADE CONSTRAINTS;
 DROP TABLE Stores_Allergen CASCADE CONSTRAINTS;
 DROP TABLE Stores_Diet CASCADE CONSTRAINTS;
-DROP TABLE Dietary_Profile_Can_Save CASCADE CONSTRAINTS;
 
 
 CREATE TABLE User_Location (
                                Longitude NUMBER(9, 6),
                                Latitude NUMBER(9, 6),
-                               Record_Date DATE DEFAULT SYSDATE,
-                               Record_Time TIMESTAMP DEFAULT SYSTIMESTAMP,
+                               Record_Date DATE,
+                               Record_Time TIMESTAMP,
                                PRIMARY KEY (Longitude, Latitude)
 );
 
@@ -121,7 +121,6 @@ CREATE TABLE Contains_Diet (
                                CONSTRAINT fk_diet FOREIGN KEY (Diet_Type) REFERENCES Diet(Diet_Type),
                                CONSTRAINT fk_menu_diet FOREIGN KEY (Menu_Item_Name, Menu_Id) REFERENCES Menu_Item_On(Menu_Name, Menu_Id)
 );
-
 
 CREATE TABLE Dietary_Profile_Can_Save (
                                           Profile_Name VARCHAR2(30),
