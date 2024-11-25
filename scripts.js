@@ -21,14 +21,6 @@ async function checkDbConnection() {
     const response = await fetch('/check-db-connection', {
         method: "GET"
     });
-    return await response.text();
-}
-
-export async function fetchAllRestaurants() {
-    try {
-        const response = await fetch('http://localhost:50001/fetch-all-restaurants', {
-            method: "GET"
-        });
 
     // Hide the loading GIF once the response is received.
     loadingGifElem.style.display = 'none';
@@ -252,7 +244,6 @@ async function findRestaurantInfo(event) {
     const response = await fetch(url, {
         method: 'GET'
     });
-
     const responseData = await response.json();
     console.log(responseData)
     const messageElement = document.getElementById('restaurantInfoMsg');
@@ -263,16 +254,7 @@ async function findRestaurantInfo(event) {
     } else {
         messageElement.textContent = "Restaurant not found";
     }
-
-    demotableContent.forEach(user => {
-        const row = tableBody.insertRow();
-        user.forEach((field, index) => {
-            const cell = row.insertCell(index);
-            cell.textContent = field;
-        });
-    });
 }
-
 
 //TODO
 async function updateUserReview(event) {
@@ -322,7 +304,7 @@ window.onload = function() {
     document.getElementById("updataNameDemotable").addEventListener("submit", updateNameDemotable);
     document.getElementById("countDemotable").addEventListener("click", countDemotable);
     document.getElementById("findRestaurantInfo").addEventListener("submit", findRestaurantInfo);
-
+    
 };
 
 // General function to refresh the displayed table data. 
