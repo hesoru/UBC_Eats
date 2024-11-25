@@ -15,7 +15,7 @@
 
 // This function checks the database connection and updates its status on the frontend.
 export async function checkDbConnection() {
-    const response = await fetch('http://localhost:50013/check-db-connection', {
+    const response = await fetch('http://localhost:50001/check-db-connection', {
         method: "GET"
     });
     return await response.text();

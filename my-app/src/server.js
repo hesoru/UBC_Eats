@@ -4,6 +4,16 @@ require('dotenv').config();
 const cors = require('cors');
 const path = require('path');
 
+<<<<<<< HEAD:my-app/src/server.js
+// Load environment variables from .env file
+// Ensure your .env file has the required database credentials.
+const loadEnvFile = require('../utils/envUtil');
+// import express from 'express';
+// import loadEnvFile from './utils/envUtil.js';
+// import appController from './appController.js'; 
+const envVariables = loadEnvFile('../env');
+=======
+>>>>>>> hedie:server.js
 const app = express();
 
 
