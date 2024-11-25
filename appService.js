@@ -182,6 +182,20 @@ async function insertDemotable(id, name) {
     });
 }
 
+async function addUserProfile(first_name, last_name, email, username) {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `INSERT INTO User_Has (first_name, last_name, email, username) VALUES (:first_name, :last_name, :email, :username)`,
+            [first_name, last_name, email, username],
+            { autoCommit: true }
+        );
+
+        return result.rowsAffected && result.rowsAffected > 0;
+    }).catch(() => {
+        return false;
+    });
+}
+
 
 async function insertUserTable(Username, First_Name, Last_Name, Email, User_Longitude, User_Latitude) {
     return await withOracleDB(async (connection) => {
@@ -403,5 +417,6 @@ module.exports = {
     addItemToDietaryProfile,
     removeItemFromDietaryProfile,
     deleteReviewContent,
-    fetchAllRestaurantsFromDb
+    fetchAllRestaurantsFromDb,
+    addUserProfile
 };

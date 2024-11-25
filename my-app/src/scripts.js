@@ -15,7 +15,7 @@
 
 // This function checks the database connection and updates its status on the frontend.
 export async function checkDbConnection() {
-    const response = await fetch('http://localhost:50001/check-db-connection', {
+    const response = await fetch('http://localhost:50013/check-db-connection', {
         method: "GET"
     });
     return await response.text();
@@ -38,38 +38,40 @@ export async function fetchAllRestaurants() {
         return [];
     }
 }
-export async function updateUserReview(event) {
-    event.preventDefault();
-/// Have FRONT END ENSURE IF RATING IS BEING CHANGED THAT ONLY THE NUMBER VALUE IS BETWEEN 0 -5
-/// AND CONTENT CHAR LENGTH < 200 char
-    const oldContent = document.getElementById('....').value;
-    const newContent = document.getElementById('.....').value;
 
-    const response = await fetch('/update-review-content', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            newContent: newContent,
-            oldContent: oldContent,
-            columnName: columnName,
-            username: userName,
-            restLong: restLong,
-            restLat: restLat
-        })
-    });
-
-    const responseData = await response.json();
-    const messageElement = document.getElementById('updateNameResultMsg');
-
-    if (responseData.success) {
-        messageElement.textContent = "Name updated successfully!";
-        fetchTableData();
-    } else {
-        messageElement.textContent = "Error updating name!";
-    }
-}
+// ORE - UNFINISHED FN
+// export async function updateUserReview(event) {
+//     event.preventDefault();
+// /// Have FRONT END ENSURE IF RATING IS BEING CHANGED THAT ONLY THE NUMBER VALUE IS BETWEEN 0 -5
+// /// AND CONTENT CHAR LENGTH < 200 char
+//     const oldContent = document.getElementById('....').value;
+//     const newContent = document.getElementById('.....').value;
+//
+//     const response = await fetch('/update-review-content', {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/json'
+//         },
+//         body: JSON.stringify({
+//             newContent: newContent,
+//             oldContent: oldContent,
+//             columnName: columnName,
+//             username: userName,
+//             restLong: restLong,
+//             restLat: restLat
+//         })
+//     });
+//
+//     const responseData = await response.json();
+//     const messageElement = document.getElementById('updateNameResultMsg');
+//
+//     if (responseData.success) {
+//         messageElement.textContent = "Name updated successfully!";
+//         fetchTableData();
+//     } else {
+//         messageElement.textContent = "Error updating name!";
+//     }
+// }
 
 // List restaurant locations based on given restaurant
 export async function findRestaurantInfo(event) {

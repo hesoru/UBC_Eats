@@ -86,6 +86,19 @@ router.post("/initiate-demotable", async (req, res) => {
     }
 });
 
+
+// ACTUAL FNS
+router.post("/signup", async (req, res) => {
+    const {first_name, last_name, email, username} = req.body;
+    const updateResult = await appService.addUserProfile(first_name, last_name, email, username)
+    if (updateResult) {
+        res.json({success: true});
+    } else {
+        res.status(500).json({success: false});
+    }
+});
+
+
 router.get("/find-restaurants", async (req, res) => {
     console.log("entered endpoint")
     const restaurantName = req.query.restaurantName;
