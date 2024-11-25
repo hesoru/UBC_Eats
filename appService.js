@@ -1,7 +1,7 @@
 const oracledb = require('oracledb');
 //import oracledb from "oracledb"
-// const loadEnvFile = require('./utils/envUtil');
-// const envVariables = loadEnvFile('./.env');
+//const loadEnvFile = require('./utils/envUtil');
+//const envVariables = loadEnvFile('./.env');
 require('dotenv').config();
 
 
@@ -184,10 +184,13 @@ async function insertDemotable(id, name) {
 
 async function addUserProfile(username, first_name, last_name, email, location) {
     return await withOracleDB(async (connection) => {
+
+        const longitude = location.lng;
+        const latitude = location.lat;
         const result = await connection.execute(
             `INSERT INTO User_Has (Username, First_Name, Last_Name, Email, User_Longitude, User_Latitude)
-             VALUES (:username, :first_name, :last_name, :email, :location.lng, :location.lat)`,
-            [username, first_name, last_name, email, location.lng, location.lat],
+             VALUES (:username, :first_name, :last_name, :email, :longitude, :latitude)`,
+            [username, first_name, last_name, email, longitude, latitude],
             { autoCommit: true }
         );
         console.log(result);
@@ -199,12 +202,34 @@ async function addUserProfile(username, first_name, last_name, email, location) 
     });
 }
 
+async function addUserLocation(location) {
+    return await withOracleDB(async (connection) => {
+        const longitude = location.lng;
+        const latitude = location.lat;
+        const result = await connection.execute(
+            `INSERT INTO User_Location (LONGITUDE, LATITUDE)
+             SELECT :longitude, :latitude
+             FROM dual
+             WHERE NOT EXISTS (
+                 SELECT 1
+                 FROM User_Location ul
+                 WHERE ul.LONGITUDE = :longitude
+                   AND ul.LATITUDE = :latitude
+             )`,
+            [longitude, latitude],
+            { autoCommit: true }
+        );
+        console.log(result);
+        console.log("This is my result");
 
-// async function insertUserTable(Username, First_Name, Last_Name, Email, User_Longitude, User_Latitude) {
+        return true;
+    })
+}
+// async function addUserProfile(first_name, last_name, email, username) {
 //     return await withOracleDB(async (connection) => {
 //         const result = await connection.execute(
-//             `INSERT INTO User_Has (Username, First_Name, Last_Name, Email, User_Longitude, User_Latitude) VALUES (:Username, :First_Name, :Last_Name, :Email, :User_Longitude, :User_Latitude)`,
-//             [Username, First_Name, Last_Name, Email, User_Longitude, User_Latitude],
+//             `INSERT INTO User_Has (USERNAME, FIRST_NAME, LAST_NAME, EMAIL, USER_LONGITUDE, USER_LATITUDE) VALUES (:first_name, :last_name, :email, :username)`,
+//             [first_name, last_name, email, username],
 //             { autoCommit: true }
 //         );
 //
@@ -213,6 +238,21 @@ async function addUserProfile(username, first_name, last_name, email, location) 
 //         return false;
 //     });
 // }
+//
+
+async function insertUserTable(Username, First_Name, Last_Name, Email, User_Longitude, User_Latitude) {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `INSERT INTO User_Has (Username, First_Name, Last_Name, Email, User_Longitude, User_Latitude) VALUES (:Username, :First_Name, :Last_Name, :Email, :User_Longitude, :User_Latitude)`,
+            [Username, First_Name, Last_Name, Email, User_Longitude, User_Latitude],
+            { autoCommit: true }
+        );
+
+        return result.rowsAffected && result.rowsAffected > 0;
+    }).catch(() => {
+        return false;
+    });
+}
 
 async function updateNameDemotable(oldName, newName) {
     return await withOracleDB(async (connection) => {
@@ -441,7 +481,8 @@ module.exports = {
     removeItemFromDietaryProfile,
     deleteReviewContent,
     fetchAllRestaurantsFromDb,
+    addUserProfile,
     fetchAUserReview,
     fetchAllReviewsFromUser,
-    addUserProfile
+    addUserLocation
 };

@@ -86,23 +86,43 @@ const SignUp = () => {
         }
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
+    const submitUserLocation = async (location) => {
         try {
-            console.log({ ...formData });
+            console.log({ ...formData, location});
             console.log("this is my form data");
-            const response = await fetch('http://localhost:50001/addUserProfile', {
+            const response = await fetch('http://localhost:50001/addUserLocation', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: { ...formData, location }
+                body: JSON.stringify({ location })
             });
 
             const data = await response.json();
             if (response.success) {
-                setMessage('User signed up successfully with location!');
+                setMessage('User succesfully added location!');
             } else {
                 setMessage(data.message || 'An error occurred.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            setMessage('An error occurred.');
+        }
+    }
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        try {
+           await submitUserLocation(location)
+            const response = await fetch('http://localhost:50001/addUserProfile', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ...formData, location })
+            });
+
+            const data = await response.json();
+            if (response.success) {
+                setMessage('User signed up successfully!');
+            } else {
+                setMessage("Please enter a different username or email");
             }
         } catch (error) {
             console.error('Error:', error);

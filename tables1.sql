@@ -18,8 +18,8 @@ DROP TABLE Dietary_Profile_Can_Save CASCADE CONSTRAINTS;
 CREATE TABLE User_Location (
                                Longitude NUMBER(9, 6),
                                Latitude NUMBER(9, 6),
-                               Record_Date DATE,
-                               Record_Time TIMESTAMP,
+                               Record_Date DATE DEFAULT SYSDATE,
+                               Record_Time TIMESTAMP DEFAULT SYSTIMESTAMP,
                                PRIMARY KEY (Longitude, Latitude)
 );
 
@@ -122,8 +122,7 @@ CREATE TABLE Contains_Diet (
                                CONSTRAINT fk_menu_diet FOREIGN KEY (Menu_Item_Name, Menu_Id) REFERENCES Menu_Item_On(Menu_Name, Menu_Id)
 );
 
-<<<<<<< HEAD
-=======
+
 CREATE TABLE Dietary_Profile_Can_Save (
                                           Profile_Name VARCHAR2(30),
                                           Username VARCHAR2(30) NOT NULL,
@@ -131,7 +130,6 @@ CREATE TABLE Dietary_Profile_Can_Save (
                                           CONSTRAINT fk_user_profile FOREIGN KEY (Username) REFERENCES User_Has(Username)
 );
 
->>>>>>> hedie
 CREATE TABLE Stores_Diet (
                              Dietary_Profile_Name VARCHAR2(30),
                              User_Username VARCHAR2(30) NOT NULL,

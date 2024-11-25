@@ -1,9 +1,11 @@
 const express = require('express');
 // import express from "express";
 // import appService from './appService.js'; // Add .js extension if necessary
+
 const appService = require('./appService');
 
 const router = express.Router();
+
 
 
 // ----------------------------------------------------------
@@ -104,9 +106,24 @@ router.post("/initiate-demotable", async (req, res) => {
 // });
 
 router.post('/addUserProfile', async (req, res) => {
-    const { username, first_name, last_name, email, location } = req.body;
-    console.log(req.body);
-    const updateResult = await appService.addUserProfile(username, first_name, last_name, email, location);
+    try {
+        const { username, first_name, last_name, email, location } = req.body;
+        console.log("username:", username);
+        const updateResult = await appService.addUserProfile(username, first_name, last_name, email, location);
+        if (updateResult) {
+            res.json({ success: true });
+        } else {
+            res.status(400).json({ success: false , message: "Username or email already exists"});
+        }
+    } catch (error) {
+        next(error);
+    }
+
+});
+
+router.post('/addUserLocation', async (req, res) => {
+    const { location } = req.body;
+    const updateResult = await appService.addUserLocation( location);
     if (updateResult) {
         res.json({ success: true });
     } else {
