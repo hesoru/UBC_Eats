@@ -1,7 +1,7 @@
 const oracledb = require('oracledb');
 //import oracledb from "oracledb"
-const loadEnvFile = require('./utils/envUtil');
-//const envVariables = loadEnvFile('./.env');
+// const loadEnvFile = require('./utils/envUtil');
+// const envVariables = loadEnvFile('./.env');
 require('dotenv').config();
 
 
@@ -182,13 +182,16 @@ async function insertDemotable(id, name) {
     });
 }
 
-async function addUserProfile(first_name, last_name, email, username) {
+async function addUserProfile(username, first_name, last_name, email, location) {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
-            `INSERT INTO User_Has (first_name, last_name, email, username) VALUES (:first_name, :last_name, :email, :username)`,
-            [first_name, last_name, email, username],
+            `INSERT INTO User_Has (Username, First_Name, Last_Name, Email, User_Longitude, User_Latitude)
+             VALUES (:username, :first_name, :last_name, :email, :location.lng, :location.lat)`,
+            [username, first_name, last_name, email, location.lng, location.lat],
             { autoCommit: true }
         );
+        console.log(result);
+        console.log("This is my result");
 
         return result.rowsAffected && result.rowsAffected > 0;
     }).catch(() => {
@@ -197,19 +200,19 @@ async function addUserProfile(first_name, last_name, email, username) {
 }
 
 
-async function insertUserTable(Username, First_Name, Last_Name, Email, User_Longitude, User_Latitude) {
-    return await withOracleDB(async (connection) => {
-        const result = await connection.execute(
-            `INSERT INTO User_Has (Username, First_Name, Last_Name, Email, User_Longitude, User_Latitude) VALUES (:Username, :First_Name, :Last_Name, :Email, :User_Longitude, :User_Latitude)`,
-            [Username, First_Name, Last_Name, Email, User_Longitude, User_Latitude],
-            { autoCommit: true }
-        );
-
-        return result.rowsAffected && result.rowsAffected > 0;
-    }).catch(() => {
-        return false;
-    });
-}
+// async function insertUserTable(Username, First_Name, Last_Name, Email, User_Longitude, User_Latitude) {
+//     return await withOracleDB(async (connection) => {
+//         const result = await connection.execute(
+//             `INSERT INTO User_Has (Username, First_Name, Last_Name, Email, User_Longitude, User_Latitude) VALUES (:Username, :First_Name, :Last_Name, :Email, :User_Longitude, :User_Latitude)`,
+//             [Username, First_Name, Last_Name, Email, User_Longitude, User_Latitude],
+//             { autoCommit: true }
+//         );
+//
+//         return result.rowsAffected && result.rowsAffected > 0;
+//     }).catch(() => {
+//         return false;
+//     });
+// }
 
 async function updateNameDemotable(oldName, newName) {
     return await withOracleDB(async (connection) => {

@@ -87,16 +87,42 @@ router.post("/initiate-demotable", async (req, res) => {
 });
 
 
-// ACTUAL FNS
-router.post("/signup", async (req, res) => {
-    const {first_name, last_name, email, username} = req.body;
-    const updateResult = await appService.addUserProfile(first_name, last_name, email, username)
+// // ACTUAL FNS
+// router.post("/addUserProfile", async (req, res) => {
+//     try {
+//         const { first_name, last_name, email, username } = req.body;  // Destructure the body
+//         const success = await appService.addUserProfile(first_name, last_name, email, username);
+//         if (success) {
+//             res.json({ success: true, message: 'Profile added successfully' });
+//         } else {
+//             res.status(400).json({ success: false, message: 'Failed to add profile' });
+//         }
+//     } catch (error) {
+//         console.error('Server error:', error);
+//         res.status(500).json({ success: false, message: 'Server error occurred' });
+//     }
+// });
+
+router.post('/addUserProfile', async (req, res) => {
+    const { username, first_name, last_name, email, location } = req.body;
+    console.log(req.body);
+    const updateResult = await appService.addUserProfile(username, first_name, last_name, email, location);
     if (updateResult) {
-        res.json({success: true});
+        res.json({ success: true });
     } else {
-        res.status(500).json({success: false});
+        res.status(500).json({ success: false });
     }
 });
+
+// router.post("/update-review-content", async (req, res) => {
+//     const { oldContent, newContent, columnName, reviewID} = req.body;
+//     const updateResult = await appService.updateReviewContent(oldContent, newContent, columnName, reviewID);
+//     if (updateResult) {
+//         res.json({ success: true });
+//     } else {
+//         res.status(500).json({ success: false });
+//     }
+// });
 
 
 router.get("/find-restaurants", async (req, res) => {

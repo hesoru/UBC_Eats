@@ -84,6 +84,36 @@ export async function updateUserReview(newContent, oldContent, columnName, revie
     }
 }
 
+
+// export async function addUserProfile(username, first_name, last_name, email) {
+//
+//     try {
+//         const response = await fetch(
+//             `http://localhost:50013/addUserProfile`,
+//             {
+//                 method: 'POST',
+//                 headers: {
+//                     'Content-Type': 'application/json'
+//                 },
+//                 body: JSON.stringify({
+//                     username,
+//                     first_name,
+//                     last_name,
+//                     email
+//                 }),
+//             }
+//         );
+//         if (!response.success) {
+//             throw new Error(`Request failed with status ${response.status}: ${response.statusText}`);
+//         }
+//
+//         return await response.json();
+//     } catch (error) {
+//         console.error('Error updating user profile:', error);
+//         throw error;
+//     }
+// }
+
 // List restaurant locations based on given restaurant
 export async function findRestaurantInfo(restaurantNameValue) {
     const url =`http://localhost:50013/find-restaurants?restaurantName=${encodeURIComponent(restaurantNameValue)}`;
