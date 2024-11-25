@@ -237,7 +237,7 @@ async function countDemotable() {
     });
 }
 
-async function updateReviewContent(oldContent, newContent, columnName, userName, restLong, restLat) {
+async function updateReviewContent(oldContent, newContent, columnName, reviewID) {
     // BE SURE TO ONLY BE ABLE TO UPDATE THE FOLOWING COLUMNS: Content (VARCHAR2),
     // Rating (0 - 5)
     return await withOracleDB(async (connection) => {
@@ -254,10 +254,8 @@ async function updateReviewContent(oldContent, newContent, columnName, userName,
             Record_Time = SYSTIMESTAMP 
             where 
             ${columnName}=:oldContent 
-            AND Username=:userName 
-            AND RESTAURANT_LONGITUDE=:restLong 
-            AND Restaurant_Latitude=:restLat`,
-            [newContent, oldContent, userName, restLong, restLat],
+            AND Id=:reviewID `,
+            [newContent, oldContent, reviewID],
             { autoCommit: true }
         );
 
@@ -365,6 +363,28 @@ async function findRestaurant(restaurantName) {
     });
 }
 
+async function fetchAUserReview(reviewID) {
+    return await withOracleDB(async (connection) => {
+        console.log("before connecting")
+        const result = await connection.execute('SELECT Id FROM REVIEW_FOR_MAKES WHERE Id=:reviewID', [reviewID]);
+        console.log("after connecting")
+        return result.rows;
+
+    }).catch(() => {
+        return [];
+    });
+}
+async function fetchAllReviewsFromUser(userName) {
+    return await withOracleDB(async (connection) => {
+        console.log("before connecting")
+        const result = await connection.execute('SELECT Id FROM REVIEW_FOR_MAKES WHERE USERNAME=:userName', [userName]);
+        console.log("after connecting")
+        return result.rows;
+
+    }).catch(() => {
+        return [];
+    });
+}
 async function fetchAllRestaurantsFromDb() {
     return await withOracleDB(async (connection) => {
         console.log("before connecting")
@@ -418,5 +438,7 @@ module.exports = {
     removeItemFromDietaryProfile,
     deleteReviewContent,
     fetchAllRestaurantsFromDb,
+    fetchAUserReview,
+    fetchAllReviewsFromUser,
     addUserProfile
 };
