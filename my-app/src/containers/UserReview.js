@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import { Box, Typography, Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 
-const UserReviews = ({ initialReviews }) => {
-    const [reviews, setReviews] = useState(initialReviews);
+const UserReviews = ({ initialReviews: userName }) => {
+    const [reviews, setReviews] = useState(userName);
     const [editDialogOpen, setEditDialogOpen] = useState(false);
     const [currentReview, setCurrentReview] = useState(null);
     const [editedComment, setEditedComment] = useState("");
 
+    const retreiveReviewIDs = (userName) => {
+        const revIDs = await fetch("")
+    }
     const handleEditOpen = (review) => {
         setCurrentReview(review);
         setEditedComment(review.comment);
