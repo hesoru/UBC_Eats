@@ -408,15 +408,63 @@ async function findRestaurant(restaurantName) {
 
 async function fetchAUserReview(reviewID) {
     return await withOracleDB(async (connection) => {
-        console.log("before connecting")
-        const result = await connection.execute('SELECT Id, CONTENT, RATING, RECORD_DATE, RECORD_TIME FROM REVIEW_FOR_MAKES WHERE Id=:reviewID', [reviewID]);
-        console.log("after connecting")
-        return result.rows;
+        console.log("Fetching review and location details for reviewID:", reviewID);
 
-    }).catch(() => {
+        const query = `
+            SELECT 
+                rl.Location_Name,
+                rfm.Content AS Review_Content,
+                rfm.Rating,
+                rfm.Record_Date,
+                rfm.Record_Time
+            FROM 
+                Review_For_Makes rfm
+            JOIN 
+                Restaurant_Location_Has rl
+            ON 
+                rfm.Restaurant_Longitude = rl.Longitude 
+                AND rfm.Restaurant_Latitude = rl.Latitude
+            WHERE 
+                rfm.Id = :reviewID
+        `;
+
+        const result = await connection.execute(query, [reviewID]);
+        console.log("Query executed successfully for reviewID:", reviewID);
+
+        // Return rows directly or map into structured format if needed
+        return result.rows;
+    }).catch((err) => {
+        console.error("Error fetching review for reviewID:", reviewID, err);
         return [];
     });
 }
+
+
+// async function fetchAUserReview(reviewID) {
+//     return await withOracleDB(async (connection) => {
+//         console.log("before connecting")
+//         const result = await connection.execute('SELECT \n' +
+//             '    rl.Location_Name,\n' +
+//             '    rfm.Content AS Review_Content,\n' +
+//             '    rfm.Rating,\n' +
+//             '    rfm.Record_Date,\n' +
+//             '    rfm.Record_Time\n' +
+//             'FROM \n' +
+//             '    Review_For_Makes rfm\n' +
+//             'JOIN \n' +
+//             '    Restaurant_Location_Has rl\n' +
+//             'ON \n' +
+//             '    rfm.Restaurant_Longitude = rl.Longitude \n' +
+//             '    AND rfm.Restaurant_Latitude = rl.Latitude\n' +
+//             'WHERE \n' +
+//             '    rfm.Id = :reviewID;\n, [reviewID]);
+//         console.log("after connecting")
+//         return result.rows;
+//
+//     }).catch(() => {
+//         return [];
+//     });
+// }
 async function fetchAllReviewsFromUser(userName) {
     return await withOracleDB(async (connection) => {
 
