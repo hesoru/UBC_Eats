@@ -12,21 +12,36 @@ const UserReviews = ({ userName, initialReviews }) => {
         const fetchReviews = async () => {
             try {
                 const response = await fetchUsersReviews(userName);
-                console.log(response)
                 const revIDs = response.result.map(item => Number(item[0]));
-                console.log(revIDs)
+
                 const fetchedReviews = await Promise.all(
-                    revIDs.map((id) => fetchReviewContent(id))
+                    revIDs.map(async (id) => {
+                        const reviewResponse = await fetchReviewContent(id);
+                        if (reviewResponse.success) {
+                            const [restaurantName, comment, rating, createdAt, updatedAt] = reviewResponse.result[0];
+                            return {
+                                id, // Assuming the review ID
+                                restaurantName,
+                                comment,
+                                rating,
+                                createdAt,
+                                updatedAt,
+                            };
+                        } else {
+                            console.error(`Failed to fetch review with ID ${id}`);
+                            return null;
+                        }
+                    })
                 );
-                setReviews(fetchedReviews); // Update reviews state
+
+                setReviews(fetchedReviews.filter((review) => review !== null)); // Filter out failed requests
             } catch (error) {
                 console.error("Error fetching reviews:", error);
             }
         };
 
         fetchReviews(); // Trigger fetching
-    }, [userName]); // Dependency ensures useEffect runs when `userName` updates
-
+    }, [userName]);
 
     const handleEditOpen = (review) => {
         setCurrentReview(review);
@@ -58,7 +73,9 @@ const UserReviews = ({ userName, initialReviews }) => {
             <h2 style={styles.heading}>Your Reviews</h2>
             {reviews.length > 0 ? (
                 reviews.map((review) => (
-                    <div key={review.id} style={styles.reviewCard}>
+
+                    <div
+                        key={review.id} style={styles.reviewCard}>
                         <h3 style={styles.restaurantName}>Restaurant: {review.restaurantName}</h3>
                         <p style={styles.comment}>Review: {review.comment}</p>
                         <p style={styles.rating}>Rating: {review.rating} / 5</p>
