@@ -64,12 +64,12 @@ function App() {
             {/*</form>*/}
 
             {/*{restaurantInfo && <p>{restaurantInfo}</p>}<RestaurantsContainer />*/}
-            {/*<div className={"SignupPage"}>*/}
-            {/*    <SignUp></SignUp>*/}
-            {/*</div>*/}
-            <div className={"UserReview"}>
-                <UserReview userName={currentUser}/>
+            <div className={"SignupPage"}>
+                <SignUp></SignUp>
             </div>
+            {/*<div className={"UserReview"}>*/}
+            {/*    <UserReview userName={currentUser}/>*/}
+            {/*</div>*/}
 
         </div>
     )

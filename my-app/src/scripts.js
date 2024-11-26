@@ -40,12 +40,12 @@ export async function fetchAllRestaurants() {
 }
 
 export async function fetchUsersReviews(userName) {
-    const response = await fetch(`http://localhost:50001/fetch-user-reviews${userName}`, {
+    const response = await fetch(`http://localhost:50001/fetch-user-reviews/${userName}`, {
         method: 'GET'
     });
 
 
-    if (!response.success) {
+    if (!response.ok) {
         throw new Error(`Request failed with status ${response.status}: ${response.statusText}`);
     }
     return await response.json();
@@ -56,14 +56,14 @@ export async function fetchReviewContent(reviewID) {
             method: 'GET'
         });
 
-           if (!response.success) {
+           if (!response.ok) {
               throw new Error(`Request failed with status ${response.status}: ${response.statusText}`);
            }
        return await response.json();
 }
 
 
-export async function updateUserReview(newContent, oldContent, columnName, reviewID) {
+export async function updateUserReview(newContent, columnName, reviewID) {
 
 /// Have FRONT END ENSURE IF RATING IS BEING CHANGED THAT ONLY THE NUMBER VALUE IS BETWEEN 0 -5
 /// AND CONTENT CHAR LENGTH < 200 char
@@ -78,7 +78,6 @@ export async function updateUserReview(newContent, oldContent, columnName, revie
                 },
                 body: JSON.stringify({
                     newContent,
-                    oldContent,
                     columnName,
                     reviewID,
                 }),

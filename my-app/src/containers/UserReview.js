@@ -11,7 +11,10 @@ const UserReviews = ({ userName, initialReviews }) => {
     useEffect(() => {
         const fetchReviews = async () => {
             try {
-                const revIDs = await fetchUsersReviews(userName);
+                const response = await fetchUsersReviews(userName);
+                console.log(response)
+                const revIDs = response.result.map(item => Number(item[0]));
+                console.log(revIDs)
                 const fetchedReviews = await Promise.all(
                     revIDs.map((id) => fetchReviewContent(id))
                 );
