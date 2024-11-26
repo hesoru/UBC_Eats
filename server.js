@@ -4,6 +4,18 @@ require('dotenv').config();
 const cors = require('cors');
 const path = require('path');
 
+
+
+// <<<<<<< HEAD:my-app/src/server.js
+// // Load environment variables from .env file
+// // Ensure your .env file has the required database credentials.
+// const loadEnvFile = require('../utils/envUtil');
+// // import express from 'express';
+// // import loadEnvFile from './utils/envUtil.js';
+// // import appController from './appController.js';
+// const envVariables = loadEnvFile('../env');
+// =======
+// >>>>>>> hedie:server.js
 const app = express();
 
 
@@ -15,6 +27,7 @@ const PORT = process.env.PORT || 65534;
 app.use(express.json());             // Parse incoming JSON payloads
 
 app.use(cors());
+
 
 // If you prefer some other file as default page other than 'index.html',
 //      you can adjust and use the bellow line of code to

@@ -1,9 +1,11 @@
 const express = require('express');
 // import express from "express";
 // import appService from './appService.js'; // Add .js extension if necessary
+
 const appService = require('./appService');
 
 const router = express.Router();
+
 
 
 // ----------------------------------------------------------
@@ -86,6 +88,49 @@ router.post("/initiate-demotable", async (req, res) => {
     }
 });
 
+
+// // ACTUAL FNS
+// router.post("/addUserProfile", async (req, res) => {
+//     try {
+//         const { first_name, last_name, email, username } = req.body;  // Destructure the body
+//         const success = await appService.addUserProfile(first_name, last_name, email, username);
+//         if (success) {
+//             res.json({ success: true, message: 'Profile added successfully' });
+//         } else {
+//             res.status(400).json({ success: false, message: 'Failed to add profile' });
+//         }
+//     } catch (error) {
+//         console.error('Server error:', error);
+//         res.status(500).json({ success: false, message: 'Server error occurred' });
+//     }
+// });
+
+router.post('/addUserProfile', async (req, res) => {
+    try {
+        const { username, first_name, last_name, email, location } = req.body;
+        console.log("username:", username);
+        const updateResult = await appService.addUserProfile(username, first_name, last_name, email, location);
+        if (updateResult) {
+            res.json({ success: true });
+        } else {
+            res.status(400).json({ success: false , message: "Username or email already exists"});
+        }
+    } catch (error) {
+        next(error);
+    }
+
+});
+
+router.post('/addUserLocation', async (req, res) => {
+    const { location } = req.body;
+    const updateResult = await appService.addUserLocation( location);
+    if (updateResult) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
 router.get("/find-restaurants", async (req, res) => {
     console.log("entered endpoint")
     const restaurantName = req.query.restaurantName;
@@ -97,8 +142,9 @@ router.get("/find-restaurants", async (req, res) => {
         res.status(500).json({ success: false });
     }
 });
-router.get("/fetch-user-review", async (req, res) => {
-    const reviewID = req.query.reviewID;
+router.get("/fetch-user-review/:reviewID", async (req, res) => {
+    const reviewID = req.params.reviewID;
+    console.log(reviewID)
     const initiateResult = await appService.fetchAUserReview(reviewID);
     console.log(initiateResult)
     if (initiateResult) {
@@ -108,8 +154,9 @@ router.get("/fetch-user-review", async (req, res) => {
     }
 });
 
-router.get("/fetch-user-reviews", async (req, res) => {
-    const userName = req.query.userName;
+router.get("/fetch-user-reviews/:userName", async (req, res) => {
+    const userName  = req.params.userName;
+    console.log(userName)
     const initiateResult = await appService.fetchAllReviewsFromUser(userName);
     console.log(initiateResult)
     if (initiateResult) {
@@ -130,9 +177,11 @@ router.get("/fetch-all-restaurants", async (req, res) => {
     }
 });
 
-router.post("/update-review-content", async (req, res) => {
-    const { oldContent, newContent, columnName, reviewID} = req.body;
-    const updateResult = await appService.updateReviewContent(oldContent, newContent, columnName, reviewID);
+router.post("/update-user-review", async (req, res) => {
+    const {newContent, columnName, reviewID} = req.body;
+    console.log("Req Body: " , req.body)
+    console.log(columnName)
+    const updateResult = await appService.updateReviewContent(newContent, columnName, reviewID);
     if (updateResult) {
         res.json({ success: true });
     } else {

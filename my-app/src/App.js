@@ -4,8 +4,11 @@ import React, { useState } from 'react';
 import './index.css';
 import { checkDbConnection } from './scripts';
 import RestaurantsContainer from "./containers/RestaurantsContainer";
+import SignUp from "../src/components/signup";
+import UserReview from "./containers/UserReview";
 
 function App() {
+    const currentUser = "oreo"
     const [dbStatus, setDbStatus] = useState('');
     const [demotableData, setDemotableData] = useState([]);
     const [usertableData, setUsertableData] = useState([]);
@@ -42,27 +45,35 @@ function App() {
     return (
         <div className="App">
             <header className="App-header">
-                <img src={logo} className="App-logo" alt="logo" />
+                <img src={logo} className="App-logo" alt="logo"/>
                 <h1>
-                    Database Connection Status:
+                    Looking for delicious food that fits your needs?
                     <span id="dbStatus" className="font-bold text-green-500">
                         {dbStatus}
                     </span>
                 </h1>
             </header>
 
-            <img id="loadingGif" className="loading-gif" src="loading_100px.gif" alt="Loading..." />
-            <button onClick={checkDbStatus}>Check DB Status</button>
+            {/*<img id="loadingGif" className="loading-gif" src="loading_100px.gif" alt="Loading..." />*/}
+            {/*<button onClick={checkDbStatus}>Check DB Status</button>*/}
 
-            {/* Add your form or UI to handle restaurant info here */}
-            <form onSubmit={findRestaurantInfo}>
-                <input type="text" name="restaurantName" placeholder="Enter restaurant name" />
-                <button type="submit">Find Restaurant</button>
-            </form>
+            {/*/!* Add your form or UI to handle restaurant info here *!/*/}
+            {/*<form onSubmit={findRestaurantInfo}>*/}
+            {/*    <input type="text" name="restaurantName" placeholder="Enter restaurant name" />*/}
+            {/*    <button type="submit">Find Restaurant</button>*/}
+            {/*</form>*/}
 
-            {restaurantInfo && <p>{restaurantInfo}</p>}<RestaurantsContainer />
+            {/*{restaurantInfo && <p>{restaurantInfo}</p>}<RestaurantsContainer />*/}
+            <div className={"SignupPage"}>
+                <SignUp></SignUp>
+            </div>
+            {/*<div className={"UserReview"}>*/}
+            {/*    <UserReview userName={currentUser}/>*/}
+            {/*</div>*/}
+
         </div>
-    );
+    )
+        ;
 }
 
 export default App;

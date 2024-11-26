@@ -1,5 +1,10 @@
 .App {
   text-align: center;
+    background-color: #FFFFFF;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }
 
 .App-logo {
@@ -10,6 +15,44 @@
   pointer-events: none;
 }
 
+.SignupPage {
+    background-color: #C2E5EE;
+    width: 800px;
+    height: 600px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.SignupHeader {
+    color: #000;
+    font-family: 'Gabarito', sans-serif;;
+    font-style: italic;
+    font-weight: 400;
+    line-height: normal;
+    font-size: calc(8px + 2vmin);
+    padding-top: 20px;
+    padding-bottom: 50px;
+}
+
+.FirstAndLastName {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+}
+
+.GetLocation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.SubmitButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
@@ -17,14 +60,19 @@
 }
 
 .App-header {
-  background-color: #282c34;
-  min-height: 10vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+    text-align: center;
+    font-family: sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+      /*background-color: #282c34;*/
+      min-height: 10vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: calc(10px + 2vmin);
+      color: black;
 }
 
 .App-link {

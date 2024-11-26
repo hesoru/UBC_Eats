@@ -1,6 +1,6 @@
 const oracledb = require('oracledb');
 //import oracledb from "oracledb"
-const loadEnvFile = require('./utils/envUtil');
+//const loadEnvFile = require('./utils/envUtil');
 //const envVariables = loadEnvFile('./.env');
 require('dotenv').config();
 
@@ -182,14 +182,20 @@ async function insertDemotable(id, name) {
     });
 }
 
-
-async function insertUserTable(Username, First_Name, Last_Name, Email, User_Longitude, User_Latitude) {
+//// ore's
+async function addUserProfile(username, first_name, last_name, email, location) {
     return await withOracleDB(async (connection) => {
+
+        const longitude = location.lng;
+        const latitude = location.lat;
         const result = await connection.execute(
-            `INSERT INTO User_Has (Username, First_Name, Last_Name, Email, User_Longitude, User_Latitude) VALUES (:Username, :First_Name, :Last_Name, :Email, :User_Longitude, :User_Latitude)`,
-            [Username, First_Name, Last_Name, Email, User_Longitude, User_Latitude],
+            `INSERT INTO User_Has (Username, First_Name, Last_Name, Email, User_Longitude, User_Latitude)
+             VALUES (:username, :first_name, :last_name, :email, :longitude, :latitude)`,
+            [username, first_name, last_name, email, longitude, latitude],
             { autoCommit: true }
         );
+        console.log(result);
+        console.log("This is my result");
 
         return result.rowsAffected && result.rowsAffected > 0;
     }).catch(() => {
@@ -197,51 +203,130 @@ async function insertUserTable(Username, First_Name, Last_Name, Email, User_Long
     });
 }
 
-async function updateNameDemotable(oldName, newName) {
+async function addUserLocation(location) {
     return await withOracleDB(async (connection) => {
-        console.log("before update connecting")
+        const longitude = location.lng;
+        const latitude = location.lat;
         const result = await connection.execute(
-            `UPDATE DEMOTABLE SET name=:newName where name=:oldName`,
-            [newName, oldName],
+            `INSERT INTO User_Location (LONGITUDE, LATITUDE)
+             SELECT :longitude, :latitude
+             FROM dual
+             WHERE NOT EXISTS (
+                 SELECT 1
+                 FROM User_Location ul
+                 WHERE ul.LONGITUDE = :longitude
+                   AND ul.LATITUDE = :latitude
+             )`,
+            [longitude, latitude],
             { autoCommit: true }
         );
+        console.log(result);
+        console.log("This is my result");
 
-        console.log("after update connecting")
-
-        return result.rowsAffected && result.rowsAffected > 0;
-    }).catch(() => {
-        return false;
-    });
+        return true;
+    })
 }
 
-async function countDemotable() {
+async function fetchAllReviewsFromUser(userName) {
     return await withOracleDB(async (connection) => {
-        const result = await connection.execute('SELECT Count(*) FROM DEMOTABLE');
-        return result.rows[0][0];
+
+        console.log("before connecting")
+        const result = await connection.execute('SELECT ID FROM REVIEW_FOR_MAKES WHERE USERNAME=:userName', [userName]);
+        console.log("after connecting")
+        return result.rows;
+
     }).catch(() => {
-        return -1;
+        return [];
+    });
+}
+async function fetchAllRestaurantsFromDb() {
+    return await withOracleDB(async (connection) => {
+        console.log("before connecting")
+        const result = await connection.execute(
+            "SELECT rl.Location_Name,\n" +
+            "       rl.STREET_ADDRESS,\n" +
+            "       rl.CITY,\n" +
+            "       rl.PROVINCE_OR_STATE,\n" +
+            "       rl.POSTAL_CODE,\n" +
+            "       rl.PHONE_NUMBER,\n" +
+            "       r.Cuisine_Type,\n" +
+            "       r.Average_Price,  -- Added Average_Price\n" +
+            "       rl.AVERAGE_RATING,\n" +
+            "       COUNT(*) AS Total_Rows\n" +
+            "FROM Restaurant_Location_Has rl\n" +
+            "JOIN Restaurant r ON rl.Restaurant_Id = r.Id\n" +
+            "GROUP BY rl.Location_Name,\n" +
+            "         rl.STREET_ADDRESS,\n" +
+            "         rl.CITY,\n" +
+            "         rl.PROVINCE_OR_STATE,\n" +
+            "         rl.POSTAL_CODE,\n" +
+            "         rl.PHONE_NUMBER,\n" +
+            "         r.Cuisine_Type,\n" +
+            "         r.Average_Price,\n" +
+            "         rl.AVERAGE_RATING\n",
+            []  // Empty array????
+        );
+        console.log("after connecting")
+        return result;
+
+    }).catch(() => {
+        return [];
     });
 }
 
-async function updateReviewContent(oldContent, newContent, columnName, reviewID) {
+async function fetchAUserReview(reviewID) {
+    return await withOracleDB(async (connection) => {
+
+        const query = `
+            SELECT 
+                rl.Location_Name,
+                rfm.Content AS Review_Content,
+                rfm.Rating,
+                rfm.Record_Date,
+                rfm.Record_Time
+            FROM 
+                Review_For_Makes rfm
+            JOIN 
+                Restaurant_Location_Has rl
+            ON 
+                rfm.Restaurant_Longitude = rl.Longitude 
+                AND rfm.Restaurant_Latitude = rl.Latitude
+            WHERE 
+                rfm.Id = :reviewID
+        `;
+
+        const result = await connection.execute(query, [reviewID]);
+        //console.log("Query executed successfully for reviewID:", reviewID);
+
+        return result.rows;
+    }).catch((err) => {
+        //console.error("Error fetching review for reviewID:", reviewID, err);
+        return [];
+    });
+}
+
+
+
+async function updateReviewContent(newContent, columnName, reviewID) {
     // BE SURE TO ONLY BE ABLE TO UPDATE THE FOLOWING COLUMNS: Content (VARCHAR2),
     // Rating (0 - 5)
     return await withOracleDB(async (connection) => {
         console.log("before update connecting")
-        const validColumns = ['Content', 'Rating'];
+
+        const validColumns = ['CONTENT', 'RATING'];
+        // console.log("Passed Content variable: ", columnName)
         if (!validColumns.includes(columnName)) {
             throw new Error('Invalid column name');
         }
         const result = await connection.execute(
             `UPDATE Review_For_Makes 
             SET 
-            ${columnName}=:newContent,
+            ${columnName} = :newContent,
             Record_Date = SYSDATE,              
             Record_Time = SYSTIMESTAMP 
             where 
-            ${columnName}=:oldContent 
-            AND Id=:reviewID `,
-            [newContent, oldContent, reviewID],
+            Id=:reviewID `,
+            [newContent, reviewID],
             { autoCommit: true }
         );
 
@@ -342,72 +427,55 @@ async function findRestaurant(restaurantName) {
             `SELECT Location_Name, Street_Address, Postal_Code, Phone_Number, Average_Rating 
             FROM Restaurant_Location_Has WHERE UPPER(Location_Name)=UPPER(:restaurantName)`,
             [restaurantName]);
-            console.log("after connecting", result.rows)
+        console.log("after connecting", result.rows)
         return result.rows;
     }).catch(() => {
         return [];
     });
 }
 
-async function fetchAUserReview(reviewID) {
-    return await withOracleDB(async (connection) => {
-        console.log("before connecting")
-        const result = await connection.execute('SELECT Id FROM REVIEW_FOR_MAKES WHERE Id=:reviewID', [reviewID]);
-        console.log("after connecting")
-        return result.rows;
 
-    }).catch(() => {
-        return [];
-    });
-}
-async function fetchAllReviewsFromUser(userName) {
-    return await withOracleDB(async (connection) => {
-        console.log("before connecting")
-        const result = await connection.execute('SELECT Id FROM REVIEW_FOR_MAKES WHERE USERNAME=:userName', [userName]);
-        console.log("after connecting")
-        return result.rows;
 
-    }).catch(() => {
-        return [];
-    });
-}
-async function fetchAllRestaurantsFromDb() {
+/////// ores
+async function insertUserTable(Username, First_Name, Last_Name, Email, User_Longitude, User_Latitude) {
     return await withOracleDB(async (connection) => {
-        console.log("before connecting")
         const result = await connection.execute(
-           "SELECT rl.Location_Name,\n" +
-            "       rl.STREET_ADDRESS,\n" +
-            "       rl.CITY,\n" +
-            "       rl.PROVINCE_OR_STATE,\n" +
-            "       rl.POSTAL_CODE,\n" +
-            "       rl.PHONE_NUMBER,\n" +
-            "       r.Cuisine_Type,\n" +
-            "       r.Average_Price,  -- Added Average_Price\n" +
-            "       rl.AVERAGE_RATING,\n" +
-            "       COUNT(*) AS Total_Rows\n" +
-            "FROM Restaurant_Location_Has rl\n" +
-            "JOIN Restaurant r ON rl.Restaurant_Id = r.Id\n" +
-            "GROUP BY rl.Location_Name,\n" +
-            "         rl.STREET_ADDRESS,\n" +
-            "         rl.CITY,\n" +
-            "         rl.PROVINCE_OR_STATE,\n" +
-            "         rl.POSTAL_CODE,\n" +
-            "         rl.PHONE_NUMBER,\n" +
-            "         r.Cuisine_Type,\n" +
-            "         r.Average_Price,\n" +
-            "         rl.AVERAGE_RATING\n",
-            []  // Empty array????
+            `INSERT INTO User_Has (Username, First_Name, Last_Name, Email, User_Longitude, User_Latitude) VALUES (:Username, :First_Name, :Last_Name, :Email, :User_Longitude, :User_Latitude)`,
+            [Username, First_Name, Last_Name, Email, User_Longitude, User_Latitude],
+            { autoCommit: true }
         );
-        console.log("after connecting")
-        return result;
 
+        return result.rowsAffected && result.rowsAffected > 0;
     }).catch(() => {
-        return [];
+        return false;
     });
 }
 
+async function updateNameDemotable(oldName, newName) {
+    return await withOracleDB(async (connection) => {
+        console.log("before update connecting")
+        const result = await connection.execute(
+            `UPDATE DEMOTABLE SET name=:newName where name=:oldName`,
+            [newName, oldName],
+            { autoCommit: true }
+        );
 
+        console.log("after update connecting")
 
+        return result.rowsAffected && result.rowsAffected > 0;
+    }).catch(() => {
+        return false;
+    });
+}
+
+async function countDemotable() {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute('SELECT Count(*) FROM DEMOTABLE');
+        return result.rows[0][0];
+    }).catch(() => {
+        return -1;
+    });
+}
 
 
 module.exports = {
@@ -424,6 +492,8 @@ module.exports = {
     removeItemFromDietaryProfile,
     deleteReviewContent,
     fetchAllRestaurantsFromDb,
+    addUserProfile,
     fetchAUserReview,
-    fetchAllReviewsFromUser
+    fetchAllReviewsFromUser,
+    addUserLocation
 };
