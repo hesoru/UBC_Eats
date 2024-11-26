@@ -1,7 +1,4 @@
 const oracledb = require('oracledb');
-//import oracledb from "oracledb"
-//const loadEnvFile = require('./utils/envUtil');
-//const envVariables = loadEnvFile('./.env');
 require('dotenv').config();
 
 
@@ -92,91 +89,6 @@ async function withOracleDB(action) {
 async function testOracleConnection() {
     return await withOracleDB(async (connection) => {
         return true;
-    }).catch(() => {
-        return false;
-    });
-}
-
-async function fetchDemotableFromDb() {
-    return await withOracleDB(async (connection) => {
-        console.log("before connecting")
-        const result = await connection.execute('SELECT * FROM DEMOTABLE');
-        console.log("after connecting")
-        return result.rows;
-    }).catch(() => {
-        return [];
-    });
-}
-
-async function fetchUserTableFromDb() {
-    return await withOracleDB(async (connection) => {
-        console.log("before connecting")
-        const result = await connection.execute('SELECT * FROM User_Has');
-        console.log("after connecting")
-        return result.rows;
-    }).catch(() => {
-        return [];
-    });
-}
-
-
-async function initiateDemotable() {
-    return await withOracleDB(async (connection) => {
-        try {
-            await connection.execute(`DROP TABLE DEMOTABLE`);
-        } catch(err) {
-            console.log('Table might not exist, proceeding to create...');
-        }
-
-        const result = await connection.execute(`
-            CREATE TABLE DEMOTABLE (
-                id NUMBER PRIMARY KEY,
-                name VARCHAR2(20)
-            )
-        `);
-        return true;
-    }).catch(() => {
-        return false;
-    });
-}
-
-async function initiateUserTable() {
-    return await withOracleDB(async (connection) => {
-        try {
-            await connection.execute(`DROP TABLE User_Has`);
-        } catch(err) {
-            console.log('Table might not exist, proceeding to create...');
-        }
-
-        const result = await connection.execute(`
-            CREATE TABLE User_Has (
-                Username VARCHAR2(30) PRIMARY KEY,
-                First_Name VARCHAR2(30),
-                Last_Name VARCHAR2(30),
-                Email VARCHAR2(30) NOT NULL UNIQUE,
-                User_Longitude NUMBER(9, 6) NOT NULL,
-                User_Latitude NUMBER(9, 6) NOT NULL,
-                CONSTRAINT fk_user_location FOREIGN KEY (User_Longitude, User_Latitude)
-                    REFERENCES User_Location(Longitude, Latitude)
-                    ON DELETE CASCADE
-            )
-        `);
-        return true;
-    }).catch(() => {
-        return false;
-    });
-}
-
-
-async function insertDemotable(id, name) {
-    return await withOracleDB(async (connection) => {
-        const result = await connection.execute(
-            `INSERT INTO DEMOTABLE (id, name) VALUES (:id, :name)`,
-            [id, name],
-            { autoCommit: true }
-        );
-
-        return result.rowsAffected && result.rowsAffected > 0;
     }).catch(() => {
         return false;
     });
@@ -276,30 +188,29 @@ async function fetchAllRestaurantsFromDb() {
 
 async function fetchAUserReview(reviewID) {
     return await withOracleDB(async (connection) => {
-
+        console.log(reviewID)
         const query = `
-            SELECT 
+            SELECT
                 rl.Location_Name,
                 rfm.Content AS Review_Content,
                 rfm.Rating,
                 rfm.Record_Date,
                 rfm.Record_Time
-            FROM 
+            FROM
                 Review_For_Makes rfm
-            JOIN 
+            JOIN
                 Restaurant_Location_Has rl
-            ON 
-                rfm.Restaurant_Longitude = rl.Longitude 
+            ON
+                rfm.Restaurant_Longitude = rl.Longitude
                 AND rfm.Restaurant_Latitude = rl.Latitude
-            WHERE 
+            WHERE
                 rfm.Id = :reviewID
         `;
 
         const result = await connection.execute(query, [reviewID]);
-        //console.log("Query executed successfully for reviewID:", reviewID);
 
         return result.rows;
-    }).catch((err) => {
+    }).catch(() => {
         //console.error("Error fetching review for reviewID:", reviewID, err);
         return [];
     });
@@ -338,18 +249,15 @@ async function updateReviewContent(newContent, columnName, reviewID) {
     });
 }
 
-async function deleteReviewContent(content, userName, restLong, restLat) {
-    // TODO: when writing api endpoint of deleting user name, also delete all review associated
+async function deleteReviewContent(reviewID) {
+    // TODO: when writing api endpoint of deleting user name, also delete all review associated if on Delete cascade is enabled
     return await withOracleDB(async (connection) => {
         console.log("before delete connecting");
 
         const result = await connection.execute(
             `DELETE FROM Review_For_Makes
-            WHERE Content = :content
-              AND Username = :userName
-              AND Restaurant_Longitude = :restLong
-              AND Restaurant_Latitude = :restLat`,
-            [content, userName, restLong, restLat],
+            WHERE ID =:reviewID`,
+            [reviewID],
             { autoCommit: true }
         );
 
@@ -362,63 +270,6 @@ async function deleteReviewContent(content, userName, restLong, restLat) {
         return false;
     });
 }
-
-
-async function addItemToDietaryProfile(foodType, userName, profileName) {
-    // 1) Check if DietType exists,
-    // TODO: 2) IF not, add to Diet or Allergen OR REJECT????
-    // 3)
-    // const validFoodTypes = ['Vegan', 'Gluten', 'Vegetarian', 'Kosher', 'Halal'];
-    // if (!validFoodTypes.includes(foodType)) {
-    //     console.error('Invalid food type');
-    //     return false;
-    // }
-    return await withOracleDB(async (connection) => {
-
-        const result = await connection.execute(
-            `INSERT INTO Stores_${foodType} 
-            (Dietary_Profile_Name, User_Username, ${foodType}_Type) 
-            VALUES  
-            (:profileName, :userName, :foodType)`,
-            [profileName, userName, foodType],
-            { autoCommit: true }
-        );
-
-        return result.rowsAffected && result.rowsAffected > 0;
-    }).catch(() => {
-        return false;
-    });
-}
-
-async function removeItemFromDietaryProfile(foodType, userName, profileName) {
-    // const validFoodTypes = ['Vegan', 'Gluten', 'Vegetarian', 'Kosher', 'Halal'];
-    // if (!validFoodTypes.includes(foodType)) {
-    //     console.error('Invalid food type');
-    //     return false;
-    // }
-
-    return await withOracleDB(async (connection) => {
-
-        const query = `
-            DELETE FROM Stores_${foodType} 
-            WHERE Dietary_Profile_Name = :profileName
-              AND User_Username = :userName
-              AND ${foodType}_Type = :foodType
-        `;
-// TODO: MAKE SURE TO PROVIDE USER THE OPTION TO Pick "Allergen" or "Diet" -- CASE SENSITVIE FOR TABLE NAME
-        const result = await connection.execute(
-            query,
-            { profileName, userName, foodType },
-            { autoCommit: true }
-        );
-
-        return result.rowsAffected && result.rowsAffected > 0;
-    }).catch((err) => {
-        console.error('Error removing dietary profile item:', err);
-        return false;
-    });
-}
-
 
 async function findRestaurant(restaurantName) {
     return await withOracleDB(async (connection) => {
@@ -433,67 +284,211 @@ async function findRestaurant(restaurantName) {
         return [];
     });
 }
+// async function addItemToDietaryProfile(foodType, userName, profileName) {
+//     // 1) Check if DietType exists,
+//     // TODO: 2) IF not, add to Diet or Allergen OR REJECT????
+//     // 3)
+//     // const validFoodTypes = ['Vegan', 'Gluten', 'Vegetarian', 'Kosher', 'Halal'];
+//     // if (!validFoodTypes.includes(foodType)) {
+//     //     console.error('Invalid food type');
+//     //     return false;
+//     // }
+//     return await withOracleDB(async (connection) => {
+//
+//         const result = await connection.execute(
+//             `INSERT INTO Stores_${foodType}
+//             (Dietary_Profile_Name, User_Username, ${foodType}_Type)
+//             VALUES
+//             (:profileName, :userName, :foodType)`,
+//             [profileName, userName, foodType],
+//             { autoCommit: true }
+//         );
+//
+//         return result.rowsAffected && result.rowsAffected > 0;
+//     }).catch(() => {
+//         return false;
+//     });
+// }
+//
+// async function removeItemFromDietaryProfile(foodType, userName, profileName) {
+//     // const validFoodTypes = ['Vegan', 'Gluten', 'Vegetarian', 'Kosher', 'Halal'];
+//     // if (!validFoodTypes.includes(foodType)) {
+//     //     console.error('Invalid food type');
+//     //     return false;
+//     // }
+//
+//     return await withOracleDB(async (connection) => {
+//
+//         const query = `
+//             DELETE FROM Stores_${foodType}
+//             WHERE Dietary_Profile_Name = :profileName
+//               AND User_Username = :userName
+//               AND ${foodType}_Type = :foodType
+//         `;
+// // TODO: MAKE SURE TO PROVIDE USER THE OPTION TO Pick "Allergen" or "Diet" -- CASE SENSITVIE FOR TABLE NAME
+//         const result = await connection.execute(
+//             query,
+//             { profileName, userName, foodType },
+//             { autoCommit: true }
+//         );
+//
+//         return result.rowsAffected && result.rowsAffected > 0;
+//     }).catch((err) => {
+//         console.error('Error removing dietary profile item:', err);
+//         return false;
+//     });
+// }
+//
+//
+//
 
 
 
 /////// ores
-async function insertUserTable(Username, First_Name, Last_Name, Email, User_Longitude, User_Latitude) {
-    return await withOracleDB(async (connection) => {
-        const result = await connection.execute(
-            `INSERT INTO User_Has (Username, First_Name, Last_Name, Email, User_Longitude, User_Latitude) VALUES (:Username, :First_Name, :Last_Name, :Email, :User_Longitude, :User_Latitude)`,
-            [Username, First_Name, Last_Name, Email, User_Longitude, User_Latitude],
-            { autoCommit: true }
-        );
+// async function insertUserTable(Username, First_Name, Last_Name, Email, User_Longitude, User_Latitude) {
+//     return await withOracleDB(async (connection) => {
+//         const result = await connection.execute(
+//             `INSERT INTO User_Has (Username, First_Name, Last_Name, Email, User_Longitude, User_Latitude) VALUES (:Username, :First_Name, :Last_Name, :Email, :User_Longitude, :User_Latitude)`,
+//             [Username, First_Name, Last_Name, Email, User_Longitude, User_Latitude],
+//             { autoCommit: true }
+//         );
+//
+//         return result.rowsAffected && result.rowsAffected > 0;
+//     }).catch(() => {
+//         return false;
+//     });
+// }
+//
+// async function updateNameDemotable(oldName, newName) {
+//     return await withOracleDB(async (connection) => {
+//         console.log("before update connecting")
+//         const result = await connection.execute(
+//             `UPDATE DEMOTABLE SET name=:newName where name=:oldName`,
+//             [newName, oldName],
+//             { autoCommit: true }
+//         );
+//
+//         console.log("after update connecting")
+//
+//         return result.rowsAffected && result.rowsAffected > 0;
+//     }).catch(() => {
+//         return false;
+//     });
+// }
+//
+// async function countDemotable() {
+//     return await withOracleDB(async (connection) => {
+//         const result = await connection.execute('SELECT Count(*) FROM DEMOTABLE');
+//         return result.rows[0][0];
+//     }).catch(() => {
+//         return -1;
+//     });
+// }
 
-        return result.rowsAffected && result.rowsAffected > 0;
-    }).catch(() => {
-        return false;
-    });
-}
 
-async function updateNameDemotable(oldName, newName) {
-    return await withOracleDB(async (connection) => {
-        console.log("before update connecting")
-        const result = await connection.execute(
-            `UPDATE DEMOTABLE SET name=:newName where name=:oldName`,
-            [newName, oldName],
-            { autoCommit: true }
-        );
 
-        console.log("after update connecting")
-
-        return result.rowsAffected && result.rowsAffected > 0;
-    }).catch(() => {
-        return false;
-    });
-}
-
-async function countDemotable() {
-    return await withOracleDB(async (connection) => {
-        const result = await connection.execute('SELECT Count(*) FROM DEMOTABLE');
-        return result.rows[0][0];
-    }).catch(() => {
-        return -1;
-    });
-}
+// async function fetchDemotableFromDb() {
+//     return await withOracleDB(async (connection) => {
+//         console.log("before connecting")
+//         const result = await connection.execute('SELECT * FROM DEMOTABLE');
+//         console.log("after connecting")
+//         return result.rows;
+//     }).catch(() => {
+//         return [];
+//     });
+// }
+//
+// async function fetchUserTableFromDb() {
+//     return await withOracleDB(async (connection) => {
+//         console.log("before connecting")
+//         const result = await connection.execute('SELECT * FROM User_Has');
+//         console.log("after connecting")
+//         return result.rows;
+//     }).catch(() => {
+//         return [];
+//     });
+// }
+//
+//
+// async function initiateDemotable() {
+//     return await withOracleDB(async (connection) => {
+//         try {
+//             await connection.execute(`DROP TABLE DEMOTABLE`);
+//         } catch(err) {
+//             console.log('Table might not exist, proceeding to create...');
+//         }
+//
+//         const result = await connection.execute(`
+//             CREATE TABLE DEMOTABLE (
+//                 id NUMBER PRIMARY KEY,
+//                 name VARCHAR2(20)
+//             )
+//         `);
+//         return true;
+//     }).catch(() => {
+//         return false;
+//     });
+// }
+//
+// async function initiateUserTable() {
+//     return await withOracleDB(async (connection) => {
+//         try {
+//             await connection.execute(`DROP TABLE User_Has`);
+//         } catch(err) {
+//             console.log('Table might not exist, proceeding to create...');
+//         }
+//
+//         const result = await connection.execute(`
+//             CREATE TABLE User_Has (
+//                 Username VARCHAR2(30) PRIMARY KEY,
+//                 First_Name VARCHAR2(30),
+//                 Last_Name VARCHAR2(30),
+//                 Email VARCHAR2(30) NOT NULL UNIQUE,
+//                 User_Longitude NUMBER(9, 6) NOT NULL,
+//                 User_Latitude NUMBER(9, 6) NOT NULL,
+//                 CONSTRAINT fk_user_location FOREIGN KEY (User_Longitude, User_Latitude)
+//                     REFERENCES User_Location(Longitude, Latitude)
+//                     ON DELETE CASCADE
+//             )
+//         `);
+//         return true;
+//     }).catch(() => {
+//         return false;
+//     });
+// }
+//
+//
+// async function insertDemotable(id, name) {
+//     return await withOracleDB(async (connection) => {
+//         const result = await connection.execute(
+//             `INSERT INTO DEMOTABLE (id, name) VALUES (:id, :name)`,
+//             [id, name],
+//             { autoCommit: true }
+//         );
+//
+//         return result.rowsAffected && result.rowsAffected > 0;
+//     }).catch(() => {
+//         return false;
+//     });
+// }
 
 
 module.exports = {
     testOracleConnection,
-    fetchDemotableFromDb,
-    initiateDemotable, 
-    insertDemotable, 
-    updateNameDemotable,
     findRestaurant,
-    fetchUserTableFromDb,
-    initiateUserTable,
     updateReviewContent,
-    addItemToDietaryProfile,
-    removeItemFromDietaryProfile,
     deleteReviewContent,
     fetchAllRestaurantsFromDb,
     addUserProfile,
     fetchAUserReview,
     fetchAllReviewsFromUser,
     addUserLocation
+    // addItemToDietaryProfile,
+    // removeItemFromDietaryProfile,
+    // fetchUserTableFromDb,
+    // initiateUserTable,
+    // fetchDemotableFromDb,
+    // initiateDemotable,
+    // insertDemotable,
+    // updateNameDemotable,
 };

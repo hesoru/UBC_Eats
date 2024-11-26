@@ -40,7 +40,7 @@ export async function fetchAllRestaurants() {
 }
 
 export async function fetchUsersReviews(userName) {
-    const response = await fetch(`http://localhost:50001/fetch-user-reviews/${userName}`, {
+    const response = await fetch(`http://localhost:50001/fetch-user-reviews/${encodeURIComponent(userName)}`, {
         method: 'GET'
     });
 
@@ -52,7 +52,7 @@ export async function fetchUsersReviews(userName) {
 }
 
 export async function fetchReviewContent(reviewID) {
-        const response = await fetch(`http://localhost:50001/fetch-user-review/${reviewID}`, {
+        const response = await fetch(`http://localhost:50001/fetch-user-review/${encodeURIComponent(reviewID)}`, {
             method: 'GET'
         });
 
@@ -83,7 +83,7 @@ export async function updateUserReview(newContent, columnName, reviewID) {
                 }),
             }
         );
-        if (!response.success) {
+        if (!response.ok) {
             throw new Error(`Request failed with status ${response.status}: ${response.statusText}`);
         }
 
@@ -95,38 +95,34 @@ export async function updateUserReview(newContent, columnName, reviewID) {
 }
 
 
-// export async function addUserProfile(username, first_name, last_name, email) {
-//
-//     try {
-//         const response = await fetch(
-//             `http://localhost:50013/addUserProfile`,
-//             {
-//                 method: 'POST',
-//                 headers: {
-//                     'Content-Type': 'application/json'
-//                 },
-//                 body: JSON.stringify({
-//                     username,
-//                     first_name,
-//                     last_name,
-//                     email
-//                 }),
-//             }
-//         );
-//         if (!response.success) {
-//             throw new Error(`Request failed with status ${response.status}: ${response.statusText}`);
-//         }
-//
-//         return await response.json();
-//     } catch (error) {
-//         console.error('Error updating user profile:', error);
-//         throw error;
-//     }
-// }
+export async function deleteReview(reviewID) {
+
+/// Have FRONT END ENSURE IF RATING IS BEING CHANGED THAT ONLY THE NUMBER VALUE IS BETWEEN 0 -5
+/// AND CONTENT CHAR LENGTH < 200 char
+
+    try {
+        const response = await fetch(
+            `http://localhost:50001/delete-review/${encodeURIComponent(reviewID)}`,
+            {
+                method: 'DELETE',
+            }
+        );
+        if (!response.ok) {
+            throw new Error(`Request failed with status ${response.status}: ${response.statusText}`);
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Error updating user review:', error);
+        throw error;
+    }
+}
+
+
 
 // List restaurant locations based on given restaurant
 export async function findRestaurantInfo(restaurantNameValue) {
-    const url =`http://localhost:50013/find-restaurants?restaurantName=${encodeURIComponent(restaurantNameValue)}`;
+    const url =`http://localhost:50001/find-restaurants?restaurantName=${encodeURIComponent(restaurantNameValue)}`;
 
     const response = await fetch(url, {
         method: 'GET'
@@ -290,11 +286,6 @@ export async function findRestaurantInfo(restaurantNameValue) {
 //         });
 //     });
 // }
-
-
-//TODO
-
-
 
 
 // ---------------------------------------------------------------
