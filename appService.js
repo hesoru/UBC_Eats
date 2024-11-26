@@ -274,29 +274,39 @@ async function fetchAllRestaurantsFromDb() {
     });
 }
 
+// async function fetchAUserReview(reviewID) {
+//     return await withOracleDB(async (connection) => {
+//         console.log("before connecting")
+//         const result = await connection.execute('SELECT Id FROM REVIEW_FOR_MAKES WHERE Id=:reviewID', [reviewID]);
+//         console.log("after connecting")
+//         return result.rows;
+//
+//     }).catch(() => {
+//         return [];
+//     });
+// }
 async function fetchAUserReview(reviewID) {
     return await withOracleDB(async (connection) => {
-
+        console.log(reviewID)
         const query = `
-            SELECT 
+            SELECT
                 rl.Location_Name,
                 rfm.Content AS Review_Content,
                 rfm.Rating,
                 rfm.Record_Date,
                 rfm.Record_Time
-            FROM 
+            FROM
                 Review_For_Makes rfm
-            JOIN 
+            JOIN
                 Restaurant_Location_Has rl
-            ON 
-                rfm.Restaurant_Longitude = rl.Longitude 
+            ON
+                rfm.Restaurant_Longitude = rl.Longitude
                 AND rfm.Restaurant_Latitude = rl.Latitude
-            WHERE 
+            WHERE
                 rfm.Id = :reviewID
         `;
 
         const result = await connection.execute(query, [reviewID]);
-        //console.log("Query executed successfully for reviewID:", reviewID);
 
         return result.rows;
     }).catch((err) => {
