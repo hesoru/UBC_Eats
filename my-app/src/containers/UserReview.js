@@ -1,12 +1,13 @@
 import React, { useState,  useEffect} from "react";
 //import { Box, Typography, Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
-import {fetchReviewContent, fetchUsersReviews} from "../scripts";
+import {fetchReviewContent, fetchUsersReviews, updateUserReview} from "../scripts";
 
 const UserReviews = ({ userName, initialReviews }) => {
     const [reviews, setReviews] = useState(initialReviews || []);
     const [editDialogOpen, setEditDialogOpen] = useState(false);
     const [currentReview, setCurrentReview] = useState(null);
     const [editedComment, setEditedComment] = useState("");
+    const [editedRating, setEditedRating] = useState(null);
 
     useEffect(() => {
         const fetchReviews = async () => {
@@ -20,7 +21,7 @@ const UserReviews = ({ userName, initialReviews }) => {
                         if (reviewResponse.success) {
                             const [restaurantName, comment, rating, createdAt, updatedAt] = reviewResponse.result[0];
                             return {
-                                id, // Assuming the review ID
+                                id,
                                 restaurantName,
                                 comment,
                                 rating,
@@ -34,18 +35,19 @@ const UserReviews = ({ userName, initialReviews }) => {
                     })
                 );
 
-                setReviews(fetchedReviews.filter((review) => review !== null)); // Filter out failed requests
+                setReviews(fetchedReviews.filter((review) => review !== null));
             } catch (error) {
                 console.error("Error fetching reviews:", error);
             }
         };
 
-        fetchReviews(); // Trigger fetching
+        fetchReviews();
     }, [userName]);
 
     const handleEditOpen = (review) => {
         setCurrentReview(review);
         setEditedComment(review.comment);
+        setEditedRating(review.rating);
         setEditDialogOpen(true);
     };
 
@@ -53,11 +55,18 @@ const UserReviews = ({ userName, initialReviews }) => {
         setEditDialogOpen(false);
         setCurrentReview(null);
         setEditedComment("");
+        setEditedRating(null);
     };
 
-    const handleEditSave = () => {
+    const handleEditSave = async () => {
+        // Update the comment and rating
+        await updateUserReview(editedComment, "CONTENT", currentReview.id);
+        await updateUserReview(editedRating, "RATING", currentReview.id);
+
         const updatedReviews = reviews.map((review) =>
-            review.id === currentReview.id ? { ...review, comment: editedComment } : review
+            review.id === currentReview.id
+                ? { ...review, comment: editedComment, rating: editedRating }
+                : review
         );
         setReviews(updatedReviews);
         handleEditClose();
@@ -73,9 +82,7 @@ const UserReviews = ({ userName, initialReviews }) => {
             <h2 style={styles.heading}>Your Reviews</h2>
             {reviews.length > 0 ? (
                 reviews.map((review) => (
-
-                    <div
-                        key={review.id} style={styles.reviewCard}>
+                    <div key={review.id} style={styles.reviewCard}>
                         <h3 style={styles.restaurantName}>Restaurant: {review.restaurantName}</h3>
                         <p style={styles.comment}>Review: {review.comment}</p>
                         <p style={styles.rating}>Rating: {review.rating} / 5</p>
@@ -102,6 +109,16 @@ const UserReviews = ({ userName, initialReviews }) => {
                             value={editedComment}
                             onChange={(e) => setEditedComment(e.target.value)}
                         ></textarea>
+                        <input
+                            type="number"
+                            min="0"
+                            max="5"
+                            step="0.1"
+                            style={styles.input}
+                            value={editedRating}
+                            onChange={(e) => setEditedRating(Number(e.target.value))}
+                            placeholder="Rating (0-5)"
+                        />
                         <div style={styles.dialogActions}>
                             <button style={styles.button} onClick={handleEditClose}>
                                 Cancel
@@ -118,6 +135,7 @@ const UserReviews = ({ userName, initialReviews }) => {
         </div>
     );
 };
+
 
 const styles = {
     container: {

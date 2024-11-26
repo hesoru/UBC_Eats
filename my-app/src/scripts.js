@@ -83,7 +83,7 @@ export async function updateUserReview(newContent, columnName, reviewID) {
                 }),
             }
         );
-        if (!response.success) {
+        if (!response.ok) {
             throw new Error(`Request failed with status ${response.status}: ${response.statusText}`);
         }
 
