@@ -1,6 +1,6 @@
 import React, { useState,  useEffect} from "react";
 //import { Box, Typography, Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
-import {fetchReviewContent, fetchUsersReviews, updateUserReview} from "../scripts";
+import {deleteReview, fetchReviewContent, fetchUsersReviews, updateUserReview} from "../scripts";
 
 const UserReviews = ({ userName, initialReviews }) => {
     const [reviews, setReviews] = useState(initialReviews || []);
@@ -72,14 +72,16 @@ const UserReviews = ({ userName, initialReviews }) => {
         handleEditClose();
     };
 
-    const handleDelete = (reviewId) => {
+    const handleDelete = async (reviewId) => {
+
         const updatedReviews = reviews.filter((review) => review.id !== reviewId);
+        await deleteReview(reviewId);
         setReviews(updatedReviews);
     };
 
     return (
         <div style={styles.container}>
-            <h2 style={styles.heading}>Your Reviews</h2>
+            <h2 style={styles.heading}>My Reviews</h2>
             {reviews.length > 0 ? (
                 reviews.map((review) => (
                     <div key={review.id} style={styles.reviewCard}>
@@ -116,7 +118,12 @@ const UserReviews = ({ userName, initialReviews }) => {
                             step="0.1"
                             style={styles.input}
                             value={editedRating}
-                            onChange={(e) => setEditedRating(Number(e.target.value))}
+                            onChange={(e) => {
+                                const value = Number(e.target.value);
+                                if (value >= 0 && value <= 5) {
+                                    setEditedRating(value);
+                                }
+                            }}
                             placeholder="Rating (0-5)"
                         />
                         <div style={styles.dialogActions}>
@@ -130,8 +137,6 @@ const UserReviews = ({ userName, initialReviews }) => {
                     </div>
                 </div>
             )}
-
-            <button style={{ ...styles.button, marginTop: "20px" }}>Add a Review</button>
         </div>
     );
 };
