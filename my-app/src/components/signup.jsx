@@ -116,7 +116,7 @@ const SignUp = ({setCurrentUser}) => {
                             <br/>
 
                         </div>
-                        <Label className={"SignupLabel"} htmlFor={"email"}>
+                        <Label className={"SignupLabel justify-items-center"} htmlFor={"email"}>
                             Email:
                             <TextInput id="email" type="email" placeholder="name@mail.com" value={formData.email}
                                        onChange={handleChange} required/>
@@ -130,16 +130,16 @@ const SignUp = ({setCurrentUser}) => {
                                onChange={handleChange} required />
                 </Label>
                 <br />
-                <div className={"SubmitButton"}>
-                    <Button type="submit">{isSignUp ? 'Sign Up' : 'Sign In'}</Button>
+                <div className={"SubmitButton justify-items-center"}>
+                    <Button className={"align-middle justify-center justify-items-center"} type="submit">{isSignUp ? 'Sign Up' : 'Sign In'}</Button>
                 </div>
                 {message && <p className="error-message">{message}</p>}
             </form>
 
-            <div className="toggleOption">
+            <div className="toggleOption justify-items-center">
                 <p>
                     {isSignUp ? 'Already have an account?' : 'Don’t have an account?'}{' '}
-                    <Button type="button" onClick={() => setIsSignUp(!isSignUp)}>
+                    <Button className={"align-middle justify-center"} type="button" onClick={() => setIsSignUp(!isSignUp)}>
                         {isSignUp ? 'Sign In' : 'Sign Up'}
                     </Button>
                 </p>
