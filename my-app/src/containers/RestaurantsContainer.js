@@ -1,7 +1,8 @@
-// RestaurantsContainer.js
+
 import React, { useState } from 'react';
 import {fetchAllRestaurants} from "../scripts";
 import RestaurantPage from "./RestaurantPage";
+import '../css/RestaurantPage.css';
 
 const RestaurantsContainer = () => {
     const [allRestaurants, setAllRestaurants] = useState([]);
@@ -43,6 +44,7 @@ const RestaurantsContainer = () => {
     return (
         <div className="restaurants-container">
             {selectedRestaurant ? (
+
                 <RestaurantPage restaurant={selectedRestaurant} />
             ) : (
                 <>
@@ -51,13 +53,18 @@ const RestaurantsContainer = () => {
                     {loading && <p>Loading...</p>}
 
                     {allRestaurants.length > 0 && (
-                        <ul>
+                        <ul className="restaurant-list">
                             {allRestaurants.map((restaurant, index) => (
-                                <li key={index}>
-                                    <p>{restaurant.LOCATION_NAME}</p>
-                                    <button onClick={() => setSelectedRestaurant(restaurant)}>
-                                        View Details
-                                    </button>
+                                <li key={index} className="restaurant-item">
+                                    <h3>{restaurant.LOCATION_NAME}</h3>
+                                    <p>{restaurant.CUISINE_TYPE}</p>
+                                    <p>Average Rating: {parseFloat(restaurant.AVERAGE_RATING).toFixed(1)}</p>
+                                    <p>Average Price: {restaurant.AVERAGE_PRICE}</p>
+                                    <p>Phone Number: {restaurant.PHONE_NUMBER}</p>
+                                    <p>Address: {restaurant.STREET_ADDRESS}, {restaurant.CITY}, {restaurant.PROVINCE_OR_STATE}, {restaurant.POSTAL_CODE}</p>
+                                    {/*<button onClick={() => setSelectedRestaurant(restaurant)}>*/}
+                                    {/*    View Details*/}
+                                    {/*</button>*/}
                                 </li>
                             ))}
                         </ul>
@@ -67,5 +74,7 @@ const RestaurantsContainer = () => {
         </div>
     );
 };
+
+
 
 export default RestaurantsContainer;
