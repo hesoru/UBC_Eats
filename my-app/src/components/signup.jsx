@@ -2,51 +2,6 @@ import React, { useState } from 'react';
 import { Button, Label, TextInput } from "flowbite-react";
 import { addUserProfile } from "../scripts";
 
-// const SignUp = () => {
-//     const [formData, setFormData] = useState({
-//         first_name: '',
-//         last_name: '',
-//         email: '',
-//         username: ''
-//     });
-//
-//     const handleSubmit = async (e) => {
-//         e.preventDefault();
-//
-//         try {
-//             const response = await fetch('http://localhost:50013/addUserProfile', {
-//                 method: 'POST',
-//                 headers: {
-//                     'Content-Type': 'application/json',
-//                 },
-//                 body: JSON.stringify(formData), // Using the state formData directly
-//             });
-//
-//             if (!response.ok) {
-//                 throw new Error(`HTTP error! status: ${response.status}`);
-//             }
-//
-//             const data = await response.json();
-//             console.log('Server response:', data);
-//
-//             if (data.success) {
-//                 alert('Profile added successfully!');
-//                 // Reset form after success
-//                 setFormData({
-//                     first_name: '',
-//                     last_name: '',
-//                     email: '',
-//                     username: ''
-//                 });
-//             } else {
-//                 alert(data.message || 'Failed to add profile');
-//             }
-//         } catch (error) {
-//             console.error('Error:', error);
-//             alert('Error adding profile. Please try again.');
-//         }
-//     };
-
 
 const SignUp = () => {
     const [formData, setFormData] = useState({
@@ -97,14 +52,14 @@ const SignUp = () => {
             });
 
             const data = await response.json();
-            if (response.success) {
+            if (response.ok) {
                 setMessage('User succesfully added location!');
             } else {
                 setMessage(data.message || 'An error occurred.');
             }
         } catch (error) {
             console.error('Error:', error);
-            setMessage('An error occurred.');
+            setMessage('An error occurred registering your location.');
         }
     }
     const handleSubmit = async (e) => {
@@ -118,15 +73,15 @@ const SignUp = () => {
                 body: JSON.stringify({ ...formData, location })
             });
 
-            const data = await response.json();
-            if (response.success) {
+            if (response.ok) {
+                console.log(message);
                 setMessage('User signed up successfully!');
             } else {
                 setMessage("Please enter a different username or email");
             }
         } catch (error) {
-            console.error('Error:', error);
-            setMessage('An error occurred.');
+           // console.error('Error:', error);
+            //setMessage('An error occurred registering your Location');
         }
     };
 
@@ -172,6 +127,7 @@ const SignUp = () => {
                 <div className={"SubmitButton"}>
                     <Button type="submit">Sign Up</Button>
                 </div>
+                {message && <p className="error-message">{message}</p>}
             </form>
         </div>
     );
