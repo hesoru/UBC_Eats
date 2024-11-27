@@ -1,7 +1,12 @@
 import React from "react";
+import { useNavigate } from 'react-router-dom';
 import restuarant1 from "./restaurant-1.svg";
 
 const RestaurantPage = ({ restaurant }) => {
+    const navigate = useNavigate();
+    const goBack = () => {
+        navigate(-1);
+    };
     return (
         <div
             style={{
@@ -19,6 +24,7 @@ const RestaurantPage = ({ restaurant }) => {
                     position: "relative",
                 }}
             >
+
                 <div
                     style={{
                         position: "absolute",
@@ -43,7 +49,32 @@ const RestaurantPage = ({ restaurant }) => {
                         FILTER
                     </button>
                 </div>
-
+                {/* Back Button */}
+                <div
+                    style={{
+                        position: "absolute",
+                        width: "150x",
+                        height: "90px",
+                        bottom: "100 px",
+                        right: "20px",
+                    }}
+                >
+                    <button
+                        onClick={goBack}
+                        style={{
+                            width: "236px",
+                            height: "70px",
+                            backgroundColor: "#012046",
+                            color: "#fff",
+                            fontSize: "40px",
+                            fontFamily: "Gabarito-Regular, Helvetica",
+                            border: "none",
+                            cursor: "pointer",
+                        }}
+                    >
+                        BACK
+                    </button>
+                </div>
                 <div
                     style={{
                         position: "absolute",
@@ -79,7 +110,7 @@ const RestaurantPage = ({ restaurant }) => {
                     fontStyle: "-moz-initial",
                     flexDirection: "column",
                     alignItems: "center", }} >
-                    Average Price: {restaurant.AVERAGE_PRICE},
+                    Average Price: {restaurant},
                     Average Rating: {restaurant.AVERAGE_RATING}
                 </div>
                 <div

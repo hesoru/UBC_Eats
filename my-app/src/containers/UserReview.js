@@ -1,8 +1,10 @@
 import React, { useState,  useEffect} from "react";
 //import { Box, Typography, Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import { useParams } from 'react-router-dom';
 import {deleteReview, fetchReviewContent, fetchUsersReviews, updateUserReview} from "../scripts";
 
-const UserReviews = ({ userName, initialReviews }) => {
+const UserReviews = ({initialReviews }) => {
+    const { userName } = useParams();
     const [reviews, setReviews] = useState(initialReviews || []);
     const [editDialogOpen, setEditDialogOpen] = useState(false);
     const [currentReview, setCurrentReview] = useState(null);

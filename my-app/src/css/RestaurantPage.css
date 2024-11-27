@@ -1,0 +1,50 @@
+
+.restaurants-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+.view-restaurants-btn {
+    width: 250px;
+    padding: 10px;
+    background-color: #012046;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    border: none;
+    margin-bottom: 20px;
+}
+
+.restaurant-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    width: 100%;
+    max-width: 1200px;
+}
+
+.restaurant-item {
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.restaurant-item h3 {
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.view-details-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #012046;
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}

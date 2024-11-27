@@ -52,7 +52,7 @@ CREATE TABLE Restaurant_Location_Has (
                                          Postal_Code CHAR(6),
                                          Location_Name VARCHAR2(30),
                                          Phone_Number VARCHAR2(15) UNIQUE,
-                                         Average_Rating NUMBER(3, 2) CHECK (Average_Rating BETWEEN 0 AND 5),
+                                         Average_Rating NUMBER(1, 1) CHECK (Average_Rating BETWEEN 0 AND 5),
                                          PRIMARY KEY (Longitude, Latitude),
                                          CONSTRAINT fk_restaurant FOREIGN KEY (Restaurant_Id)
                                              REFERENCES Restaurant(Id)
