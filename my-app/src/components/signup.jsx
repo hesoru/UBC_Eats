@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { Button, Label, TextInput } from "flowbite-react";
-import { addUserProfile } from "../scripts";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 
 const SignUp = ({setCurrentUser}) => {
@@ -24,26 +23,30 @@ const SignUp = ({setCurrentUser}) => {
     const [location, setLocation] = useState({ lat: null, lng: null });
     const [message, setMessage] = useState('');
 
-    const getGeolocation = () => {
-        if ('geolocation' in navigator) {
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    setLocation({
-                        lat: position.coords.latitude,
-                        lng: position.coords.longitude,
-                    });
-                    console.log(position.coords.latitude);
-                    console.log(position.coords.longitude);
-                },
-                (error) => {
-                    console.error('Error getting geolocation:', error);
-                    alert('Unable to get your location.');
-                }
-            );
-        } else {
-            alert('Geolocation is not available on your browser.');
-        }
-    };
+    useEffect(() => {
+        const getGeolocation = () => {
+            if ('geolocation' in navigator) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        setLocation({
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude,
+                        });
+                        console.log(position.coords.latitude);
+                        console.log(position.coords.longitude);
+                    },
+                    (error) => {
+                        console.error('Error getting geolocation:', error);
+                        alert('Unable to get your location.');
+                    }
+                );
+            } else {
+                alert('Geolocation is not available on your browser.');
+            }
+        };
+        getGeolocation()
+    }, []);
+
 
     const submitUserLocation = async (location) => {
         try {
@@ -94,56 +97,61 @@ const SignUp = ({setCurrentUser}) => {
             navigate('/user/' + formData.username);
         }
     };
-
     return (
-        <div className={"SignupBlock"}>
-            <h1 className={"SignupHeader"}>{isSignUp ? 'SIGN UP' : 'SIGN IN'}</h1>
+        <div className="SignupBlock max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
+            <h1 className="SignupHeader text-2xl font-semibold text-center mb-4">Sign Up</h1>
             <form onSubmit={handleSubmit}>
-                {isSignUp && (
-                    <>
-                        <div className={"FirstAndLastName"}>
-                            <Label className={"SignupLabel"} htmlFor={"first_name"}>
-                                First Name:
-                                <TextInput id="first_name" type="text" placeholder="Jane" value={formData.first_name}
-                                           onChange={handleChange} required/>
-                            </Label>
-                            <br/>
-                            <Label className={"SignupLabel"} htmlFor={"last_name"}>
-                                Last Name:
-                                <TextInput id="last_name" type="text" placeholder="Doe" value={formData.last_name}
-                                           onChange={handleChange} required/>
-                            </Label>
-                            <br/>
-
-                        </div>
-                        <Label className={"SignupLabel justify-items-center"} htmlFor={"email"}>
-                            Email:
-                            <TextInput id="email" type="email" placeholder="name@mail.com" value={formData.email}
-                                       onChange={handleChange} required/>
-                        </Label>
-                    </>
-                )}
-
-                <Label className={"SignupLabel"} htmlFor={"username"}>
-                    Username:
-                    <TextInput id="username" type="text" placeholder="myusername98" value={formData.username}
-                               onChange={handleChange} required />
-                </Label>
-                <br />
-                <div className={"SubmitButton justify-items-center"}>
-                    <Button className={"align-middle justify-center justify-items-center"} type="submit">{isSignUp ? 'Sign Up' : 'Sign In'}</Button>
+                <div className="mb-4">
+                    <Label htmlFor="first_name">First Name</Label>
+                    <TextInput
+                        id="first_name"
+                        type="text"
+                        placeholder="Jane"
+                        value={formData.first_name}
+                        onChange={handleChange}
+                        required
+                    />
                 </div>
-                {message && <p className="error-message">{message}</p>}
+                <div className="mb-4">
+                    <Label htmlFor="last_name">Last Name</Label>
+                    <TextInput
+                        id="last_name"
+                        type="text"
+                        placeholder="Doe"
+                        value={formData.last_name}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+                <div className="mb-4">
+                    <Label htmlFor="email">Email</Label>
+                    <TextInput
+                        id="email"
+                        type="email"
+                        placeholder="name@mail.com"
+                        value={formData.email}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+                <div className="mb-4">
+                    <Label htmlFor="username">Username</Label>
+                    <TextInput
+                        id="username"
+                        type="text"
+                        placeholder="myusername98"
+                        value={formData.username}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+                <Button type="submit" className="w-full">Sign Up</Button>
+                {message && <p className="text-center text-red-500 mt-2">{message}</p>}
             </form>
-
-            <div className="toggleOption justify-items-center">
-                <p>
-                    {isSignUp ? 'Already have an account?' : 'Don’t have an account?'}{' '}
-                    <Button className={"align-middle justify-center"} type="button" onClick={() => setIsSignUp(!isSignUp)}>
-                        {isSignUp ? 'Sign In' : 'Sign Up'}
-                    </Button>
-                </p>
-            </div>
+            <p className="text-center mt-4">
+                Already have an account?{" "}
+                <Link to="/signin" className="text-blue-500 hover:underline">Sign In</Link>
+            </p>
         </div>
     );
 };
