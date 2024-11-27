@@ -133,7 +133,7 @@ export async function findRestaurantInfo(restaurantNameValue) {
     const messageElement = document.getElementById('restaurantInfoMsg');
 
     if (responseData.success) {
-        messageElement.textContent = "Found Restaurant Successfull!";
+        messageElement.textContent = "Found Restaurant successfully!";
         //fetchTableData();
     } else {
         messageElement.textContent = "Restaurant not found";
@@ -142,7 +142,7 @@ export async function findRestaurantInfo(restaurantNameValue) {
 
 export async function getRestaurantMenu(lat, lon) {
     try {
-        const response = await fetch(`${host}/${lat}/${lon}/menu`, {
+        const response = await fetch(`${host}/menu/${lat}/${lon}`, {
             method: "GET"
         });
         console.log(response);
