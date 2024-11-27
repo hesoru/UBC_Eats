@@ -4,6 +4,7 @@ import './css/App.css';
 import React, { useState } from 'react';
 import SignUp from "./components/signup";
 import UserReview from "./containers/UserReview";
+import MenuPage from "./containers/MenuPage";
 import RestaurantsContainer from "./containers/RestaurantsContainer";
 
 function App() {
@@ -20,7 +21,8 @@ function App() {
                     <nav>
                         <Link to="/signup">Sign Up/In</Link> |{' '}
                         <Link to="/restaurants">Restaurants</Link> |{' '}
-                        <Link to={`/user/${currentUser}`}>User Review</Link>
+                        <Link to={`/user/${currentUser}`}>User Review</Link> |{' '}
+                        <Link to={`/restaurant/49.267726/-123.253154/menu`}>Menu (Temp Link)</Link>
                     </nav>
                 </header>
 
@@ -28,6 +30,7 @@ function App() {
                     <Route path="/signup" element={<SignUp setCurrentUser={setCurrentUser} />} />
                     <Route path="/restaurants" element={<RestaurantsContainer />} />
                     <Route path="/user/:userName" element={<UserReview />} />
+                    <Route path="/restaurant/:lat/:lon/menu" element={<MenuPage />} />
                 </Routes>
             </div>
         </Router>

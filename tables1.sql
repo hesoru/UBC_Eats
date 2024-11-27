@@ -96,12 +96,12 @@ CREATE TABLE Menu_Serves (
 );
 
 CREATE TABLE Menu_Item_On (
-                              Menu_Name VARCHAR2(60),
+                              Menu_Item_Name VARCHAR2(60),
                               Menu_Id VARCHAR2(30) NOT NULL,
                               Description VARCHAR2(100),
                               Menu_Type VARCHAR2(30),
                               Price NUMBER(9, 2),
-                              PRIMARY KEY (Menu_Name, Menu_Id),
+                              PRIMARY KEY (Menu_Item_Name, Menu_Id),
                               CONSTRAINT fk_menu_item FOREIGN KEY (Menu_Id) REFERENCES Menu_Serves(Id)
 );
 
@@ -119,7 +119,7 @@ CREATE TABLE Contains_Diet (
                                Menu_Id VARCHAR2(30),
                                PRIMARY KEY (Diet_Type, Menu_Item_Name, Menu_Id),
                                CONSTRAINT fk_diet FOREIGN KEY (Diet_Type) REFERENCES Diet(Diet_Type),
-                               CONSTRAINT fk_menu_diet FOREIGN KEY (Menu_Item_Name, Menu_Id) REFERENCES Menu_Item_On(Menu_Name, Menu_Id)
+                               CONSTRAINT fk_menu_diet FOREIGN KEY (Menu_Item_Name, Menu_Id) REFERENCES Menu_Item_On(Menu_Item_Name, Menu_Id)
 );
 
 CREATE TABLE Dietary_Profile_Can_Save (
@@ -144,7 +144,7 @@ CREATE TABLE Contains_Allergen (
                                    Menu_Id VARCHAR2(30),
                                    PRIMARY KEY (Allergen_Type, Menu_Item_Name, Menu_Id),
                                    CONSTRAINT fk_allergen FOREIGN KEY (Allergen_Type) REFERENCES Allergen(Allergen_Type),
-                                   CONSTRAINT fk_menu_allergen FOREIGN KEY (Menu_Item_Name, Menu_Id) REFERENCES Menu_Item_On(Menu_Name, Menu_Id)
+                                   CONSTRAINT fk_menu_allergen FOREIGN KEY (Menu_Item_Name, Menu_Id) REFERENCES Menu_Item_On(Menu_Item_Name, Menu_Id)
 );
 
 CREATE TABLE Stores_Allergen (

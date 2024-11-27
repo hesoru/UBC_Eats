@@ -12,10 +12,11 @@
  * 
  */
 
+const host = 'http://localhost:50001'
 
 // This function checks the database connection and updates its status on the frontend.
 export async function checkDbConnection() {
-    const response = await fetch('http://localhost:50001/check-db-connection', {
+    const response = await fetch(`${host}/check-db-connection`, {
         method: "GET"
     });
     return await response.text();
@@ -23,7 +24,7 @@ export async function checkDbConnection() {
 
 export async function fetchAllRestaurants() {
     try {
-        const response = await fetch('http://localhost:50001/fetch-all-restaurants', {
+        const response = await fetch(`${host}/fetch-all-restaurants`, {
             method: "GET"
         });
 
@@ -40,7 +41,7 @@ export async function fetchAllRestaurants() {
 }
 
 export async function fetchUsersReviews(userName) {
-    const response = await fetch(`http://localhost:50001/fetch-user-reviews/${encodeURIComponent(userName)}`, {
+    const response = await fetch(`${host}/fetch-user-reviews/${encodeURIComponent(userName)}`, {
         method: 'GET'
     });
 
@@ -52,7 +53,7 @@ export async function fetchUsersReviews(userName) {
 }
 
 export async function fetchReviewContent(reviewID) {
-        const response = await fetch(`http://localhost:50001/fetch-user-review/${encodeURIComponent(reviewID)}`, {
+        const response = await fetch(`${host}/fetch-user-review/${encodeURIComponent(reviewID)}`, {
             method: 'GET'
         });
 
@@ -70,7 +71,7 @@ export async function updateUserReview(newContent, columnName, reviewID) {
 
     try {
         const response = await fetch(
-            `http://localhost:50001/update-user-review`,
+            `${host}/update-user-review`,
             {
                 method: 'POST',
                 headers: {
@@ -102,7 +103,7 @@ export async function deleteReview(reviewID) {
 
     try {
         const response = await fetch(
-            `http://localhost:50001/delete-review/${encodeURIComponent(reviewID)}`,
+            `${host}/delete-review/${encodeURIComponent(reviewID)}`,
             {
                 method: 'DELETE',
             }
@@ -122,7 +123,7 @@ export async function deleteReview(reviewID) {
 
 // List restaurant locations based on given restaurant
 export async function findRestaurantInfo(restaurantNameValue) {
-    const url =`http://localhost:50001/find-restaurants?restaurantName=${encodeURIComponent(restaurantNameValue)}`;
+    const url =`${host}/find-restaurants?restaurantName=${encodeURIComponent(restaurantNameValue)}`;
 
     const response = await fetch(url, {
         method: 'GET'
@@ -136,6 +137,24 @@ export async function findRestaurantInfo(restaurantNameValue) {
         //fetchTableData();
     } else {
         messageElement.textContent = "Restaurant not found";
+    }
+}
+
+export async function getRestaurantMenu(lat, lon) {
+    try {
+        const response = await fetch(`${host}/${lat}/${lon}/menu`, {
+            method: "GET"
+        });
+        console.log(response);
+        if (!response.ok) {
+            throw new Error(`Request failed with status ${response.status}: ${response.statusText}`);
+        }
+
+        return await response.json();
+
+    } catch (error) {
+        console.error("Error fetching restaurant menu:", error.message);
+        return [];
     }
 }
 

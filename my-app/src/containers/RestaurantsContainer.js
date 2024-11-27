@@ -142,6 +142,7 @@ const RestaurantsContainer = () => {
                                         <p>Average Price: {restaurant.AVERAGE_PRICE}</p>
                                         <p>Phone Number: {restaurant.PHONE_NUMBER}</p>
                                         <p>Address: {restaurant.STREET_ADDRESS}, {restaurant.CITY}, {restaurant.PROVINCE_OR_STATE}, {restaurant.POSTAL_CODE}</p>
+                                        {/* <button className="text-ellipsis space-x-3 text-lg font-extrabold font-mono" onClick={applyFilters}>Menu</button> */}
                                     </li>
                                 ))}
                             </ul>
