@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Label, TextInput } from "flowbite-react";
 import { useNavigate, Link } from 'react-router-dom';
+import {isValidUserName} from "../scripts";
 
 const SignIn = ({ setCurrentUser }) => {
     const navigate = useNavigate();
@@ -12,10 +13,29 @@ const SignIn = ({ setCurrentUser }) => {
         setFormData({ ...formData, [id]: value });
     };
 
-    const handleSubmit = (e) => {
+    function isEmptyOrSpaces(str) {
+        return !str || str.trim() === '';
+    }
+    const handleSubmit = async (e) => {
         e.preventDefault();
+
         setCurrentUser(formData.username);
-        navigate(`/user/${formData.username}`);
+        if (isEmptyOrSpaces(formData.username)) {
+            setMessage("Please enter a valid username");
+            return;
+        }
+        //console.log("current username:", formData.username)
+        const response = await isValidUserName(formData.username)
+        const result = response.result
+       // console.log(result)
+        if(result) {
+            navigate(`/user/${formData.username}`);
+        } else {
+            setMessage("This username does not exist")
+        }
+
+
+
     };
 
     return (

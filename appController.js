@@ -142,98 +142,20 @@ router.post("/filter-food", async (req, res) => {
         res.status(500).json({ success: false });
     }
 });
-// router.post("/add-to-dietary-profile", async (req, res) => {
-//     const {foodType, userName, profileName} = req.body;
-//     const updateResult = await appService.addItemToDietaryProfile(foodType, userName, profileName)
-//     if (updateResult) {
-//         res.json({ success: true });
-//     } else {
-//         res.status(500).json({ success: false });
-//     }
-// });
-//
-// router.delete("/remove-from-dietary-profile", async (req, res) => {
-//     const {foodType, userName, profileName} = req.body;
-//     const updateResult = await appService.removeItemFromDietaryProfile(foodType, userName, profileName)
-//     if (updateResult) {
-//         res.json({ success: true });
-//     } else {
-//         res.status(500).json({ success: false });
-//     }
-// });
-
-//
-// router.get('/demotable', async (req, res) => {
-//     const tableContent = await appService.fetchDemotableFromDb();
-//     res.json({data: tableContent});
-// });
-//
-// router.get('/usertable', async (req, res) => {
-//     const tableContent = await appService.fetchUserTableFromDb();
-//     res.json({data: tableContent});
-// });
-//
-// router.post("/initiate-demotable", async (req, res) => {
-//     const initiateResult = await appService.initiateDemotable();
-//     if (initiateResult) {
-//         res.json({ success: true });
-//     } else {
-//         res.status(500).json({ success: false });
-//     }
-// });
-//
-// router.post("/initiate-usertable", async (req, res) => {
-//     const initiateResult = await appService.initiateUserTable();
-//     if (initiateResult) {
-//         res.json({ success: true });
-//     } else {
-//         res.status(500).json({ success: false });
-//     }
-// });
-//
-// router.post("/insert-demotable", async (req, res) => {
-//     const { id, name } = req.body;
-//     const insertResult = await appService.insertDemotable(id, name);
-//     if (insertResult) {
-//         res.json({ success: true });
-//     } else {
-//         res.status(500).json({ success: false });
-//     }
-// });
-//
-// router.post("/insert-usertable", async (req, res) => {
-//     const { Username, First_Name, Last_Name, Email, User_Longitude, User_Latitude } = req.body;
-//     const insertResult = await appService.insertUserTable(Username, First_Name, Last_Name, Email, User_Longitude, User_Latitude);
-//     if (insertResult) {
-//         res.json({ success: true });
-//     } else {
-//         res.status(500).json({ success: false });
-//     }
-// });
-//
-// router.post("/update-name-demotable", async (req, res) => {
-//     const { oldName, newName } = req.body;
-//     const updateResult = await appService.updateNameDemotable(oldName, newName);
-//     if (updateResult) {
-//         res.json({ success: true });
-//     } else {
-//         res.status(500).json({ success: false });
-//     }
-// });
-//
-// router.post("/initiate-demotable", async (req, res) => {
-//     const initiateResult = await appService.initiateDemotable();
-//     if (initiateResult) {
-//         res.json({ success: true });
-//     } else {
-//         res.status(500).json({ success: false });
-//     }
-// });
-//
-//
-//
-//
 
 
+router.get("/check-username/:userName", async (req, res) => {
+    console.log("entered endpoint")
 
+    // console.log(dietTypes, allergenTypes);
+    const initiateResult = await appService.checkUserName(req.params.userName)
+    //console.log(initiateResult)
+    if (initiateResult) {
+        console.log("success")
+        res.json({ success: true, result: initiateResult});
+    } else {
+        console.log("fail")
+        res.status(500).json({ success: false });
+    }
+});
 module.exports = router;
