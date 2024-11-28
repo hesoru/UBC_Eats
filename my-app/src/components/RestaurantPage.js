@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from 'react-router-dom';
-import restuarant1 from "./restaurant-1.svg";
+import restuarant1 from "../containers/restaurant-1.svg";
 
 const RestaurantPage = ({ restaurant }) => {
     const navigate = useNavigate();

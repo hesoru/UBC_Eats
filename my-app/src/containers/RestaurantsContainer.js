@@ -1,7 +1,7 @@
 
 import React, {useEffect, useState} from 'react';
 import {fetchAllRestaurants} from "../scripts";
-import RestaurantPage from "./RestaurantPage";
+import RestaurantPage from "../components/RestaurantPage";
 import '../css/RestaurantPage.css';
 
 const RestaurantsContainer = () => {
