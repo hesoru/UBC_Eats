@@ -7,6 +7,7 @@ import UserReview from "./containers/UserReview";
 import MenuPage from "./containers/MenuPage";
 import RestaurantsContainer from "./containers/RestaurantsContainer";
 import SignIn from "./components/SignIn";
+import FindFood from "./containers/FindFood";
 
 function App() {
     const [currentUser, setCurrentUser] = useState('');
@@ -24,6 +25,7 @@ function App() {
                         <Link to="/restaurants">Restaurants</Link> |{' '}
                         <Link to={`/user/${currentUser}`}>User Review</Link> |{' '}
                         <Link to={`/menu/49.269235/-123.255589`}>Menu (Temp Link)</Link>
+                        <Link to={`/find-food`}>FindFood</Link>
                     </nav>
                 </header>
 
@@ -33,6 +35,7 @@ function App() {
                     <Route path="/restaurants" element={<RestaurantsContainer />} />
                     <Route path="/user/:userName" element={<UserReview />} />
                     <Route path="/menu/:lat/:lon" element={<MenuPage />} />
+                    <Route path="/find-food" element={<FindFood />} />
                 </Routes>
             </div>
         </Router>

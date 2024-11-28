@@ -152,7 +152,7 @@ async function fetchAllRestaurantsFromDb() {
             "       rl.POSTAL_CODE,\n" +
             "       rl.PHONE_NUMBER,\n" +
             "       r.Cuisine_Type,\n" +
-            "       r.Average_Price,  -- Added Average_Price\n" +
+            "       r.Average_Price, \n" +
             "       rl.AVERAGE_RATING,\n" +
             "       COUNT(*) AS Total_Rows\n" +
             "FROM Restaurant_Location_Has rl\n" +
@@ -274,6 +274,106 @@ async function findRestaurant(restaurantName) {
         return [];
     });
 }
+
+async function fetchMenuProfile(dietTypes, allergenTypes) {
+    return await withOracleDB(async (connection) => {
+        console.log("before connecting");
+
+        let dietCondition = "";
+        let allergenCondition = "";
+
+        if (dietTypes.length > 0) {
+            const dietTypesPlaceholders = dietTypes.map((_, index) => `:dietType${index}`).join(', ');
+            dietCondition = `cd.DIET_TYPE IN (${dietTypesPlaceholders})`;
+        }
+
+        if (allergenTypes.length > 0) {
+            const allergenTypesPlaceholders = allergenTypes.map((_, index) => `:allergenType${index}`).join(', ');
+            allergenCondition = `SUM(CASE WHEN ca.ALLERGEN_TYPE IN (${allergenTypesPlaceholders}) THEN 1 ELSE 0 END) = 0`;
+        }
+
+        const query = `
+            SELECT ca.MENU_ITEM_NAME, ca.MENU_ID
+            FROM CONTAINS_ALLERGEN ca
+            JOIN CONTAINS_DIET cd
+                ON ca.MENU_ITEM_NAME = cd.MENU_ITEM_NAME
+            WHERE 1 = 1
+            ${dietCondition ? `AND ${dietCondition}` : ""}
+            GROUP BY ca.MENU_ITEM_NAME, ca.MENU_ID
+            ${allergenCondition ? `HAVING ${allergenCondition}` : ""}
+            ORDER BY ca.MENU_ITEM_NAME
+        `;
+
+        // Prepare the query parameters to bind
+        const queryParams = {};
+
+        dietTypes.forEach((type, index) => {
+            queryParams[`dietType${index}`] = {val: type}; // val? or ...
+        });
+
+        allergenTypes.forEach((type, index) => {
+            queryParams[`allergenType${index}`] = {val: type}; // val? or ...
+        });
+
+        try {
+            // Execute the query with parameters
+            const result = await connection.execute(query, queryParams);
+            console.log("after connecting", result);
+            return result.rows.length;
+        } catch (err) {
+            console.error("Error executing query", err);
+            return [];
+        }
+    });
+}
+
+
+// async function fetchMenuProfile(dietTypes, allergenTypes) {
+//     return await withOracleDB(async (connection) => {
+//         console.log("before connecting");
+//
+//         let dietCondition = "";
+//         let allergenCondition = "";
+//
+//         if (dietTypes.length > 0) {
+//             const dietTypesPlaceholders = dietTypes.map((_, index) => `:dietType${index}`).join(', ');
+//             dietCondition = `cd.DIET_TYPE IN (${dietTypesPlaceholders})`;
+//         }
+//
+//         if (allergenTypes.length > 0) {
+//             const allergenTypesPlaceholders = allergenTypes.map((_, index) => `:allergenType${index}`).join(', ');
+//             allergenCondition = `SUM(CASE WHEN ca.ALLERGEN_TYPE IN (${allergenTypesPlaceholders}) THEN 1 ELSE 0 END) = 0`;
+//         }
+//
+//         const query = `
+//             SELECT ca.MENU_ITEM_NAME, ca.MENU_ID
+//             FROM CONTAINS_ALLERGEN ca
+//             JOIN CONTAINS_DIET cd
+//                 ON ca.MENU_ITEM_NAME = cd.MENU_ITEM_NAME
+//             WHERE 1 = 1
+//             ${dietCondition ? `AND ${dietCondition}` : ""}
+//             GROUP BY ca.MENU_ITEM_NAME, ca.MENU_ID
+//             ${allergenCondition ? `HAVING ${allergenCondition}` : ""}
+//             ORDER BY ca.MENU_ITEM_NAME
+//         `;
+//
+//         // Prepare the query parameters to bind
+//         const queryParams = [
+//             ...dietTypes.map((type, index) => ({ name: `dietType${index}`, value: type })),
+//             ...allergenTypes.map((type, index) => ({ name: `allergenType${index}`, value: type }))
+//         ];
+//
+//         // Execute the query with parameters
+//         const result = await connection.execute(query, queryParams);
+//
+//         console.log("after connecting", result.rows);
+//         return result.rows;
+//     }).catch((err) => {
+//         console.error("Error executing query", err);
+//         return [];
+//     });
+// }
+
 
 async function fetchRestaurantMenuFromDb(lat, lon) {
     return await withOracleDB(async (connection) => {
@@ -532,7 +632,8 @@ module.exports = {
     fetchAUserReview,
     fetchAllReviewsFromUser,
     addUserLocation,
-    fetchRestaurantMenuFromDb
+    fetchRestaurantMenuFromDb,
+    fetchMenuProfile
     // addItemToDietaryProfile,
     // removeItemFromDietaryProfile,
     // fetchUserTableFromDb,

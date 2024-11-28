@@ -158,6 +158,29 @@ export async function getRestaurantMenu(lat, lon) {
     }
 }
 
+export async function filterFoods(dietTypes, allergenTypes) {
+    try {
+        const response = await fetch(`${host}/filter-food`, {
+            method: "POST",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                dietTypes,
+                allergenTypes
+            })
+        });
+        console.log("response: " + response);
+        if (!response.ok) {
+            throw new Error(`Request failed with status ${response.status}: ${response.statusText}`);
+        }
+
+        return await response.json();
+
+    } catch (error) {
+        console.error("Error fetching food items:", error.message);
+        return [];
+    }
+}
+
 // //HEDIE'S
 // export async function fetchAndDisplayUsersHedie() {
 //     const tableElement = document.getElementById('usertable');
