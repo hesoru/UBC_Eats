@@ -145,7 +145,7 @@ export async function getRestaurantMenu(lat, lon) {
         const response = await fetch(`${host}/menu/${lat}/${lon}`, {
             method: "GET"
         });
-        console.log(response);
+        console.log("response: " + response);
         if (!response.ok) {
             throw new Error(`Request failed with status ${response.status}: ${response.statusText}`);
         }

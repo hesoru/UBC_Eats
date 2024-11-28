@@ -310,7 +310,7 @@ async function fetchRestaurantMenuFromDb(lat, lon) {
             LEFT JOIN 
                 Allergen a ON ca.Allergen_Type = a.Allergen_Type
             WHERE 
-                rlh.Latitude = :lat AND rlh.Longitude = :lon`
+                rlh.Latitude = :lat AND rlh.Longitude = :lon`,
             [lat, lon]);
         console.log("after connecting", result.rows)
         return result.rows;
@@ -541,7 +541,8 @@ module.exports = {
     addUserProfile,
     fetchAUserReview,
     fetchAllReviewsFromUser,
-    addUserLocation
+    addUserLocation,
+    fetchRestaurantMenuFromDb
     // addItemToDietaryProfile,
     // removeItemFromDietaryProfile,
     // fetchUserTableFromDb,
