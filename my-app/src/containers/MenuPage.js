@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import {getRestaurantMenu} from "../scripts";
+import '../css/MenuPage.css'
 
 const MenuPage = () => {
     const [menuItems, setMenuItems] = useState([]);
@@ -16,6 +17,7 @@ const MenuPage = () => {
 
             try {
                 const data = await getRestaurantMenu(lat, lon);
+                console.log(data.result);
                 setMenuItems(data.result || []);
             } catch (err) {
                 console.error(err);
@@ -40,29 +42,29 @@ const MenuPage = () => {
         return <p style={{ color: 'red' }}>Error: {error}</p>;
     }
 
-    // TODO: change lat/lon to restaurant name
+    // TODO: change lat/lon to restaurant name item.Price.toFixed(2)
     return (
-        <div className="menu-page">
+        <main className="menu-list-container">
             <h1 className="text-2xl font-extrabold">Menu for Location at ({lat}, {lon})</h1> 
-            <ul>
                 {menuItems.length > 0 ? (
-                    menuItems.map((item, index) => (
-                        <li key={index} className="menu-item">
-                            <h3 className="font-bold">{item.Menu_Item_Name}</h3>
-                            <p>{item.Description}</p>
-                            <p>Price: ${item.Price.toFixed(2)}</p>
-                            {item.Allergen_Type && <p>Allergens: {item.Allergen_Type}</p>}
-                            {item.Diet_Type && <p>Dietary Info: {item.Diet_Type}</p>}
-                        </li>
-                    ))
+                    <ul className="menu-list">
+                        {menuItems.map((item, index) => (
+                            <li key={index} className="menu-item">
+                                <h3 style={{ marginBottom: '1em'}} className="text-lg font-extrabold">{item[0]}</h3>
+                                <p>{item[1]}</p>
+                                <p style={{fontWeight: 'bold', marginBottom: '12px'}}>Price: ${item[2].toFixed(2)}</p>
+                                {item[3] && <p>Dietary Info: {item[3] || "Not specified"}</p>}
+                                {item[4] && <p>Allergens: Contains {item[4] || "Not specified"}</p>}
+                            </li>
+                        ))}
+                    </ul>    
                 ) : (
                     <p>No menu items available for this location.</p>
                 )}
-            </ul>
             <Link to="/restaurants" className="mt-4 inline-block bg-blue-500 text-white py-2 px-4 rounded">
                 Back to Restaurants
             </Link>
-        </div>
+        </main>
     );
 };
 
