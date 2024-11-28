@@ -61,7 +61,7 @@ CREATE TABLE Restaurant_Location_Has (
 CREATE TABLE Review_For_Makes (
                                   Id VARCHAR2(30) PRIMARY KEY,
                                   Content VARCHAR2(200) NOT NULL,
-                                  Rating NUMBER(10, 0) CHECK (Rating BETWEEN 0 AND 5),
+                                  Rating NUMBER(2, 2) CHECK (Rating BETWEEN 0.0 AND 5.0 ),
                                   Record_Date DATE,
                                   Record_Time TIMESTAMP,
                                   Username VARCHAR2(30) NOT NULL,

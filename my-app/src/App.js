@@ -6,6 +6,7 @@ import SignUp from "./components/signup";
 import UserReview from "./containers/UserReview";
 import MenuPage from "./containers/MenuPage";
 import RestaurantsContainer from "./containers/RestaurantsContainer";
+import SignIn from "./components/SignIn";
 
 function App() {
     const [currentUser, setCurrentUser] = useState('');
@@ -28,6 +29,7 @@ function App() {
 
                 <Routes>
                     <Route path="/signup" element={<SignUp setCurrentUser={setCurrentUser} />} />
+                    <Route path="/signin" element={<SignIn setCurrentUser={setCurrentUser} />} />
                     <Route path="/restaurants" element={<RestaurantsContainer />} />
                     <Route path="/user/:userName" element={<UserReview />} />
                     <Route path="/menu/:lat/:lon" element={<MenuPage />} />

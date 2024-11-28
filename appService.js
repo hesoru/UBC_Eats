@@ -22,16 +22,6 @@ const dbConfig = {
     poolTimeout: 60
 };
 
-
-// initialize connection pool
-// async function initializeConnectionPool() {
-//     try {
-//         await oracledb.createPool(dbConfig);
-//         console.log('Connection pool started');
-//     } catch (err) {
-//         console.error('Initialization error: ' + err.message);
-//     }
-// }
 async function initializeConnectionPool() {
     try {
         oracledb.initOracleClient({ libDir: process.env.ORACLE_DIR })
@@ -223,7 +213,7 @@ async function updateReviewContent(newContent, columnName, reviewID) {
     // Rating (0 - 5)
     return await withOracleDB(async (connection) => {
         console.log("before update connecting")
-
+        console.log(newContent)
         const validColumns = ['CONTENT', 'RATING'];
         // console.log("Passed Content variable: ", columnName)
         if (!validColumns.includes(columnName)) {
