@@ -20,22 +20,26 @@ function App() {
                     <h1 className="text-3xl font-mono">
                         Looking for delicious food that fits your needs?
                     </h1>
-                    <nav>
-                        <Link to="/signup">Sign Up/In</Link> |{' '}
-                        <Link to="/restaurants">Restaurants</Link> |{' '}
-                        <Link to={`/user/${currentUser}`}>User Review</Link> |{' '}
-                        <Link to={`/menu/49.269235/-123.255589`}>Menu (Temp Link)</Link>
-                        <Link to={`/find-food`}>FindFood</Link>
+
+                    <nav className="mt-4 space-x-6">
+                        <Link to="/signup" className="text-lg font-bold font-mono hover:text-indigo-200 transition">Sign Up/In</Link> |{' '}
+                        <Link to="/restaurants"
+                              className="text-lg font-bold font-mono  hover:text-indigo-200 transition">Restaurants</Link> |{' '}
+                        <Link to={`/user/${currentUser}`} className="text-lg font-bold font-mono  hover:text-indigo-200 transition">User
+                            Review</Link> |{' '}
+                        <Link to={`/menu/49.269235/-123.255589`} className="text-lg font-bold font-mono :text-indigo-200 transition">Menu
+                            (Temp Link)</Link> |{' '}
+                        <Link to={`/find-food`} className="text-lg font-bold font-mono hover:text-indigo-200 transition">Find Food</Link>
                     </nav>
                 </header>
 
                 <Routes>
-                    <Route path="/signup" element={<SignUp setCurrentUser={setCurrentUser} />} />
-                    <Route path="/signin" element={<SignIn setCurrentUser={setCurrentUser} />} />
-                    <Route path="/restaurants" element={<RestaurantsContainer />} />
-                    <Route path="/user/:userName" element={<UserReview />} />
-                    <Route path="/menu/:lat/:lon" element={<MenuPage />} />
-                    <Route path="/find-food" element={<FindFood />} />
+                    <Route path="/signup" element={<SignUp setCurrentUser={setCurrentUser}/>}/>
+                    <Route path="/signin" element={<SignIn setCurrentUser={setCurrentUser}/>}/>
+                    <Route path="/restaurants" element={<RestaurantsContainer/>}/>
+                    <Route path="/user/:userName" element={<UserReview/>}/>
+                    <Route path="/menu/:lat/:lon" element={<MenuPage/>}/>
+                    <Route path="/find-food" element={<FindFood/>}/>
                 </Routes>
             </div>
         </Router>
