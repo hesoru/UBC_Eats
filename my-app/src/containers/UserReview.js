@@ -10,6 +10,7 @@ const UserReviews = ({initialReviews }) => {
     const [currentReview, setCurrentReview] = useState(null);
     const [editedComment, setEditedComment] = useState("");
     const [editedRating, setEditedRating] = useState(null);
+    const [message, setMessage] = useState("");
 
     useEffect(() => {
         const fetchReviews = async () => {
@@ -61,29 +62,50 @@ const UserReviews = ({initialReviews }) => {
     };
 
     const handleEditSave = async () => {
-        // Update the comment and rating
-        await updateUserReview(editedComment, "CONTENT", currentReview.id);
-        await updateUserReview(editedRating, "RATING", currentReview.id);
+        try {
+            // Update the comment and rating
+            await updateUserReview(editedComment, "CONTENT", currentReview.id);
+            await updateUserReview(editedRating, "RATING", currentReview.id);
 
-        const updatedReviews = reviews.map((review) =>
-            review.id === currentReview.id
-                ? { ...review, comment: editedComment, rating: editedRating }
-                : review
-        );
-        setReviews(updatedReviews);
-        handleEditClose();
+            const updatedReviews = reviews.map((review) =>
+                review.id === currentReview.id
+                    ? { ...review, comment: editedComment, rating: editedRating }
+                    : review
+            );
+            setReviews(updatedReviews);
+            setMessage("Review updated successfully!");
+            setTimeout(() => setMessage(""), 3000);
+        } catch (error) {
+            setMessage("Error updating review.");
+            setTimeout(() => setMessage(""), 3000);
+        }
+
+        handleEditClose()
     };
 
     const handleDelete = async (reviewId) => {
-
-        const updatedReviews = reviews.filter((review) => review.id !== reviewId);
-        await deleteReview(reviewId);
-        setReviews(updatedReviews);
+        try {
+            await deleteReview(reviewId);
+            const updatedReviews = reviews.filter((review) => review.id !== reviewId);
+            setReviews(updatedReviews);
+            setMessage("Review deleted successfully!");
+            setTimeout(() => setMessage(""), 3000);
+        } catch (error) {
+            setMessage("Error deleting review.");
+            setTimeout(() => setMessage(""), 3000);
+        }
     };
 
     return (
         <div style={styles.container}>
-            <h2 style={styles.heading}>My Reviews</h2>
+            <h2 style={styles.heading}> {userName}'s Reviews</h2>
+
+            {message && (
+                <div style={styles.message} className="bg-green-500 text-white p-2 mb-4">
+                    {message}
+                </div>
+            )}
+
             {reviews.length > 0 ? (
                 reviews.map((review) => (
                     <div key={review.id} style={styles.reviewCard}>

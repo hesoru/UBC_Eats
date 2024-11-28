@@ -159,17 +159,20 @@ export async function getRestaurantMenu(location_name, lat, lon) {
     }
 }
 
+
+
 export async function filterFoods(dietTypes, allergenTypes) {
     try {
+        //console.log(dietTypes, allergenTypes.type)
         const response = await fetch(`${host}/filter-food`, {
             method: "POST",
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 dietTypes,
-                allergenTypes
+                allergenTypes,
             })
         });
-        console.log("response: " + response);
+        //console.log("response: " + response);
         if (!response.ok) {
             throw new Error(`Request failed with status ${response.status}: ${response.statusText}`);
         }

@@ -48,11 +48,11 @@ CREATE TABLE Restaurant_Location_Has (
                                          Latitude NUMBER(9, 6),
                                          City VARCHAR2(30),
                                          Province_or_State VARCHAR2(2),
-                                         Street_Address VARCHAR2(50) NOT NULL UNIQUE,
+                                         Street_Address VARCHAR2(60) NOT NULL UNIQUE,
                                          Postal_Code CHAR(6),
                                          Location_Name VARCHAR2(30),
                                          Phone_Number VARCHAR2(15) UNIQUE,
-                                         Average_Rating NUMBER(1, 1) CHECK (Average_Rating BETWEEN 0 AND 5),
+                                         Average_Rating NUMBER(3, 2) CHECK (Average_Rating BETWEEN 0 AND 5),
                                          PRIMARY KEY (Longitude, Latitude),
                                          CONSTRAINT fk_restaurant FOREIGN KEY (Restaurant_Id)
                                              REFERENCES Restaurant(Id)
@@ -61,7 +61,7 @@ CREATE TABLE Restaurant_Location_Has (
 CREATE TABLE Review_For_Makes (
                                   Id VARCHAR2(30) PRIMARY KEY,
                                   Content VARCHAR2(200) NOT NULL,
-                                  Rating NUMBER(2, 2) CHECK (Rating BETWEEN 0.0 AND 5.0 ),
+                                  Rating NUMBER(3, 2) CHECK (Rating BETWEEN 0.0 AND 5.0 ),
                                   Record_Date DATE,
                                   Record_Time TIMESTAMP,
                                   Username VARCHAR2(30) NOT NULL,
