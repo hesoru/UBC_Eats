@@ -1,4 +1,4 @@
-
+import { Link } from "react-router-dom";
 import React, {useEffect, useState} from 'react';
 import {fetchAllRestaurants} from "../scripts";
 import RestaurantPage from "../components/RestaurantPage";
@@ -31,6 +31,7 @@ const RestaurantsContainer = () => {
             try {
                 const response = await fetchAllRestaurants()
                 const finalResult = await setRestaurants(response);
+                console.log(finalResult);
                 setAllRestaurants(finalResult);
                 setFilteredRestaurants(finalResult);
             } catch (error) {
@@ -45,6 +46,7 @@ const RestaurantsContainer = () => {
     const setRestaurants = async (response) => {
         const {metaData, rows} = response.result;
 
+        // console.log("metaData: " + metaData.toString());
         const columns = metaData.map(col => col.name);
         //console.log(metaData)
 
@@ -87,7 +89,6 @@ const RestaurantsContainer = () => {
         });
         setFilteredRestaurants(filtered);
     }, [filters, allRestaurants]);
-
 
     return (
         <div className="restaurants-container">
@@ -142,6 +143,12 @@ const RestaurantsContainer = () => {
                                         <p>Average Price: ${restaurant.AVERAGE_PRICE}</p>
                                         <p>Phone Number: {restaurant.PHONE_NUMBER}</p>
                                         <p>Address: {restaurant.STREET_ADDRESS}, {restaurant.CITY}, {restaurant.PROVINCE_OR_STATE}, {restaurant.POSTAL_CODE}</p>
+                                        {/* <p>Address: {restaurant.LATITUDE}, {restaurant.LONGITUDE}</p> */}
+                                        <Link
+                                            to={`/menu/${restaurant.LOCATION_NAME}/${restaurant.LATITUDE.toFixed(6)}/${restaurant.LONGITUDE.toFixed(6)}`}
+                                            className="mt-2 inline-block bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
+                                            Browse Menu
+                                        </Link>
                                         {/* <button className="text-ellipsis space-x-3 text-lg font-extrabold font-mono" onClick={applyFilters}>Menu</button> */}
                                     </li>
                                 ))}

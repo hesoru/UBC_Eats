@@ -2,7 +2,7 @@
 .restaurants-container {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    /* align-items: right; */
     padding: 20px;
 }
 
@@ -21,7 +21,7 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 20px;
-    width: 100%;
+    width: 80%;
     max-width: 1200px;
 }
 

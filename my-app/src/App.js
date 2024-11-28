@@ -23,9 +23,9 @@ function App() {
                     <nav>
                         <Link to="/signup">Sign Up/In</Link> |{' '}
                         <Link to="/restaurants">Restaurants</Link> |{' '}
-                        <Link to={`/user/${currentUser}`}>User Review</Link> |{' '}
-                        <Link to={`/menu/49.269235/-123.255589`}>Menu (Temp Link)</Link>
-                        <Link to={`/find-food`}>FindFood</Link>
+                        <Link to={`/user/${currentUser}`}>User Review</Link>
+                        {/* <Link to={`/menu/49.269235/-123.255589`}>Menu (Temp Link)</Link> */}
+                        {/* <Link to={`/find-food`}>FindFood</Link> */}
                     </nav>
                 </header>
 
@@ -34,8 +34,8 @@ function App() {
                     <Route path="/signin" element={<SignIn setCurrentUser={setCurrentUser} />} />
                     <Route path="/restaurants" element={<RestaurantsContainer />} />
                     <Route path="/user/:userName" element={<UserReview />} />
-                    <Route path="/menu/:lat/:lon" element={<MenuPage />} />
-                    <Route path="/find-food" element={<FindFood />} />
+                    <Route path="/menu/:location_name/:lat/:lon" element={<MenuPage />} />
+                    {/* <Route path="/find-food" element={<FindFood />} /> */}
                 </Routes>
             </div>
         </Router>
