@@ -144,39 +144,31 @@ async function fetchAllReviewsFromUser(userName) {
 async function fetchAllRestaurantsFromDb() {
     return await withOracleDB(async (connection) => {
         console.log("before connecting")
-        const result = await connection.execute(`
-        SELECT 
-            rl.Location_Name,
-            rl.STREET_ADDRESS,
-            rl.CITY,
-            rl.PROVINCE_OR_STATE,
-            rl.POSTAL_CODE,
-            rl.PHONE_NUMBER,
-            r.Cuisine_Type,
-            ROUND(r.Average_Price, 0) AS Average_Price,
-            rl.AVERAGE_RATING,
-            ROUND(rl.Latitude, 6) AS Latitude,
-            ROUND(rl.Longitude, 6) AS Longitude,
-            COUNT(*) AS Total_Rows
-        FROM 
-            Restaurant_Location_Has rl
-        JOIN 
-            Restaurant r ON rl.Restaurant_Id = r.Id
-        GROUP BY 
-            rl.Location_Name,
-            rl.STREET_ADDRESS,
-            rl.CITY,
-            rl.PROVINCE_OR_STATE,
-            rl.POSTAL_CODE,
-            rl.PHONE_NUMBER,
-            r.Cuisine_Type,
-            ROUND(r.Average_Price, 0),
-            rl.AVERAGE_RATING,
-            ROUND(rl.Latitude, 6),
-            ROUND(rl.Longitude, 6)`,
+        const result = await connection.execute(
+            "SELECT rl.Location_Name,\n" +
+            "       rl.STREET_ADDRESS,\n" +
+            "       rl.CITY,\n" +
+            "       rl.PROVINCE_OR_STATE,\n" +
+            "       rl.POSTAL_CODE,\n" +
+            "       rl.PHONE_NUMBER,\n" +
+            "       r.Cuisine_Type,\n" +
+            "       r.Average_Price, \n" +
+            "       rl.AVERAGE_RATING,\n" +
+            "       COUNT(*) AS Total_Rows\n" +
+            "FROM Restaurant_Location_Has rl\n" +
+            "JOIN Restaurant r ON rl.Restaurant_Id = r.Id\n" +
+            "GROUP BY rl.Location_Name,\n" +
+            "         rl.STREET_ADDRESS,\n" +
+            "         rl.CITY,\n" +
+            "         rl.PROVINCE_OR_STATE,\n" +
+            "         rl.POSTAL_CODE,\n" +
+            "         rl.PHONE_NUMBER,\n" +
+            "         r.Cuisine_Type,\n" +
+            "         r.Average_Price,\n" +
+            "         rl.AVERAGE_RATING\n",
             []  // Empty array????
         );
-        console.log("after connecting", result.rows)
+        console.log("after connecting")
         return result;
 
     }).catch(() => {
@@ -360,7 +352,7 @@ async function fetchMenuProfile(dietTypes, allergenTypes) {
 
 async function fetchRestaurantMenuFromDb(lat, lon) {
     return await withOracleDB(async (connection) => {
-        console.log("before connecting params: " + lat + lon);
+        console.log("before connecting")
         const result = await connection.execute(`
             SELECT
                 mi.Menu_Name,
@@ -383,18 +375,11 @@ async function fetchRestaurantMenuFromDb(lat, lon) {
             LEFT JOIN 
                 Allergen a ON ca.Allergen_Type = a.Allergen_Type
             WHERE 
-                rlh.Latitude = :lat AND rlh.Longitude = :lon
-            GROUP BY
-                mi.Menu_Name,
-                mi.Description,
-                mi.Price,
-                d.Diet_Type,
-                a.Allergen_Type`,
+                rlh.Latitude = :lat AND rlh.Longitude = :lon`,
             [lat, lon]);
         console.log("after connecting", result.rows)
         return result.rows;
-    }).catch((e) => {
-        console.log(e.message);
+    }).catch(() => {
         return [];
     });
 }
@@ -420,43 +405,7 @@ async function fetchRestaurantMenuFromDb(lat, lon) {
             // LEFT JOIN 
             //     Allergen a ON ca.Allergen_Type = a.Allergen_Type
             // WHERE 
-            //     rlh.Latitude = 49.261271 AND rlh.Longitude = -123.255589
-            // GROUP BY
-            //     mi.Menu_Name,
-            //     mi.Description,
-            //     mi.Price,
-            //     d.Diet_Type,
-            //     a.Allergen_Type
-
-// SELECT 
-//     rl.Location_Name,
-//     rl.STREET_ADDRESS,
-//     rl.CITY,
-//     rl.PROVINCE_OR_STATE,
-//     rl.POSTAL_CODE,
-//     rl.PHONE_NUMBER,
-//     r.Cuisine_Type,
-//     ROUND(r.Average_Price, 0) AS Average_Price,
-//     rl.AVERAGE_RATING,
-//     ROUND(rl.Latitude, 6) AS Latitude,
-//     ROUND(rl.Longitude, 6) AS Longitude,
-//     COUNT(*) AS Total_Rows
-// FROM 
-//     Restaurant_Location_Has rl
-// JOIN 
-//     Restaurant r ON rl.Restaurant_Id = r.Id
-// GROUP BY 
-//     rl.Location_Name,
-//     rl.STREET_ADDRESS,
-//     rl.CITY,
-//     rl.PROVINCE_OR_STATE,
-//     rl.POSTAL_CODE,
-//     rl.PHONE_NUMBER,
-//     r.Cuisine_Type,
-//     ROUND(r.Average_Price, 0),
-//     rl.AVERAGE_RATING,
-//     ROUND(rl.Latitude, 6),
-//     ROUND(rl.Longitude, 6);
+            //     rlh.Latitude = 49.269235 AND rlh.Longitude = -123.255589
 
 
 // async function addItemToDietaryProfile(foodType, userName, profileName) {

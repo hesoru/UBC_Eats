@@ -86,7 +86,7 @@ router.get("/fetch-user-reviews/:userName", async (req, res) => {
 router.get("/fetch-all-restaurants", async (req, res) => {
 
     const initiateResult = await appService.fetchAllRestaurantsFromDb();
-    console.log("restaurants: " + initiateResult);
+    console.log(initiateResult)
     if (initiateResult) {
         res.json({ success: true, result: initiateResult});
     } else {
@@ -118,8 +118,7 @@ router.delete("/delete-review/:reviewID", async (req, res) => {
 });
 
 
-router.get("/menu/:location_name/:lat/:lon", async (req, res) => {
-    console.log("params: " + req.params);
+router.get("/menu/:lat/:lon", async (req, res) => {
     const menu = await appService.fetchRestaurantMenuFromDb(req.params.lat, req.params.lon);
     console.log(menu);
     if (menu) {
