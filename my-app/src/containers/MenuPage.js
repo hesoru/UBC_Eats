@@ -96,11 +96,11 @@ const MenuPage = () => {
                     <ul className="menu-list">
                         {consolidatedItems.map((item, index) => (
                             <li key={index} className="menu-item">
-                                <h3 style={{ marginBottom: '1em'}} className="text-lg font-extrabold">{item.name}</h3>
-                                <p>{item.description}</p>
+                                <h3 className="text-lg font-extrabold">{item.name}</h3>
                                 <p style={{fontWeight: 'bold', marginBottom: '12px'}}>
                                     {item.price != null ? `Price: $${item.price.toFixed(2)}` : "Price: N/A"}
                                 </p>
+                                <p style={{marginBottom: '12px'}}>{item.description}</p>
                                 {item.diet && item.diet.length > 0 && (
                                     <div>
                                         <p><strong>Dietary Info:</strong> {item.diet.join(', ')}</p>
