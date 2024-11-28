@@ -91,7 +91,7 @@ const MenuPage = () => {
     // TODO: change lat/lon to restaurant name item.Price.toFixed(2)
     return (
         <main className="menu-list-container">
-            <h1 style={{ marginBottom: '1em'}} className="text-2xl font-extrabold">Menu: {location_name}</h1> 
+            <h1 style={{ marginBottom: '1em'}} className="text-3xl font-extrabold font-mono">Menu: {location_name}</h1> 
                 {consolidatedItems.length > 0 ? (
                     <ul className="menu-list">
                         {consolidatedItems.map((item, index) => (
@@ -117,7 +117,7 @@ const MenuPage = () => {
                 ) : (
                     <p>No menu items available for this location.</p>
                 )}
-            <Link to="/restaurants" className="mt-4 inline-block bg-blue-500 text-white py-2 px-4 rounded">
+            <Link to="/restaurants" className="mt-4 inline-block bg-blue-500 text-white py-2 px-4 rounded font-mono">
                 Back to Restaurants
             </Link>
         </main>

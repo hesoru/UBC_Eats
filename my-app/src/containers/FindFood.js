@@ -53,7 +53,7 @@ const FindFood = () => {
 
             {/* Diet Types Checkboxes */}
             <div className="mb-6">
-                <h2 className="text-2xl font-medium font-serif mb-2">Select Multiple Dietary Compatible Items (OR) </h2>
+                <h2 className="text-2xl font-medium font-serif mb-2">Select Multiple Compatible Dietary Restrictions (OR) </h2>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                     {dietOptions.map((diet) => (
                         <label key={diet} className="flex items-center font-thin font-mono space-x-2">
@@ -72,7 +72,7 @@ const FindFood = () => {
 
             {/* Allergen Types Checkboxes */}
             <div className="mb-6">
-                <h2 className="text-2xl font-medium font-serif mb-2">Filter food containing any of the following allergens (AND): </h2>
+                <h2 className="text-2xl font-medium font-serif mb-2">Filter Selected Allergens (AND) </h2>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                     {allergenOptions.map((allergen) => (
                         <label key={allergen} className="flex  font-thin font-mono items-center space-x-2">
