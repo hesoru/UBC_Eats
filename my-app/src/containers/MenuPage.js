@@ -1,13 +1,58 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import {getRestaurantMenu} from "../scripts";
+// import FindFood from './FindFood';
 import '../css/MenuPage.css'
 
 const MenuPage = () => {
-    const [menuItems, setMenuItems] = useState([]);
+    const [consolidatedItems, setConsolidatedItems] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const { lat, lon } = useParams();
+    const { location_name, lat, lon } = useParams();
+    // const [filteredItems, setFilteredItems] = useState([]);
+
+    // Consolidate menu items with the same name, description, and price
+    const consolidateMenuItems = (items) => {
+        // Convert each item to an object
+        const itemsAsObjects = items.map(item => {
+            return {
+                name: item[0],
+                description: item[1],
+                price: item[2],
+                diet: item[3],
+                allergens: item[4]
+            };
+        });
+
+        const consolidated = itemsAsObjects.reduce((menu, item) => {
+            const { name, description, price, diet, allergens } = item;
+
+            // Find if there's already a group with the same name, description, and price
+            const existingItem = menu.find(
+                (entry) => entry.name === name && entry.description === description && entry.price === price
+            );
+
+            if (existingItem) {
+                if (diet && !existingItem.diet.includes(diet)) {
+                    existingItem.diet.push(diet);
+                }
+                if (allergens && !existingItem.allergens.includes(allergens)) {
+                    existingItem.allergens.push(allergens);
+                }
+            } else {
+                // Create a new entry
+                menu.push({
+                    name,
+                    description,
+                    price,
+                    diet: diet ? [diet] : [],
+                    allergens: allergens ? [allergens] : []
+                });
+            }
+            return menu;
+        }, []);
+        return consolidated;
+    };
 
     // Fetch the menu when the component mounts or the params change
     useEffect(() => {
@@ -16,9 +61,10 @@ const MenuPage = () => {
             setError(null);
 
             try {
-                const data = await getRestaurantMenu(lat, lon);
-                console.log(data.result);
-                setMenuItems(data.result || []);
+                // console.log(location_name);
+                const menuItems = await getRestaurantMenu(location_name, lat, lon);
+                const consolidatedItems = await consolidateMenuItems(menuItems.result);
+                setConsolidatedItems(consolidatedItems);
             } catch (err) {
                 console.error(err);
                 setError(err.message);
@@ -27,10 +73,10 @@ const MenuPage = () => {
             }
         };
 
-        if (lat && lon) {
+        if (location_name && lat && lon) {
             fetchMenu();
         }
-    }, [lat, lon]);
+    }, [location_name, lat, lon]);
 
     // Render loading state
     if (loading) {
@@ -45,16 +91,26 @@ const MenuPage = () => {
     // TODO: change lat/lon to restaurant name item.Price.toFixed(2)
     return (
         <main className="menu-list-container">
-            <h1 className="text-2xl font-extrabold">Menu for Location at ({lat}, {lon})</h1> 
-                {menuItems.length > 0 ? (
+            <h1 style={{ marginBottom: '1em'}} className="text-2xl font-extrabold">Menu: {location_name}</h1> 
+                {consolidatedItems.length > 0 ? (
                     <ul className="menu-list">
-                        {menuItems.map((item, index) => (
+                        {consolidatedItems.map((item, index) => (
                             <li key={index} className="menu-item">
-                                <h3 style={{ marginBottom: '1em'}} className="text-lg font-extrabold">{item[0]}</h3>
-                                <p>{item[1]}</p>
-                                <p style={{fontWeight: 'bold', marginBottom: '12px'}}>Price: ${item[2].toFixed(2)}</p>
-                                {item[3] && <p>Dietary Info: {item[3] || "Not specified"}</p>}
-                                {item[4] && <p>Allergens: Contains {item[4] || "Not specified"}</p>}
+                                <h3 style={{ marginBottom: '1em'}} className="text-lg font-extrabold">{item.name}</h3>
+                                <p>{item.description}</p>
+                                <p style={{fontWeight: 'bold', marginBottom: '12px'}}>
+                                    {item.price != null ? `Price: $${item.price.toFixed(2)}` : "Price: N/A"}
+                                </p>
+                                {item.diet && item.diet.length > 0 && (
+                                    <div>
+                                        <p><strong>Dietary Info:</strong> {item.diet.join(', ')}</p>
+                                    </div>
+                                )}
+                                {item.allergens && item.allergens.length > 0 && (
+                                    <div>
+                                        <p><strong>Allergens:</strong> {"Contains " + item.allergens.join(', ')}</p>
+                                    </div>
+                                )}
                             </li>
                         ))}
                     </ul>    
@@ -73,7 +129,7 @@ export default MenuPage;
 // import React, { useState, useEffect } from 'react';
 
 // const RestaurantMenu = ({ restaurantId }) => {
-//   const [menuItems, setMenuItems] = useState([]);
+//   const [consolidatedItems, setconsolidatedItems] = useState([]);
 //   const [loading, setLoading] = useState(true);
 //   const [error, setError] = useState(null);
 
@@ -91,7 +147,7 @@ export default MenuPage;
 //           throw new Error(`Error fetching menu: ${response.status} - ${response.statusText}`);
 //         }
 //         const data = await response.json();
-//         setMenuItems(data.result || []);
+//         setconsolidatedItems(data.result || []);
 //       } catch (err) {
 //         console.error(err);
 //         setError(err.message);
@@ -119,11 +175,11 @@ export default MenuPage;
 //   return (
 //     <div>
 //       <h1>{restaurantId}: Restaurant Menu</h1>
-//       {menuItems.length === 0 ? (
+//       {consolidatedItems.length === 0 ? (
 //         <p>No menu items available for this restaurant.</p>
 //       ) : (
 //         <ul>
-//           {menuItems.map((item) => (
+//           {consolidatedItems.map((item) => (
 //             <li key={item.id}>
 //               <h3>{item.name}</h3>
 //               <p>{item.description}</p>

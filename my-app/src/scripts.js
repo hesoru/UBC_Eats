@@ -140,9 +140,9 @@ export async function findRestaurantInfo(restaurantNameValue) {
     }
 }
 
-export async function getRestaurantMenu(lat, lon) {
+export async function getRestaurantMenu(location_name, lat, lon) {
     try {
-        const response = await fetch(`${host}/menu/${lat}/${lon}`, {
+        const response = await fetch(`${host}/menu/${location_name}/${lat}/${lon}`, {
             method: "GET"
         });
         console.log("response: " + response);

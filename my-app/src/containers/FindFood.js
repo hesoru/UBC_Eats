@@ -108,7 +108,7 @@ const FindFood = () => {
                             {filteredMenu.map((item, index) => (
                                 <li key={index} className="p-4 bg-gray-100 rounded-lg shadow-md">
                                     <strong className="text-xl">{item.MENU_NAME}</strong> from
-                                    <em className="italic text-indigo-600"> {item.RESTAURANT_NAME}</em> -
+                                    <em className="italic text-indigo-600"> {item.RESTAURANT_NAME}</em> - 
                                     {item.PRICE ? (
                                         <span className="font-semibold text-green-600">
                                         ${item.PRICE.toFixed(2)}
@@ -130,4 +130,4 @@ const FindFood = () => {
     );
 };
 
-    export default FindFood;
+export default FindFood;

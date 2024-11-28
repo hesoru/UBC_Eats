@@ -118,7 +118,7 @@ router.delete("/delete-review/:reviewID", async (req, res) => {
 });
 
 
-router.get("/menu/:lat/:lon", async (req, res) => {
+router.get("/menu/:location_name/:lat/:lon", async (req, res) => {
     const menu = await appService.fetchRestaurantMenuFromDb(req.params.lat, req.params.lon);
     console.log(menu);
     if (menu) {

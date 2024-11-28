@@ -22,13 +22,16 @@ function App() {
                     </h1>
 
                     <nav className="mt-4 space-x-6">
-                        <Link to="/signup" className="text-lg font-bold font-mono hover:text-indigo-200 transition">Sign Up/In</Link> |{' '}
+                        <Link to="/signup" className="text-lg font-bold font-mono hover:text-indigo-200 transition">Sign Up/In</Link>
+                        <span className="mx-2 text-gray-400">|</span>
                         <Link to="/restaurants"
-                              className="text-lg font-bold font-mono  hover:text-indigo-200 transition">Restaurants</Link> |{' '}
+                              className="text-lg font-bold font-mono  hover:text-indigo-200 transition">Restaurants</Link>
+                        <span className="mx-2 text-gray-400">|</span>
                         <Link to={`/user/${currentUser}`} className="text-lg font-bold font-mono  hover:text-indigo-200 transition">User
-                            Review</Link> |{' '}
-                        <Link to={`/menu/49.269235/-123.255589`} className="text-lg font-bold font-mono :text-indigo-200 transition">Menu
-                            (Temp Link)</Link> |{' '}
+                            Review</Link>
+                        <span className="mx-2 text-gray-400">|</span>
+                        {/* <Link to={`/menu/49.269235/-123.255589`} className="text-lg font-bold font-mono :text-indigo-200 transition">Menu
+                            (Temp Link)</Link> |{' '} */}
                         <Link to={`/find-food`} className="text-lg font-bold font-mono hover:text-indigo-200 transition">Find Food</Link>
                     </nav>
                 </header>
@@ -38,7 +41,7 @@ function App() {
                     <Route path="/signin" element={<SignIn setCurrentUser={setCurrentUser}/>}/>
                     <Route path="/restaurants" element={<RestaurantsContainer/>}/>
                     <Route path="/user/:userName" element={<UserReview/>}/>
-                    <Route path="/menu/:lat/:lon" element={<MenuPage/>}/>
+                    <Route path="/menu/:location_name/:lat/:lon" element={<MenuPage/>}/>
                     <Route path="/find-food" element={<FindFood/>}/>
                 </Routes>
             </div>

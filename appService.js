@@ -144,31 +144,39 @@ async function fetchAllReviewsFromUser(userName) {
 async function fetchAllRestaurantsFromDb() {
     return await withOracleDB(async (connection) => {
         console.log("before connecting")
-        const result = await connection.execute(
-            "SELECT rl.Location_Name,\n" +
-            "       rl.STREET_ADDRESS,\n" +
-            "       rl.CITY,\n" +
-            "       rl.PROVINCE_OR_STATE,\n" +
-            "       rl.POSTAL_CODE,\n" +
-            "       rl.PHONE_NUMBER,\n" +
-            "       r.Cuisine_Type,\n" +
-            "       r.Average_Price, \n" +
-            "       rl.AVERAGE_RATING,\n" +
-            "       COUNT(*) AS Total_Rows\n" +
-            "FROM Restaurant_Location_Has rl\n" +
-            "JOIN Restaurant r ON rl.Restaurant_Id = r.Id\n" +
-            "GROUP BY rl.Location_Name,\n" +
-            "         rl.STREET_ADDRESS,\n" +
-            "         rl.CITY,\n" +
-            "         rl.PROVINCE_OR_STATE,\n" +
-            "         rl.POSTAL_CODE,\n" +
-            "         rl.PHONE_NUMBER,\n" +
-            "         r.Cuisine_Type,\n" +
-            "         r.Average_Price,\n" +
-            "         rl.AVERAGE_RATING\n",
+        const result = await connection.execute(`
+        SELECT 
+            rl.Location_Name,
+            rl.STREET_ADDRESS,
+            rl.CITY,
+            rl.PROVINCE_OR_STATE,
+            rl.POSTAL_CODE,
+            rl.PHONE_NUMBER,
+            r.Cuisine_Type,
+            ROUND(r.Average_Price, 0) AS Average_Price,
+            rl.AVERAGE_RATING,
+            ROUND(rl.Latitude, 6) AS Latitude,
+            ROUND(rl.Longitude, 6) AS Longitude,
+            COUNT(*) AS Total_Rows
+        FROM 
+            Restaurant_Location_Has rl
+        JOIN 
+            Restaurant r ON rl.Restaurant_Id = r.Id
+        GROUP BY 
+            rl.Location_Name,
+            rl.STREET_ADDRESS,
+            rl.CITY,
+            rl.PROVINCE_OR_STATE,
+            rl.POSTAL_CODE,
+            rl.PHONE_NUMBER,
+            r.Cuisine_Type,
+            ROUND(r.Average_Price, 0),
+            rl.AVERAGE_RATING,
+            ROUND(rl.Latitude, 6),
+            ROUND(rl.Longitude, 6)`,
             []  // Empty array????
         );
-        console.log("after connecting")
+        console.log("after connecting", result.rows)
         return result;
 
     }).catch(() => {
