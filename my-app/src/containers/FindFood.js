@@ -1,19 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import {filterFoods} from "../scripts";
+
+import React, { useState } from 'react';
+import { filterFoods } from "../scripts";
 
 const FindFood = () => {
+    const dietOptions = ['Vegan', 'Vegetarian', 'Kosher', 'Halal'];
+    const allergenOptions = ['Dairy', 'Gluten', 'Egg', 'Nuts', 'Soy', "Shellfish", "Alcohol", "Chickpeas"];
 
-
-    const dietOptions = ['Vegan', 'Vegetarian', 'Kosher', 'Gluten-Free', 'Halal'];
-    const allergenOptions = ['Dairy', 'Gluten', 'Egg', 'Nuts', 'Soy'];
-
-    // State to hold selected filter options
     const [selectedDietTypes, setSelectedDietTypes] = useState([]);
     const [selectedAllergenTypes, setSelectedAllergenTypes] = useState([]);
     const [filteredMenu, setFilteredMenu] = useState([]);
-
     const [isSubmitted, setIsSubmitted] = useState(false);
-    // Handle checkbox change for diet types
+
     const handleDietChange = (e) => {
         const { value, checked } = e.target;
         setSelectedDietTypes((prev) =>
@@ -21,7 +18,6 @@ const FindFood = () => {
         );
     };
 
-    // Handle checkbox change for allergen types
     const handleAllergenChange = (e) => {
         const { value, checked } = e.target;
         setSelectedAllergenTypes((prev) =>
@@ -29,12 +25,26 @@ const FindFood = () => {
         );
     };
 
-    // Fetch filtered menu items whenever filters change
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const menu = await filterFoods(selectedDietTypes, selectedAllergenTypes);
+        const response = await filterFoods(selectedDietTypes, selectedAllergenTypes);
+        const menu = await setFilteredFoods(response);
         setFilteredMenu(menu);
-        setIsSubmitted(true);  // Indicate that the form has been submitted
+        setIsSubmitted(true);
+    };
+
+    const setFilteredFoods = async (response) => {
+        const { metaData, rows } = response.result;
+        console.log("Response:", response);
+
+        const columns = metaData.map(col => col.name);
+
+        return rows.map(row =>
+            columns.reduce((acc, col, index) => {
+                acc[col] = row[index];
+                return acc;
+            }, {})
+        );
     };
 
     return (
@@ -85,7 +95,11 @@ const FindFood = () => {
                     filteredMenu.length > 0 ? (
                         <ul>
                             {filteredMenu.map((item, index) => (
-                                <li key={index}>{item.MENU_ITEM_NAME}</li>
+                                <li key={index}>
+                                    {/* Updated property names */}
+                                    <strong>{item.MENU_NAME}</strong> from <em>{item.RESTAURANT_NAME}</em> -
+                                    {item.PRICE ? `$${item.PRICE.toFixed(2)}` : "Price not available"}
+                                </li>
                             ))}
                         </ul>
                     ) : (

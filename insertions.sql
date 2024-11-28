@@ -217,8 +217,6 @@ INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Hot Chocolate', 'M005');
 INSERT INTO Contains_Diet VALUES ('Vegetarian', 'White Hot Chocolate', 'M005');
 INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Pumpkin Spice Latte', 'M005');
 INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Peppermint Mocha', 'M005');
-INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Bacon, Gouda , Egg Sandwich', 'M005');
-INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Sausage, Cheddar , Egg Sandwich', 'M005');
 INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Impossible™ Breakfast Sandwich', 'M005');
 INSERT INTO Contains_Diet VALUES ('Vegan', 'Impossible™ Breakfast Sandwich', 'M005');
 INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Avocado Spread', 'M005');
@@ -341,5 +339,26 @@ INSERT INTO Contains_Allergen VALUES ('Gluten', 'Protein Box (Eggs , Cheese)', '
 INSERT INTO Contains_Allergen VALUES ('Dairy', 'Greek Yogurt Parfait', 'M005');
 INSERT INTO Contains_Allergen VALUES ('Nuts', 'Granola Bar', 'M005');
 
+INSERT INTO Dietary_Profile_Can_Save VALUES ('Hedies_Profile', 'hedie');
+INSERT INTO Dietary_Profile_Can_Save VALUES ('Helenas_Profile', 'hesoru');
+INSERT INTO Dietary_Profile_Can_Save VALUES ('Vegetables_Only', 'jsmith');
+INSERT INTO Dietary_Profile_Can_Save VALUES ('Halal_Friends', 'hedie');
+INSERT INTO Dietary_Profile_Can_Save VALUES ('Vegan_Vibes', 'alovelace');
+INSERT INTO Dietary_Profile_Can_Save VALUES ('Kosher_Options', 'oreo');
 
+INSERT INTO Stores_Allergen VALUES ('Hedies_Profile', 'hedie', 'Nuts');
+INSERT INTO Stores_Allergen VALUES ('Hedies_Profile', 'hedie', 'Shellfish');
+INSERT INTO Stores_Allergen VALUES ('Hedies_Profile', 'hedie', 'Chickpeas');
+INSERT INTO Stores_Allergen Values ('Halal_Friends', 'hedie', 'Alcohol');
+INSERT INTO Stores_Allergen VALUES ('Helenas_Profile', 'hesoru', 'Gluten');
+INSERT INTO Stores_Allergen VALUES ('Helenas_Profile', 'hesoru', 'Soy');
+INSERT INTO Stores_Allergen VALUES ('Helenas_Profile', 'hesoru', 'Dairy');
+INSERT INTO Stores_Allergen VALUES ('Vegetables_Only', 'jsmith', 'Gluten');
+
+
+INSERT INTO Stores_Diet VALUES ('Vegetables_Only', 'jsmith', 'Vegetarian');
+INSERT INTO Stores_Diet VALUES ('Vegan_Vibes', 'alovelace', 'Vegan');
+INSERT INTO Stores_Diet VALUES ('Halal_Friends', 'hedie', 'Halal');
+INSERT INTO Stores_Diet VALUES ('Kosher_Options', 'oreo', 'Kosher');
+INSERT INTO Stores_Diet VALUES ('Helenas_Profile', 'hesoru', 'Vegan');
 

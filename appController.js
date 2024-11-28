@@ -128,11 +128,14 @@ router.get("/menu/:lat/:lon", async (req, res) => {
     }
 });
 
+
+
 router.post("/filter-food", async (req, res) => {
     console.log("entered endpoint")
     const {dietTypes, allergenTypes} = req.body;
+   // console.log(dietTypes, allergenTypes);
     const initiateResult = await appService.fetchMenuProfile(dietTypes, allergenTypes);
-    console.log(initiateResult)
+    //console.log(initiateResult)
     if (initiateResult) {
         res.json({ success: true, result: initiateResult});
     } else {
