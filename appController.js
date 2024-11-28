@@ -117,6 +117,17 @@ router.delete("/delete-review/:reviewID", async (req, res) => {
     }
 });
 
+
+router.get("/menu/:lat/:lon", async (req, res) => {
+    const menu = await appService.fetchRestaurantMenuFromDb(req.params.lat, req.params.lon);
+    console.log(menu);
+    if (menu) {
+        res.json({ success: true, result: menu});
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
 // router.post("/add-to-dietary-profile", async (req, res) => {
 //     const {foodType, userName, profileName} = req.body;
 //     const updateResult = await appService.addItemToDietaryProfile(foodType, userName, profileName)

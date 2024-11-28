@@ -274,6 +274,65 @@ async function findRestaurant(restaurantName) {
         return [];
     });
 }
+
+async function fetchRestaurantMenuFromDb(lat, lon) {
+    return await withOracleDB(async (connection) => {
+        console.log("before connecting")
+        const result = await connection.execute(`
+            SELECT
+                mi.Menu_Name,
+                mi.Description,
+                mi.Price,
+                d.Diet_Type,
+                a.Allergen_Type
+            FROM 
+                Menu_Item_On mi
+            JOIN 
+                Menu_Serves ms ON mi.Menu_Id = ms.Id
+            JOIN 
+                Restaurant_Location_Has rlh ON ms.Restaurant_Latitude = rlh.Latitude AND ms.Restaurant_Longitude = rlh.Longitude
+            LEFT JOIN 
+                Contains_Diet cd ON mi.Menu_Name = cd.Menu_Item_Name AND mi.Menu_Id = cd.Menu_Id
+            LEFT JOIN 
+                Diet d ON cd.Diet_Type = d.Diet_Type
+            LEFT JOIN 
+                Contains_Allergen ca ON mi.Menu_Name = ca.Menu_Item_Name AND mi.Menu_Id = ca.Menu_Id
+            LEFT JOIN 
+                Allergen a ON ca.Allergen_Type = a.Allergen_Type
+            WHERE 
+                rlh.Latitude = :lat AND rlh.Longitude = :lon`,
+            [lat, lon]);
+        console.log("after connecting", result.rows)
+        return result.rows;
+    }).catch(() => {
+        return [];
+    });
+}
+
+            // SELECT
+            //     mi.Menu_Name,
+            //     mi.Description,
+            //     mi.Price,
+            //     d.Diet_Type,
+            //     a.Allergen_Type
+            // FROM 
+            //     Menu_Item_On mi
+            // JOIN 
+            //     Menu_Serves ms ON mi.Menu_Id = ms.Id
+            // JOIN 
+            //     Restaurant_Location_Has rlh ON ms.Restaurant_Latitude = rlh.Latitude AND ms.Restaurant_Longitude = rlh.Longitude
+            // LEFT JOIN 
+            //     Contains_Diet cd ON mi.Menu_Name = cd.Menu_Item_Name AND mi.Menu_Id = cd.Menu_Id
+            // LEFT JOIN 
+            //     Diet d ON cd.Diet_Type = d.Diet_Type
+            // LEFT JOIN 
+            //     Contains_Allergen ca ON mi.Menu_Name = ca.Menu_Item_Name AND mi.Menu_Id = ca.Menu_Id
+            // LEFT JOIN 
+            //     Allergen a ON ca.Allergen_Type = a.Allergen_Type
+            // WHERE 
+            //     rlh.Latitude = 49.269235 AND rlh.Longitude = -123.255589
+
+
 // async function addItemToDietaryProfile(foodType, userName, profileName) {
 //     // 1) Check if DietType exists,
 //     // TODO: 2) IF not, add to Diet or Allergen OR REJECT????
@@ -472,7 +531,8 @@ module.exports = {
     addUserProfile,
     fetchAUserReview,
     fetchAllReviewsFromUser,
-    addUserLocation
+    addUserLocation,
+    fetchRestaurantMenuFromDb
     // addItemToDietaryProfile,
     // removeItemFromDietaryProfile,
     // fetchUserTableFromDb,
