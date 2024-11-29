@@ -67,10 +67,10 @@ const SignIn = ({ setCurrentUser }) => {
 
     return (
         <div className="SignInBlock max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
-            <h1 className="SignInHeader text-2xl font-semibold text-center mb-4">Sign In</h1>
+            <h1 style={{ marginBottom: '1em'}} className="text-3xl font-extrabold font-mono">Sign In</h1> 
             <form onSubmit={handleSubmit}>
                 <div className="mb-4">
-                    <Label htmlFor="username">Username</Label>
+                    <Label htmlFor="username" className="text-xl font-extrabold font-mono">Username</Label>
                     <TextInput
                         id="username"
                         type="text"
@@ -80,12 +80,12 @@ const SignIn = ({ setCurrentUser }) => {
                         required
                     />
                 </div>
-                <Button type="submit" className="w-full">Sign In</Button>
+                <Button type="submit" className="text-xl font-extrabold font-mono w-full">Sign In</Button>
                 {errors.username && <p style={{ color: "red" }}>{errors.username}</p>}
                 {errors.doesNotExist && <p style={{ color: "red" }}>{errors.doesNotExist}</p>}
                 {/* {message && <p className="text-center text-red-500 mt-2">{message}</p>} */}
             </form>
-            <p className="text-center mt-4">
+            <p className="text-center mt-4 font-extrabold font-mono">
                 Don’t have an account?{" "}
                 <Link to="/signup" className="text-blue-500 hover:underline">Sign Up</Link>
             </p>

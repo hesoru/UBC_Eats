@@ -30,7 +30,7 @@ function App() {
                               className="text-lg font-bold font-mono  hover:text-indigo-200 transition">Restaurants</Link>
                         <span className="mx-2 text-gray-400">|</span>
                         <Link to={`/user/${currentUser}`} className="text-lg font-bold font-mono  hover:text-indigo-200 transition">User
-                            Review</Link>
+                            Reviews</Link>
                         <span className="mx-2 text-gray-400">|</span>
                         {/* <Link to={`/menu/49.269235/-123.255589`} className="text-lg font-bold font-mono :text-indigo-200 transition">Menu
                             (Temp Link)</Link> |{' '} */}

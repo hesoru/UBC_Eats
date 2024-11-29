@@ -1,6 +1,7 @@
 import React, { useState,  useEffect} from "react";
 //import { Box, Typography, Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import { useParams } from 'react-router-dom';
+import '../css/UserReview.css';
 import {deleteReview, fetchReviewContent, fetchUsersReviews, updateUserReview} from "../scripts";
 
 const UserReviews = ({initialReviews }) => {
@@ -98,7 +99,7 @@ const UserReviews = ({initialReviews }) => {
 
     return (
         <div style={styles.container}>
-            <h2 style={styles.heading}> {userName}'s Reviews</h2>
+            <h2 style={styles.heading} className="text-lg font-extrabold font-mono">{userName}'s Reviews</h2>
 
             {message && (
                 <div style={styles.message} className="bg-green-500 text-white p-2 mb-4">
@@ -106,6 +107,7 @@ const UserReviews = ({initialReviews }) => {
                 </div>
             )}
 
+        <ul className="review-list">
             {reviews.length > 0 ? (
                 reviews.map((review) => (
                     <div key={review.id} style={styles.reviewCard}>
@@ -125,6 +127,7 @@ const UserReviews = ({initialReviews }) => {
             ) : (
                 <p>No reviews available.</p>
             )}
+        </ul>
 
             {editDialogOpen && (
                 <div style={styles.dialogOverlay}>

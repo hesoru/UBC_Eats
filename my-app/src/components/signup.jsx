@@ -189,10 +189,11 @@ const SignUp = ({setCurrentUser}) => {
     };
     return (
         <div className="SignupBlock max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
-            <h1 className="SignupHeader text-2xl font-semibold text-center mb-4">Sign Up</h1>
+            <h1 style={{ marginBottom: '1em'}} className="text-3xl font-extrabold font-mono">Create Account</h1> 
+            {/* <h1 className="SignupHeader text-2xl font-semibold text-center mb-4">Sign Up</h1> */}
             <form onSubmit={handleSubmit}>
                 <div className="mb-4">
-                    <Label htmlFor="first_name">First Name</Label>
+                    <Label htmlFor="first_name" className="text-xl font-extrabold font-mono">First Name</Label>
                     <TextInput
                         id="first_name"
                         type="text"
@@ -204,7 +205,7 @@ const SignUp = ({setCurrentUser}) => {
                     {errors.first_name && <p style={{ color: "red" }}>{errors.first_name}</p>}
                 </div>
                 <div className="mb-4">
-                    <Label htmlFor="last_name">Last Name</Label>
+                    <Label htmlFor="last_name" className="text-xl font-extrabold font-mono">Last Name</Label>
                     <TextInput
                         id="last_name"
                         type="text"
@@ -216,7 +217,7 @@ const SignUp = ({setCurrentUser}) => {
                     {errors.last_name && <p style={{ color: "red" }}>{errors.last_name}</p>}
                 </div>
                 <div className="mb-4">
-                    <Label htmlFor="email">Email</Label>
+                    <Label htmlFor="email" className="text-xl font-extrabold font-mono">Email</Label>
                     <TextInput
                         id="email"
                         type="email"
@@ -228,7 +229,7 @@ const SignUp = ({setCurrentUser}) => {
                     {errors.email && <p style={{ color: "red" }}>{errors.email}</p>}
                 </div>
                 <div className="mb-4">
-                    <Label htmlFor="username">Username</Label>
+                    <Label htmlFor="username" className="text-xl font-extrabold font-mono">Username</Label>
                     <TextInput
                         id="username"
                         type="text"
@@ -239,13 +240,13 @@ const SignUp = ({setCurrentUser}) => {
                     />
                     {errors.username && <p style={{ color: "red" }}>{errors.username}</p>}
                 </div>
-                <Button type="submit" className="w-full">Sign Up</Button>
+                <Button type="submit" className="text-xl font-extrabold font-mono w-full">Sign Up</Button>
                 {Object.keys(errors).map((key) => (
                     <p key={key} style={{ color: "red" }}>{errors[key]}</p>
                 ))}
                 {message && <p className="text-center text-red-500 mt-2">{message}</p>}
             </form>
-            <p className="text-center mt-4">
+            <p className="text-center mt-4 font-extrabold font-mono">
                 Already have an account?{" "}
                 <Link to="/signin" className="text-blue-500 hover:underline">Sign In</Link>
             </p>
