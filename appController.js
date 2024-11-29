@@ -129,7 +129,6 @@ router.get("/menu/:location_name/:lat/:lon", async (req, res) => {
 });
 
 
-
 router.post("/filter-food", async (req, res) => {
     console.log("entered endpoint")
     const {dietTypes, allergenTypes} = req.body;
@@ -158,4 +157,21 @@ router.get("/check-username/:userName", async (req, res) => {
         res.status(500).json({ success: false });
     }
 });
+
+router.get("/check-unique/:username/:email", async (req, res) => {
+    console.log("entered endpoint")
+
+    const isUnique = await appService.checkUserProfileUnique(req.params.username, req.params.email)
+    console.log("unique: " + isUnique);
+    console.log("success");
+    res.json({ success: true, result: isUnique});
+    // if (isUnique) {
+    //     console.log("success")
+    //     res.json({ success: true, result: isUnique});
+    // } else {
+    //     console.log("fail")
+    //     res.status(500).json({ success: false });
+    // }
+});
+
 module.exports = router;

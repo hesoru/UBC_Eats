@@ -88,6 +88,7 @@ async function testOracleConnection() {
 async function addUserProfile(username, first_name, last_name, email, location) {
     return await withOracleDB(async (connection) => {
 
+        // check that userprofile unique!
         const longitude = location.lng;
         const latitude = location.lat;
         const result = await connection.execute(
@@ -297,6 +298,22 @@ async function checkUserName(userName) {
     });
 }
 
+async function checkUserProfileUnique(username, email) {
+    return await withOracleDB(async (connection) => {
+        console.log("before connecting");
+        const query = `
+            SELECT USERNAME, EMAIL 
+            FROM USER_HAS 
+            WHERE LOWER(USERNAME) = LOWER(:username) OR LOWER(EMAIL) = LOWER(:email)
+        `;
+        const result = await connection.execute(query, [username, email]);
+        console.log("after connecting", result.rows.length)
+        return result.rows.length == 0;
+    }).catch(() => {
+        return true;
+    });
+}
+
 async function fetchMenuProfile(dietTypes, allergenTypes) {
     return await withOracleDB(async (connection) => {
         console.log("before connecting");
@@ -418,6 +435,6 @@ module.exports = {
     addUserLocation,
     fetchRestaurantMenuFromDb,
     fetchMenuProfile,
-    checkUserName
-
+    checkUserName,
+    checkUserProfileUnique
 };

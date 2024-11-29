@@ -137,8 +137,6 @@ export async function getRestaurantMenu(location_name, lat, lon) {
     }
 }
 
-
-
 export async function filterFoods(dietTypes, allergenTypes) {
     try {
         //console.log(dietTypes, allergenTypes.type)
@@ -170,14 +168,37 @@ export async function isValidUserName(userName) {
             method: "GET",
         });
         console.log("response: " + userName);
+
+        if (!response.ok) {
+            response.result = null;
+            return response.json();
+        }
+
+        return await response.json();
+
+    } catch (error) {
+        console.error("Error fetching username:", error.message);
+        return [];
+    }
+}
+
+export async function isProfileUnique(username, email) {
+    try {
+        console.log("params: " + username + ", " + email);
+        const response = await fetch(`${host}/check-unique/${username}/${email}`, {
+            method: "GET",
+        });
+
+        console.log("response: " + response);
         // if (!response.ok) {
-        //     throw new Error(`Request failed with status ${response.status}: ${response.statusText}`);
+        //     response.result = false;
+        //     return response.json();
         // }
 
         return await response.json();
 
     } catch (error) {
-        console.error("Error fetching food items:", error.message);
+        console.log("Error fetching username:", error.message);
         return [];
     }
 }

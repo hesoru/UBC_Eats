@@ -6,36 +6,63 @@ import {isValidUserName} from "../scripts";
 const SignIn = ({ setCurrentUser }) => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({ username: '' });
-    const [message, setMessage] = useState('');
+    // const [message, setMessage] = useState('');
+    const [errors, setErrors] = useState({});
+
+    const validateInput = () => {
+        const errors = {};
+        if (!/^[a-zA-Z0-9._-]{3,20}$/.test(formData.username)) {
+            errors.username =
+              "Username must be 3-20 characters long and can only contain letters, numbers, dots, underscores, or dashes.";
+        }
+        return errors;
+    };
 
     const handleChange = (e) => {
         const { id, value } = e.target;
         setFormData({ ...formData, [id]: value });
+        setErrors((prevErrors) => {
+            const updatedErrors = { ...prevErrors };
+            delete updatedErrors[id];
+            return updatedErrors;
+        });
     };
 
-    function isEmptyOrSpaces(str) {
-        return !str || str.trim() === '';
-    }
+    // function isEmptyOrSpaces(str) {
+    //     return !str || str.trim() === '';
+    // }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        setCurrentUser(formData.username);
-        if (isEmptyOrSpaces(formData.username)) {
-            setMessage("Please enter a valid username");
+        // validate inputs
+        const validationErrors = validateInput();
+        if (Object.keys(validationErrors).length > 0) {
+            setErrors(validationErrors);
+            // don't submit input to database if invalid
             return;
         }
+        
+        // else sanitize inputs
+        const sanitizedData = {username: formData.username.trim()};
+        console.log("Sending sanitized data to backend:", sanitizedData);
+        
+        setCurrentUser(formData.username);
+        // if (isEmptyOrSpaces(formData.username)) {
+        //     setMessage("Please enter a valid username");
+        //     return;
+        // }
         //console.log("current username:", formData.username)
         const response = await isValidUserName(formData.username)
-        const result = response.result
-       // console.log(result)
-        if(result) {
+        // console.log(result)
+        if (response.result) {
             navigate(`/user/${formData.username}`);
-        } else {
-            setMessage("This username does not exist")
+        } else {   
+            setErrors((prevErrors) => ({
+                ...prevErrors,
+                doesNotExist: "This username does not exist.",
+            }));
         }
-
-
-
     };
 
     return (
@@ -54,7 +81,9 @@ const SignIn = ({ setCurrentUser }) => {
                     />
                 </div>
                 <Button type="submit" className="w-full">Sign In</Button>
-                {message && <p className="text-center text-red-500 mt-2">{message}</p>}
+                {errors.username && <p style={{ color: "red" }}>{errors.username}</p>}
+                {errors.doesNotExist && <p style={{ color: "red" }}>{errors.doesNotExist}</p>}
+                {/* {message && <p className="text-center text-red-500 mt-2">{message}</p>} */}
             </form>
             <p className="text-center mt-4">
                 Don’t have an account?{" "}
