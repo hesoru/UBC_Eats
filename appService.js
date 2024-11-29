@@ -185,6 +185,50 @@ async function fetchAllRestaurantsFromDb() {
     });
 }
 
+async function fetchTopRatedByCuisineFromDb() {
+    return await withOracleDB(async (connection) => {
+        console.log("before connecting")
+        const result = await connection.execute(`
+            SELECT 
+                R.Cuisine_Type,
+                R.Restaurant_Name,
+                AVG(RF.Rating) AS Average_Rating
+            FROM 
+                Restaurant R
+            JOIN 
+                Restaurant_Location_Has RL ON R.Id = RL.Restaurant_Id
+            JOIN 
+                Review_For_Makes RF ON RL.Longitude = RF.Restaurant_Longitude 
+                                     AND RL.Latitude = RF.Restaurant_Latitude
+            GROUP BY 
+                R.Cuisine_Type, R.Restaurant_Name
+            HAVING 
+                AVG(RF.Rating) = (
+                    SELECT 
+                        MAX(AVG(RF2.Rating))
+                    FROM 
+                        Restaurant R2
+                    JOIN 
+                        Restaurant_Location_Has RL2 ON R2.Id = RL2.Restaurant_Id
+                    JOIN 
+                        Review_For_Makes RF2 ON RL2.Longitude = RF2.Restaurant_Longitude 
+                                             AND RL2.Latitude = RF2.Restaurant_Latitude
+                    WHERE 
+                        R2.Cuisine_Type = R.Cuisine_Type
+                    GROUP BY 
+                        R2.Cuisine_Type
+                )
+            ORDER BY 
+                R.Cuisine_Type, Average_Rating DESC`,
+            []
+        );
+        console.log("after connecting", result.rows)
+        return result;
+    }).catch(() => {
+        return [];
+    });
+}
+
 async function fetchAUserReview(reviewID) {
     return await withOracleDB(async (connection) => {
         console.log(reviewID)
@@ -214,8 +258,6 @@ async function fetchAUserReview(reviewID) {
         return [];
     });
 }
-
-
 
 async function updateReviewContent(newContent, columnName, reviewID) {
     // BE SURE TO ONLY BE ABLE TO UPDATE THE FOLOWING COLUMNS: Content (VARCHAR2),
@@ -429,6 +471,7 @@ module.exports = {
     updateReviewContent,
     deleteReviewContent,
     fetchAllRestaurantsFromDb,
+    fetchTopRatedByCuisineFromDb,
     addUserProfile,
     fetchAUserReview,
     fetchAllReviewsFromUser,

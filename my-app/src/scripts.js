@@ -40,6 +40,25 @@ export async function fetchAllRestaurants() {
     }
 }
 
+export async function fetchTopRatedByCuisine() {
+    try {
+        const response = await fetch(`${host}/top-rated-by-cuisine`, {
+            method: "GET"
+        });
+
+        if (!response.ok) {
+            throw new Error(`Request failed with status ${response.status}: ${response.statusText}`);
+        }
+
+        return await response.json();
+
+    } catch (error) {
+        console.error("Error fetching top-rated restaurants by cuisine:", error);
+        return [];
+    }
+}
+
+
 export async function fetchUsersReviews(userName) {
     const response = await fetch(`${host}/fetch-user-reviews/${encodeURIComponent(userName)}`, {
         method: 'GET'
