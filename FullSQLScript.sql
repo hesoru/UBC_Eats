@@ -1,4 +1,5 @@
--- Table drop + creations
+------------------------------------------ Table drop + creations ------------------------------------------
+
 
 DROP TABLE User_Has CASCADE CONSTRAINTS;
 DROP TABLE User_Location CASCADE CONSTRAINTS;
@@ -164,7 +165,9 @@ CREATE TABLE Stores_Allergen (
    CONSTRAINT fk_dietary_profile_Allergen FOREIGN KEY (Dietary_Profile_Name, User_Username) REFERENCES Dietary_Profile_Can_Save(Profile_Name, Username)
 );
 
--- Insertion statements
+
+------------------------------------------ Insertion statements ------------------------------------------
+
 
 INSERT INTO User_Location VALUES (-123.1207, 49.2827, DATE '2024-10-30', TIMESTAMP '2024-10-30 08:30:00');
 INSERT INTO User_Location VALUES (-122.4194, 37.7749, DATE '2024-10-31', TIMESTAMP '2024-10-31 15:45:00');
@@ -173,7 +176,6 @@ INSERT INTO User_Location VALUES (-123.120744, 49.282740, DATE '2024-11-02', TIM
 INSERT INTO User_Location VALUES (-123.120730, 49.282735, DATE '2024-11-03', TIMESTAMP '2024-11-03 18:45:00');
 INSERT INTO User_Location VALUES (-123.120728, 49.282733, DATE '2024-11-04', TIMESTAMP '2024-11-04 19:45:00');
 INSERT INTO User_Location VALUES (-123.120739, 49.282728, DATE '2024-11-05', TIMESTAMP '2024-11-05 20:45:00');
-
 
 INSERT INTO User_Has VALUES ('jdoe', 'John', 'Doe', 'jdoe@example.com', -123.1207, 49.2827);
 INSERT INTO User_Has VALUES ('esmith', 'Emma', 'Smith', 'esmith@example.com', -122.4194, 37.7749);
@@ -218,7 +220,6 @@ INSERT INTO Review_For_Makes VALUES ('11', 'Pizza can be soggy', 3, DATE '2024-1
 INSERT INTO Review_For_Makes VALUES ('12', 'Lots of waiting but sandwiches are worth it', 4, DATE '2024-11-09', TIMESTAMP '2024-11-09 12:10:00', 'jdoe', -123.253154, 49.267726);
 INSERT INTO Review_For_Makes VALUES ('13', 'My sandwich was ice cold!!! >:(', 1, DATE '2024-11-11', TIMESTAMP '2024-11-11 09:39:00', 'jdoe', -123.246559, 49.261271);
 
-
 INSERT INTO Distance_From VALUES (-123.120730, 49.282735, -123.255589, 49.269235, 9.9);
 INSERT INTO Distance_From VALUES (-122.4194, 37.7749, -123.253154, 49.267726, 1279.7);
 INSERT INTO Distance_From VALUES (-123.120730, 49.282735, -123.248266, 49.261233, 9.5);
@@ -233,7 +234,6 @@ INSERT INTO Menu_Serves VALUES ('M005', 'Beverage', 49.269235, -123.255589);
 INSERT INTO Menu_Serves VALUES ('M006', 'Main Course', 49.261233, -123.248266);
 INSERT INTO Menu_Serves VALUES ('M007', 'Appetizer', 49.269235, -123.255589); 
 
-
 INSERT INTO Menu_Item_On VALUES ('Seafood Special', 'M003', 'A pizza with pesto, shrimp, scallops, and fresh mozarella', 'Main Course', 19.95);
 INSERT INTO Menu_Item_On VALUES ('Soju', 'M005', 'Delicious peach soju', 'Beverage', 8.99);
 INSERT INTO Menu_Item_On VALUES ('Lemonade', 'M005', 'Refreshing glass of Lemonade', 'Beverage', 0.99);
@@ -247,7 +247,7 @@ INSERT INTO Menu_Item_On VALUES ('Prosciutto', 'M003', 'Prosciutto pizza with ar
 INSERT INTO Menu_Item_On VALUES ('Alla Salsiccia', 'M003', 'Pizza with pork sausage, basil oregano', 'Main Course', 17.95);
 INSERT INTO Menu_Item_On VALUES ('Al Pesto', 'M003', 'A Pesto Pizza', 'Main Course', 17.95);
 INSERT INTO Menu_Item_On VALUES ('Bianca', 'M003', 'Pizza with bocconcini, goat, mozzarella, romano, and gorgonzola cheese', 'Main Course', 17.95);
-INSERT INTO Menu_Item_On VALUES ('Ortolana', 'M003', 'Pizza with sundried tomato, bocconcini, artichokes , arugula', 'Main Course', 16.95);
+INSERT INTO Menu_Item_On VALUES ('Ortolana', 'M003', 'Pizza with sundried tomato, bocconcini, artichokes, arugula', 'Main Course', 16.95);
 INSERT INTO Menu_Item_On VALUES ('Pesto Di Salame', 'M003', 'Pizza with pesto, pepperoni, olives, mozzarella cheese', 'Main Course', 17.95);
 INSERT INTO Menu_Item_On VALUES ('Vegan Feature', 'M003', 'A vegan pizza with your choice of toppings (for an additional charge)', 'Main Course', 16.00);
 INSERT INTO Menu_Item_On VALUES ('Classic Benny', 'M004', 'Classic eggs benedict on whole wheat english muffin', 'Breakfast', NULL);
@@ -255,13 +255,13 @@ INSERT INTO Menu_Item_On VALUES ('Strawberry Pancakes', 'M004', 'Fluffy pancakes
 INSERT INTO Menu_Item_On VALUES ('Bacon', 'M004', 'Freshly cooked bacon', 'Breakfast', NULL);
 INSERT INTO Menu_Item_On VALUES ('Turkey Sausage', 'M004', 'Breakfast sausages', 'Breakfast', NULL);
 INSERT INTO Menu_Item_On VALUES ('TMRW Patty', 'M004', 'Meat-free breakfast patty', 'Breakfast', NULL);
-INSERT INTO Menu_Item_On VALUES ('Scrambled Eggs', 'M004', 'Scrambled eggs with salt , pepper', 'Breakfast', NULL);
+INSERT INTO Menu_Item_On VALUES ('Scrambled Eggs', 'M004', 'Scrambled eggs with salt, pepper', 'Breakfast', NULL);
 INSERT INTO Menu_Item_On VALUES ('Hashbrowns', 'M004', 'Crispy potato hashbrowns', 'Breakfast', NULL);
-INSERT INTO Menu_Item_On VALUES ('Wilted Spinach', 'M004', 'Cooked spinach seasoned with salt , pepper', 'Breakfast', NULL);
-INSERT INTO Menu_Item_On VALUES ('Roasted Tomatoes', 'M004', 'Roasted tomatoes seasoned with salt , pepper', 'Breakfast', NULL);
+INSERT INTO Menu_Item_On VALUES ('Wilted Spinach', 'M004', 'Cooked spinach seasoned with salt, pepper', 'Breakfast', NULL);
+INSERT INTO Menu_Item_On VALUES ('Roasted Tomatoes', 'M004', 'Roasted tomatoes seasoned with salt, pepper', 'Breakfast', NULL);
 INSERT INTO Menu_Item_On VALUES ('Just Egg Omlette', 'M004', 'Egg-substitute omelette with parsley', 'Breakfast', NULL);
-INSERT INTO Menu_Item_On VALUES ('Shiitake Mozza Omelette', 'M004', 'Omelette with shiitake mushrooms, mozzarella cheese, , parsley', 'Breakfast', NULL);
-INSERT INTO Menu_Item_On VALUES ('Overnight Oats Tiramisu', 'M004', 'Overnight oats with cocoa powder , greek yogurt', 'Breakfast', NULL);
+INSERT INTO Menu_Item_On VALUES ('Shiitake Mozza Omelette', 'M004', 'Omelette with shiitake mushrooms, mozzarella cheese, parsley', 'Breakfast', NULL);
+INSERT INTO Menu_Item_On VALUES ('Overnight Oats Tiramisu', 'M004', 'Overnight oats with cocoa powder, greek yogurt', 'Breakfast', NULL);
 INSERT INTO Menu_Item_On VALUES ('Oatmeal', 'M004', 'Plain and simple oatmeal', 'Breakfast', NULL);
 INSERT INTO Menu_Item_On VALUES ('Congee Chicken', 'M004', 'Hearty congee with chicken', 'Breakfast', NULL);
 INSERT INTO Menu_Item_On VALUES ('Vanilla Yogurt', 'M004', 'Vanilla Yogurt', 'Breakfast', NULL);
@@ -284,30 +284,30 @@ INSERT INTO Menu_Item_On VALUES ('Vanilla Sweet Cream Cold Brew', 'M005', 'Cold 
 INSERT INTO Menu_Item_On VALUES ('Nitro Cold Brew', 'M005', 'Nitro-infused cold brew coffee', 'Beverage', 4.95);
 INSERT INTO Menu_Item_On VALUES ('Nitro Cold Brew with Sweet Cream', 'M005', 'Nitro cold brew with vanilla sweet cream', 'Beverage', 5.25);
 INSERT INTO Menu_Item_On VALUES ('Pumpkin Cream Cold Brew', 'M005', 'Cold brew with pumpkin spice cold foam (seasonal)', 'Beverage', 5.25);
-INSERT INTO Menu_Item_On VALUES ('Frappuccino® Blended Beverage', 'M005', 'Blended coffee drink with ice, milk, and flavors', 'Beverage', 5.5);
+INSERT INTO Menu_Item_On VALUES ('Frappuccino Blended Beverage', 'M005', 'Blended coffee drink with ice, milk, and flavors', 'Beverage', 5.5);
 INSERT INTO Menu_Item_On VALUES ('Caramel Frappuccino', 'M005', 'Blended coffee with caramel flavor', 'Beverage', 5.5);
 INSERT INTO Menu_Item_On VALUES ('Mocha Frappuccino', 'M005', 'Blended coffee with chocolate flavor', 'Beverage', 5.5);
 INSERT INTO Menu_Item_On VALUES ('Java Chip Frappuccino', 'M005', 'Blended coffee with chocolate chips', 'Beverage', 5.75);
-INSERT INTO Menu_Item_On VALUES ('Strawberry Crème Frappuccino', 'M005', 'Blended crème with strawberry flavor', 'Beverage', 5.5);
-INSERT INTO Menu_Item_On VALUES ('Matcha Green Tea Frappuccino', 'M005', 'Blended crème with matcha green tea', 'Beverage', 5.5);
+INSERT INTO Menu_Item_On VALUES ('Strawberry Creme Frappuccino', 'M005', 'Blended creme with strawberry flavor', 'Beverage', 5.5);
+INSERT INTO Menu_Item_On VALUES ('Matcha Green Tea Frappuccino', 'M005', 'Blended creme with matcha green tea', 'Beverage', 5.5);
 INSERT INTO Menu_Item_On VALUES ('Chai Tea Latte', 'M005', 'Spiced black tea with steamed milk', 'Beverage', 4.25);
 INSERT INTO Menu_Item_On VALUES ('Matcha Green Tea Latte', 'M005', 'Matcha green tea with steamed milk', 'Beverage', 4.5);
 INSERT INTO Menu_Item_On VALUES ('London Fog Tea Latte', 'M005', 'Earl grey tea with steamed milk and vanilla', 'Beverage', 4.5);
 INSERT INTO Menu_Item_On VALUES ('Honey Citrus Mint Tea', 'M005', 'Green tea with citrus and honey', 'Beverage', 4);
 INSERT INTO Menu_Item_On VALUES ('Peach Tranquility Tea', 'M005', 'Herbal peach-flavored tea', 'Beverage', 3.5);
-INSERT INTO Menu_Item_On VALUES ('Strawberry Açaí Refresher', 'M005', 'Strawberry-flavored drink with green coffee extract', 'Beverage', 4.5);
+INSERT INTO Menu_Item_On VALUES ('Strawberry Acai Refresher', 'M005', 'Strawberry-flavored drink with green coffee extract', 'Beverage', 4.5);
 INSERT INTO Menu_Item_On VALUES ('Mango Dragonfruit Refresher', 'M005', 'Mango and dragonfruit flavored drink', 'Beverage', 4.5);
-INSERT INTO Menu_Item_On VALUES ('Pink Drink', 'M005', 'Strawberry Açaí Refresher with coconut milk', 'Beverage', 4.75);
+INSERT INTO Menu_Item_On VALUES ('Pink Drink', 'M005', 'Strawberry Acai Refresher with coconut milk', 'Beverage', 4.75);
 INSERT INTO Menu_Item_On VALUES ('Dragon Drink', 'M005', 'Mango Dragonfruit Refresher with coconut milk', 'Beverage', 4.75);
 INSERT INTO Menu_Item_On VALUES ('Kiwi Starfruit Refresher', 'M005', 'Kiwi and starfruit flavored drink', 'Beverage', 4.5);
 INSERT INTO Menu_Item_On VALUES ('Hot Chocolate', 'M005', 'Steamed milk with chocolate syrup and whipped cream', 'Beverage', 4);
 INSERT INTO Menu_Item_On VALUES ('White Hot Chocolate', 'M005', 'Steamed milk with white chocolate syrup and whipped cream', 'Beverage', 4.25);
 INSERT INTO Menu_Item_On VALUES ('Pumpkin Spice Latte', 'M005', 'Espresso with steamed milk and pumpkin spice flavor (seasonal)', 'Beverage', 5.25);
 INSERT INTO Menu_Item_On VALUES ('Peppermint Mocha', 'M005', 'Mocha with peppermint flavor (seasonal)', 'Beverage', 5.25);
-INSERT INTO Menu_Item_On VALUES ('Bacon, Gouda , Egg Sandwich', 'M005', 'Bacon, gouda cheese, and egg on an artisan roll', 'Breakfast', 4.75);
-INSERT INTO Menu_Item_On VALUES ('Sausage, Cheddar , Egg Sandwich', 'M005', 'Sausage patty, cheddar, and egg on an English muffin', 'Breakfast', 4.45);
-INSERT INTO Menu_Item_On VALUES ('Spinach, Feta , Egg White Wrap', 'M005', 'Egg whites, spinach, and feta in a whole wheat wrap', 'Breakfast', 4.95);
-INSERT INTO Menu_Item_On VALUES ('Impossible™ Breakfast Sandwich', 'M005', 'Plant-based sausage with egg and cheese on English muffin', 'Breakfast', 5.95);
+INSERT INTO Menu_Item_On VALUES ('Bacon, Gouda, Egg Sandwich', 'M005', 'Bacon, gouda cheese, and egg on an artisan roll', 'Breakfast', 4.75);
+INSERT INTO Menu_Item_On VALUES ('Sausage, Cheddar, Egg Sandwich', 'M005', 'Sausage patty, cheddar, and egg on an English muffin', 'Breakfast', 4.45);
+INSERT INTO Menu_Item_On VALUES ('Spinach, Feta, Egg White Wrap', 'M005', 'Egg whites, spinach, and feta in a whole wheat wrap', 'Breakfast', 4.95);
+INSERT INTO Menu_Item_On VALUES ('Impossible Breakfast Sandwich', 'M005', 'Plant-based sausage with egg and cheese on English muffin', 'Breakfast', 5.95);
 INSERT INTO Menu_Item_On VALUES ('Avocado Spread', 'M005', 'Creamy avocado spread with spices', 'Snack', 1.25);
 INSERT INTO Menu_Item_On VALUES ('Egg Bites', 'M005', 'Sous vide egg bites with cheese and optional bacon or veggie', 'Snack', 4.95);
 INSERT INTO Menu_Item_On VALUES ('Classic Oatmeal', 'M005', 'Hearty oatmeal with optional nuts, fruit, or brown sugar', 'Breakfast', 3.25);
@@ -317,13 +317,13 @@ INSERT INTO Menu_Item_On VALUES ('Chocolate Croissant', 'M005', 'Buttery croissa
 INSERT INTO Menu_Item_On VALUES ('Blueberry Muffin', 'M005', 'Soft muffin filled with blueberries', 'Bakery', 3.25);
 INSERT INTO Menu_Item_On VALUES ('Banana Nut Loaf', 'M005', 'Banana bread loaf with nuts', 'Bakery', 3.25);
 INSERT INTO Menu_Item_On VALUES ('Pumpkin Loaf', 'M005', 'Spiced pumpkin loaf (seasonal)', 'Bakery', 3.45);
-INSERT INTO Menu_Item_On VALUES ('Tomato , Mozzarella on Focaccia', 'M005', 'Sandwich with tomato, mozzarella, and basil pesto on focaccia', 'Lunch', 6.25);
-INSERT INTO Menu_Item_On VALUES ('Turkey , Pesto Panini', 'M005', 'Roasted turkey with pesto and cheese on ciabatta', 'Lunch', 6.75);
+INSERT INTO Menu_Item_On VALUES ('Tomato, Mozzarella on Focaccia', 'M005', 'Sandwich with tomato, mozzarella, and basil pesto on focaccia', 'Lunch', 6.25);
+INSERT INTO Menu_Item_On VALUES ('Turkey, Pesto Panini', 'M005', 'Roasted turkey with pesto and cheese on ciabatta', 'Lunch', 6.75);
 INSERT INTO Menu_Item_On VALUES ('Plain Bagel', 'M005', 'Simple, plain bagel', 'Bakery', 2.25);
 INSERT INTO Menu_Item_On VALUES ('Everything Bagel', 'M005', 'Bagel topped with everything seasoning', 'Bakery', 2.5);
 INSERT INTO Menu_Item_On VALUES ('Lemon Loaf', 'M005', 'Moist loaf with lemon flavor and icing', 'Bakery', 3.45);
 INSERT INTO Menu_Item_On VALUES ('Chocolate Chip Cookie', 'M005', 'Large cookie with chocolate chips', 'Bakery', 2.95);
-INSERT INTO Menu_Item_On VALUES ('Protein Box (Eggs , Cheese)', 'M005', 'Hard-boiled eggs, cheese, apples, and peanut butter', 'Snack', 5.75);
+INSERT INTO Menu_Item_On VALUES ('Protein Box (Eggs, Cheese)', 'M005', 'Hard-boiled eggs, cheese, apples, and peanut butter', 'Snack', 5.75);
 INSERT INTO Menu_Item_On VALUES ('Greek Yogurt Parfait', 'M005', 'Greek yogurt with berries and granola', 'Snack', 3.95);
 INSERT INTO Menu_Item_On VALUES ('Granola Bar', 'M005', 'A bar with oats, nuts, and dried fruits', 'Snack', 2.5);
 
@@ -386,12 +386,12 @@ INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Vanilla Sweet Cream Cold Brew',
 INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Nitro Cold Brew', 'M005');
 INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Nitro Cold Brew with Sweet Cream', 'M005');
 INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Pumpkin Cream Cold Brew', 'M005');
-INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Frappuccino® Blended Beverage', 'M005');
+INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Frappuccino Blended Beverage', 'M005');
 INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Caramel Frappuccino', 'M005');
 INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Mocha Frappuccino', 'M005');
 INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Java Chip Frappuccino', 'M005');
 INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Dragon Drink', 'M005');
-INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Strawberry Açaí Refresher', 'M005');
+INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Strawberry Acai Refresher', 'M005');
 INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Mango Dragonfruit Refresher', 'M005');
 INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Pink Drink', 'M005');
 INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Matcha Green Tea Latte', 'M005');
@@ -400,10 +400,10 @@ INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Hot Chocolate', 'M005');
 INSERT INTO Contains_Diet VALUES ('Vegetarian', 'White Hot Chocolate', 'M005');
 INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Pumpkin Spice Latte', 'M005');
 INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Peppermint Mocha', 'M005');
-INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Bacon, Gouda , Egg Sandwich', 'M005');
-INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Sausage, Cheddar , Egg Sandwich', 'M005');
-INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Impossible™ Breakfast Sandwich', 'M005');
-INSERT INTO Contains_Diet VALUES ('Vegan', 'Impossible™ Breakfast Sandwich', 'M005');
+INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Bacon, Gouda, Egg Sandwich', 'M005');
+INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Sausage, Cheddar, Egg Sandwich', 'M005');
+INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Impossible Breakfast Sandwich', 'M005');
+INSERT INTO Contains_Diet VALUES ('Vegan', 'Impossible Breakfast Sandwich', 'M005');
 INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Avocado Spread', 'M005');
 INSERT INTO Contains_Diet VALUES ('Vegan', 'Avocado Spread', 'M005');
 INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Egg Bites', 'M005');
@@ -414,13 +414,13 @@ INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Chocolate Croissant', 'M005');
 INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Blueberry Muffin', 'M005');
 INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Banana Nut Loaf', 'M005');
 INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Pumpkin Loaf', 'M005');
-INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Tomato , Mozzarella on Focaccia', 'M005');
-INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Turkey , Pesto Panini', 'M005');
+INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Tomato, Mozzarella on Focaccia', 'M005');
+INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Turkey, Pesto Panini', 'M005');
 INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Plain Bagel', 'M005');
 INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Everything Bagel', 'M005');
 INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Lemon Loaf', 'M005');
 INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Chocolate Chip Cookie', 'M005');
-INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Protein Box (Eggs , Cheese)', 'M005');
+INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Protein Box (Eggs, Cheese)', 'M005');
 INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Greek Yogurt Parfait', 'M005');
 INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Granola Bar', 'M005');
 
@@ -485,7 +485,7 @@ INSERT INTO Contains_Allergen VALUES ('Dairy', 'White Chocolate Mocha', 'M005');
 INSERT INTO Contains_Allergen VALUES ('Dairy', 'Vanilla Sweet Cream Cold Brew', 'M005');
 INSERT INTO Contains_Allergen VALUES ('Dairy', 'Nitro Cold Brew with Sweet Cream', 'M005');
 INSERT INTO Contains_Allergen VALUES ('Dairy', 'Pumpkin Cream Cold Brew', 'M005');
-INSERT INTO Contains_Allergen VALUES ('Dairy', 'Frappuccino® Blended Beverage', 'M005');
+INSERT INTO Contains_Allergen VALUES ('Dairy', 'Frappuccino Blended Beverage', 'M005');
 INSERT INTO Contains_Allergen VALUES ('Dairy', 'Caramel Frappuccino', 'M005');
 INSERT INTO Contains_Allergen VALUES ('Dairy', 'Mocha Frappuccino', 'M005');
 INSERT INTO Contains_Allergen VALUES ('Dairy', 'Java Chip Frappuccino', 'M005');
@@ -497,12 +497,12 @@ INSERT INTO Contains_Allergen VALUES ('Dairy', 'Hot Chocolate', 'M005');
 INSERT INTO Contains_Allergen VALUES ('Dairy', 'White Hot Chocolate', 'M005');
 INSERT INTO Contains_Allergen VALUES ('Dairy', 'Pumpkin Spice Latte', 'M005');
 INSERT INTO Contains_Allergen VALUES ('Dairy', 'Peppermint Mocha', 'M005');
-INSERT INTO Contains_Allergen VALUES ('Egg', 'Bacon, Gouda , Egg Sandwich', 'M005');
-INSERT INTO Contains_Allergen VALUES ('Dairy', 'Bacon, Gouda , Egg Sandwich', 'M005');
-INSERT INTO Contains_Allergen VALUES ('Egg', 'Sausage, Cheddar , Egg Sandwich', 'M005');
-INSERT INTO Contains_Allergen VALUES ('Dairy', 'Sausage, Cheddar , Egg Sandwich', 'M005');
-INSERT INTO Contains_Allergen VALUES ('Soy', 'Impossible™ Breakfast Sandwich', 'M005');
-INSERT INTO Contains_Allergen VALUES ('Egg', 'Impossible™ Breakfast Sandwich', 'M005');
+INSERT INTO Contains_Allergen VALUES ('Egg', 'Bacon, Gouda, Egg Sandwich', 'M005');
+INSERT INTO Contains_Allergen VALUES ('Dairy', 'Bacon, Gouda, Egg Sandwich', 'M005');
+INSERT INTO Contains_Allergen VALUES ('Egg', 'Sausage, Cheddar, Egg Sandwich', 'M005');
+INSERT INTO Contains_Allergen VALUES ('Dairy', 'Sausage, Cheddar, Egg Sandwich', 'M005');
+INSERT INTO Contains_Allergen VALUES ('Soy', 'Impossible Breakfast Sandwich', 'M005');
+INSERT INTO Contains_Allergen VALUES ('Egg', 'Impossible Breakfast Sandwich', 'M005');
 INSERT INTO Contains_Allergen VALUES ('Egg', 'Egg Bites', 'M005');
 INSERT INTO Contains_Allergen VALUES ('Dairy', 'Egg Bites', 'M005');
 INSERT INTO Contains_Allergen VALUES ('Gluten', 'Hearty Blueberry Oatmeal', 'M005');
@@ -514,17 +514,17 @@ INSERT INTO Contains_Allergen VALUES ('Gluten', 'Blueberry Muffin', 'M005');
 INSERT INTO Contains_Allergen VALUES ('Nuts', 'Banana Nut Loaf', 'M005');
 INSERT INTO Contains_Allergen VALUES ('Gluten', 'Banana Nut Loaf', 'M005');
 INSERT INTO Contains_Allergen VALUES ('Gluten', 'Pumpkin Loaf', 'M005');
-INSERT INTO Contains_Allergen VALUES ('Dairy', 'Tomato , Mozzarella on Focaccia', 'M005');
-INSERT INTO Contains_Allergen VALUES ('Gluten', 'Tomato , Mozzarella on Focaccia', 'M005');
-INSERT INTO Contains_Allergen VALUES ('Gluten', 'Turkey , Pesto Panini', 'M005');
+INSERT INTO Contains_Allergen VALUES ('Dairy', 'Tomato, Mozzarella on Focaccia', 'M005');
+INSERT INTO Contains_Allergen VALUES ('Gluten', 'Tomato, Mozzarella on Focaccia', 'M005');
+INSERT INTO Contains_Allergen VALUES ('Gluten', 'Turkey, Pesto Panini', 'M005');
 INSERT INTO Contains_Allergen VALUES ('Gluten', 'Plain Bagel', 'M005');
 INSERT INTO Contains_Allergen VALUES ('Gluten', 'Everything Bagel', 'M005');
 INSERT INTO Contains_Allergen VALUES ('Dairy', 'Lemon Loaf', 'M005');
 INSERT INTO Contains_Allergen VALUES ('Gluten', 'Lemon Loaf', 'M005');
 INSERT INTO Contains_Allergen VALUES ('Gluten', 'Chocolate Chip Cookie', 'M005');
-INSERT INTO Contains_Allergen VALUES ('Egg', 'Protein Box (Eggs , Cheese)', 'M005');
-INSERT INTO Contains_Allergen VALUES ('Dairy', 'Protein Box (Eggs , Cheese)', 'M005');
-INSERT INTO Contains_Allergen VALUES ('Gluten', 'Protein Box (Eggs , Cheese)', 'M005');
+INSERT INTO Contains_Allergen VALUES ('Egg', 'Protein Box (Eggs, Cheese)', 'M005');
+INSERT INTO Contains_Allergen VALUES ('Dairy', 'Protein Box (Eggs, Cheese)', 'M005');
+INSERT INTO Contains_Allergen VALUES ('Gluten', 'Protein Box (Eggs, Cheese)', 'M005');
 INSERT INTO Contains_Allergen VALUES ('Dairy', 'Greek Yogurt Parfait', 'M005');
 INSERT INTO Contains_Allergen VALUES ('Nuts', 'Granola Bar', 'M005');
 
@@ -544,11 +544,8 @@ INSERT INTO Stores_Allergen VALUES ('Helenas_Profile', 'hesoru', 'Soy');
 INSERT INTO Stores_Allergen VALUES ('Helenas_Profile', 'hesoru', 'Dairy');
 INSERT INTO Stores_Allergen VALUES ('Vegetables_Only', 'jsmith', 'Gluten');
 
-
 INSERT INTO Stores_Diet VALUES ('Vegetables_Only', 'jsmith', 'Vegetarian');
 INSERT INTO Stores_Diet VALUES ('Vegan_Vibes', 'alovelace', 'Vegan');
 INSERT INTO Stores_Diet VALUES ('Halal_Friends', 'hedie', 'Halal');
 INSERT INTO Stores_Diet VALUES ('Kosher_Options', 'oreo', 'Kosher');
 INSERT INTO Stores_Diet VALUES ('Helenas_Profile', 'hesoru', 'Vegan');
-
-
