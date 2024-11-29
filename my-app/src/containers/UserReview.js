@@ -129,6 +129,7 @@ const UserReviews = ({initialReviews }) => {
             )}
         </ul>
 
+        <ul className="edit-review">
             {editDialogOpen && (
                 <div style={styles.dialogOverlay}>
                     <div style={styles.dialog}>
@@ -138,12 +139,12 @@ const UserReviews = ({initialReviews }) => {
                             value={editedComment}
                             onChange={(e) => setEditedComment(e.target.value)}
                         ></textarea>
-                        <input
+                        <input 
                             type="number"
                             min="0"
                             max="5"
                             step="0.1"
-                            style={styles.input}
+                            style={{ ...styles.input, marginBottom: '20px' }}
                             value={editedRating}
                             onChange={(e) => {
                                 const value = Number(e.target.value);
@@ -164,6 +165,7 @@ const UserReviews = ({initialReviews }) => {
                     </div>
                 </div>
             )}
+        </ul>
         </div>
     );
 };

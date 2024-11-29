@@ -90,13 +90,13 @@ const RestaurantsContainer = () => {
 
 
     return (
-        <div className="restaurants-container">
+        <div className="restaurants-container flex items-center justify-center min-h-screen">
             {selectedRestaurant ? (
                 <RestaurantPage restaurant={selectedRestaurant} />
             ) : (
                 <div className="flex gap-4 p-4">
                     <aside className="w-64 bg-gray-100 p-4 rounded-lg shadow">
-                        <h3 className="text-lg contain-style flex align-middle font-extrabold font-mono mb-4 text-center">Filter Restaurants</h3>
+                        <h3 className="text-lg contain-style font-extrabold font-mono mb-4">Filter Restaurants</h3>
                         <div>
                             <label className="text-ellipsis contain-style font-mono">Cuisine Type</label>
                             <input
@@ -130,7 +130,7 @@ const RestaurantsContainer = () => {
                         </div>
                         <button className="text-ellipsis space-x-3 text-lg font-extrabold font-mono" onClick={applyFilters}>Submit</button>
                     </aside>
-                    <main className="restaurant-list-container">
+                    <main className="restaurant-list-view">
                         {loading && <p>Loading...</p>}
                         {filteredRestaurants.length > 0 ? (
                             <ul className="restaurant-list">
