@@ -229,6 +229,36 @@ async function fetchTopRatedByCuisineFromDb() {
     });
 }
 
+async function fetchRestaurantsServingAllDietsFromDb() {
+    return await withOracleDB(async (connection) => {
+        console.log("before connecting")
+        const result = await connection.execute(`
+        SELECT 
+            R.Restaurant_Name, 
+            R.Cuisine_Type
+        FROM 
+            Restaurant R
+        JOIN 
+            Restaurant_Location_Has RL ON R.Id = RL.Restaurant_Id
+        JOIN 
+            Menu_Serves MS ON RL.Longitude = MS.Restaurant_Longitude AND RL.Latitude = MS.Restaurant_Latitude
+        JOIN 
+            Contains_Diet CD ON MS.Id = CD.Menu_Id
+        JOIN 
+            Diet D ON CD.Diet_Type = D.Diet_Type
+        GROUP BY 
+            R.Restaurant_Name, R.Cuisine_Type
+        HAVING 
+            COUNT(DISTINCT D.Diet_Type) = (SELECT COUNT(*) FROM Diet)`,
+            []
+        );
+        console.log("after connecting", result.rows)
+        return result;
+    }).catch(() => {
+        return [];
+    });
+}
+
 async function fetchAUserReview(reviewID) {
     return await withOracleDB(async (connection) => {
         console.log(reviewID)
@@ -472,6 +502,7 @@ module.exports = {
     deleteReviewContent,
     fetchAllRestaurantsFromDb,
     fetchTopRatedByCuisineFromDb,
+    fetchRestaurantsServingAllDietsFromDb,
     addUserProfile,
     fetchAUserReview,
     fetchAllReviewsFromUser,

@@ -88,7 +88,6 @@ const MenuPage = () => {
         return <p style={{ color: 'red' }}>Error: {error}</p>;
     }
 
-    // TODO: change lat/lon to restaurant name item.Price.toFixed(2)
     return (
         <main className="menu-list-container">
             <h1 style={{ marginBottom: '1em'}} className="text-3xl font-extrabold font-mono">Menu: {location_name}</h1> 
@@ -125,73 +124,3 @@ const MenuPage = () => {
 };
 
 export default MenuPage;
-
-// import React, { useState, useEffect } from 'react';
-
-// const RestaurantMenu = ({ restaurantId }) => {
-//   const [consolidatedItems, setconsolidatedItems] = useState([]);
-//   const [loading, setLoading] = useState(true);
-//   const [error, setError] = useState(null);
-
-//   const host = 'http://localhost:50001'
-
-//   // Fetch the menu when the component mounts or the restaurantId changes
-//   useEffect(() => {
-//     const fetchMenu = async () => {
-//       setLoading(true);
-//       setError(null);
-
-//       try {
-//         const response = await fetch(`${host}/${restaurantId}/menu`);
-//         if (!response.ok) {
-//           throw new Error(`Error fetching menu: ${response.status} - ${response.statusText}`);
-//         }
-//         const data = await response.json();
-//         setconsolidatedItems(data.result || []);
-//       } catch (err) {
-//         console.error(err);
-//         setError(err.message);
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-
-//     if (restaurantId) {
-//       fetchMenu();
-//     }
-//   }, [restaurantId]);
-
-//   // Render loading state
-//   if (loading) {
-//     return <p>Loading menu...</p>;
-//   }
-
-//   // Render error state
-//   if (error) {
-//     return <p style={{ color: 'red' }}>Error: {error}</p>;
-//   }
-
-//   // Render menu items
-//   return (
-//     <div>
-//       <h1>{restaurantId}: Restaurant Menu</h1>
-//       {consolidatedItems.length === 0 ? (
-//         <p>No menu items available for this restaurant.</p>
-//       ) : (
-//         <ul>
-//           {consolidatedItems.map((item) => (
-//             <li key={item.id}>
-//               <h3>{item.name}</h3>
-//               <p>{item.description}</p>
-//               <p>Price: ${item.price}</p>
-//               {item.allergens && <p>Allergens: {item.allergens}</p>}
-//               {item.dietary_restrictions && <p>Dietary Info: {item.dietary_restrictions}</p>}
-//             </li>
-//           ))}
-//         </ul>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default RestaurantMenu;

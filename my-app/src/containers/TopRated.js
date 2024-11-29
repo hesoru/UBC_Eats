@@ -6,7 +6,6 @@ const TopRated = () => {
     const [topRated, setTopRated] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    // const { location_name, lat, lon } = useParams();
 
     useEffect(() => {
         const viewTopRated = async () => {
@@ -52,7 +51,6 @@ const TopRated = () => {
         return <p style={{ color: 'red' }}>Error: {error}</p>;
     }
 
-    // TODO: change lat/lon to restaurant name item.Price.toFixed(2)
     return (
         <main className="top-rated-list-container">
             <h1 style={{ marginBottom: '1em'}} className="text-3xl font-extrabold font-mono">Top-Rated Restaurants By Cuisine</h1> 

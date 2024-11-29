@@ -9,6 +9,7 @@ import RestaurantsContainer from "./containers/RestaurantsContainer";
 import SignIn from "./components/SignIn";
 import FindFood from "./containers/FindFood";
 import TopRated from "./containers/TopRated";
+import SuperServers from "./containers/SuperServers";
 
 function App() {
     const [currentUser, setCurrentUser] = useState('');
@@ -36,6 +37,8 @@ function App() {
                         <Link to={`/find-food`} className="text-lg font-bold font-mono hover:text-indigo-200 transition">Find Food</Link>
                         <span className="mx-2 text-gray-400">|</span>
                         <Link to={`/top-rated`} className="text-lg font-bold font-mono hover:text-indigo-200 transition">Top-Rated</Link>
+                        <span className="mx-2 text-gray-400">|</span>
+                        <Link to={`/super-servers`} className="text-lg font-bold font-mono hover:text-indigo-200 transition">Super-Servers</Link>
                     </nav>
                 </header>
 
@@ -47,6 +50,7 @@ function App() {
                     <Route path="/menu/:location_name/:lat/:lon" element={<MenuPage/>}/>
                     <Route path="/find-food" element={<FindFood/>}/>
                     <Route path="/top-rated" element={<TopRated/>}/>
+                    <Route path="/super-servers" element={<SuperServers/>}/>
                 </Routes>
             </div>
         </Router>

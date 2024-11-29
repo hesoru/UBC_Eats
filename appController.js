@@ -105,6 +105,17 @@ router.get("/top-rated-by-cuisine", async (req, res) => {
     }
 });
 
+router.get("/serving-all-diets", async (req, res) => {
+
+    const initiateResult = await appService.fetchRestaurantsServingAllDietsFromDb();
+    console.log(initiateResult)
+    if (initiateResult) {
+        res.json({ success: true, result: initiateResult});
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
 
 router.post("/update-user-review", async (req, res) => {
     const {newContent, columnName, reviewID} = req.body;

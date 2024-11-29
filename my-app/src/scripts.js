@@ -58,6 +58,23 @@ export async function fetchTopRatedByCuisine() {
     }
 }
 
+export async function fetchRestaurantsServingAllDiets() {
+    try {
+        const response = await fetch(`${host}/serving-all-diets`, {
+            method: "GET"
+        });
+
+        if (!response.ok) {
+            throw new Error(`Request failed with status ${response.status}: ${response.statusText}`);
+        }
+
+        return await response.json();
+
+    } catch (error) {
+        console.error("Error fetching restaurants serving at least one menu item for every diet:", error);
+        return [];
+    }
+}
 
 export async function fetchUsersReviews(userName) {
     const response = await fetch(`${host}/fetch-user-reviews/${encodeURIComponent(userName)}`, {

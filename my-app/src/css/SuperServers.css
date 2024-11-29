@@ -1,0 +1,28 @@
+.super-servers-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    width: 100%;
+    max-width: 1200px;
+}
+
+.super-servers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Flexible columns */
+    gap: 16px; /* Spacing between grid items */
+    padding: 16px;
+}
+
+.super-servers-item {
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-size: 18px;
+    font-family: monospace;
+}
+
+.super-servers-item h3 {
+    font-size: 1.5rem;
+    color: #333;
+}
