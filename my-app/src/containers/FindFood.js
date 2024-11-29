@@ -53,7 +53,7 @@ const FindFood = () => {
 
             {/* Diet Types Checkboxes */}
             <div className="mb-6">
-                <h2 className="text-2xl font-medium font-serif mb-2">Select Multiple Compatible Dietary Restrictions (OR) </h2>
+                <h2 className="text-2xl font-medium font-mono mb-2">Select Multiple Compatible Dietary Restrictions (OR) </h2>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                     {dietOptions.map((diet) => (
                         <label key={diet} className="flex items-center font-thin font-mono space-x-2">
@@ -72,7 +72,7 @@ const FindFood = () => {
 
             {/* Allergen Types Checkboxes */}
             <div className="mb-6">
-                <h2 className="text-2xl font-medium font-serif mb-2">Filter Selected Allergens (AND) </h2>
+                <h2 className="text-2xl font-medium font-mono mb-2">Filter Selected Allergens (AND) </h2>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                     {allergenOptions.map((allergen) => (
                         <label key={allergen} className="flex  font-thin font-mono items-center space-x-2">
@@ -100,16 +100,15 @@ const FindFood = () => {
             </div>
 
             {/* Filtered Menu */}
-            <div>
-                <h2 className="text-gray-500 font-bold font-serif mb-4">Filtered Menu</h2>
+            <div className="filtered-menu font-mono">
+                <h2 className="text-gray-500 font-bold font-mono mb-4">Filtered Menu</h2>
                 {isSubmitted ? (
                     filteredMenu.length > 0 ? (
                         <ul className="space-y-4">
                             {filteredMenu.map((item, index) => (
                                 <li key={index} className="p-4 bg-gray-100 rounded-lg shadow-md">
                                     <strong className="text-xl">{item.MENU_NAME}</strong> from
-                                    <em className="italic text-indigo-600"> {item.RESTAURANT_NAME}</em> - 
-                                    {item.PRICE ? (
+                                    <em className="italic text-indigo-600"> {item.RESTAURANT_NAME}</em>: {item.PRICE ? (
                                         <span className="font-semibold text-green-600">
                                         ${item.PRICE.toFixed(2)}
                                     </span>

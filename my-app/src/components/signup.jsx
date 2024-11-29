@@ -241,9 +241,14 @@ const SignUp = ({setCurrentUser}) => {
                     {errors.username && <p style={{ color: "red" }}>{errors.username}</p>}
                 </div>
                 <Button type="submit" className="text-xl font-extrabold font-mono w-full">Sign Up</Button>
-                {Object.keys(errors).map((key) => (
+                {errors.geolocation_request && <p className="text-center text-red-500 mt-2">{errors.geolocation_request}</p>}
+                {errors.geolocation && <p className="text-center text-red-500 mt-2">{errors.geolocation}</p>}
+                {errors.unique && <p className="text-center text-red-500 mt-2">{errors.unique}</p>}
+                {errors.adding_request && <p className="text-center text-red-500 mt-2">{errors.adding_request}</p>}
+                {errors.general && <p className="text-center text-red-500 mt-2">{errors.general}</p>}
+                {/* {Object.keys(errors).map((key) => (
                     <p key={key} style={{ color: "red" }}>{errors[key]}</p>
-                ))}
+                ))} */}
                 {message && <p className="text-center text-red-500 mt-2">{message}</p>}
             </form>
             <p className="text-center mt-4 font-extrabold font-mono">
