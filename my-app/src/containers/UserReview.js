@@ -3,6 +3,7 @@ import React, { useState,  useEffect} from "react";
 import { useParams } from 'react-router-dom';
 import '../css/UserReview.css';
 import {deleteReview, fetchReviewContent, fetchUsersReviews, updateUserReview} from "../scripts";
+import DOMPurify from 'dompurify';
 
 const UserReviews = ({initialReviews }) => {
     const { userName } = useParams();
@@ -12,6 +13,7 @@ const UserReviews = ({initialReviews }) => {
     const [editedComment, setEditedComment] = useState("");
     const [editedRating, setEditedRating] = useState(null);
     const [message, setMessage] = useState("");
+    const [editMessage, setEditMessage] = useState("");
 
     useEffect(() => {
         const fetchReviews = async () => {
@@ -64,13 +66,28 @@ const UserReviews = ({initialReviews }) => {
 
     const handleEditSave = async () => {
         try {
+            let sanitizedComment = editedComment.trim();
+            // Basic length validation
+            if (sanitizedComment.length === 0) {
+                setEditMessage("Comment cannot be empty.");
+                setTimeout(() => setMessage(""), 3000);
+                return;
+            }
+            if (sanitizedComment.length > 500) {
+                setEditMessage("Comment is too long. Please keep it under 500 characters.");
+                setTimeout(() => setMessage(""), 3000);
+                return;
+            }
+            // Remove HTML tags
+            sanitizedComment = DOMPurify.sanitize(sanitizedComment);
+
             // Update the comment and rating
-            await updateUserReview(editedComment, "CONTENT", currentReview.id);
+            await updateUserReview(sanitizedComment, "CONTENT", currentReview.id);
             await updateUserReview(editedRating, "RATING", currentReview.id);
 
             const updatedReviews = reviews.map((review) =>
                 review.id === currentReview.id
-                    ? { ...review, comment: editedComment, rating: editedRating }
+                    ? { ...review, comment: sanitizedComment, rating: editedRating }
                     : review
             );
             setReviews(updatedReviews);
@@ -139,6 +156,7 @@ const UserReviews = ({initialReviews }) => {
                             value={editedComment}
                             onChange={(e) => setEditedComment(e.target.value)}
                         ></textarea>
+                        {editMessage && <p style={{ color: "red" }}>{editMessage}</p>}
                         <input 
                             type="number"
                             min="0"
