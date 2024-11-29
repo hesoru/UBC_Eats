@@ -1,3 +1,171 @@
+-- Table drop + creations
+
+DROP TABLE User_Has CASCADE CONSTRAINTS;
+DROP TABLE User_Location CASCADE CONSTRAINTS;
+DROP TABLE Review_For_Makes CASCADE CONSTRAINTS;
+DROP TABLE Restaurant_Location_Has CASCADE CONSTRAINTS;
+DROP TABLE Distance_From CASCADE CONSTRAINTS;
+DROP TABLE Restaurant CASCADE CONSTRAINTS;
+DROP TABLE Menu_Serves CASCADE CONSTRAINTS;
+DROP TABLE Menu_Item_On CASCADE CONSTRAINTS;
+DROP TABLE Contains_Allergen CASCADE CONSTRAINTS;
+DROP TABLE Contains_Diet CASCADE CONSTRAINTS;
+DROP TABLE Allergen CASCADE CONSTRAINTS;
+DROP TABLE Diet CASCADE CONSTRAINTS;
+DROP TABLE Dietary_Profile_Can_Save CASCADE CONSTRAINTS;
+DROP TABLE Stores_Allergen CASCADE CONSTRAINTS;
+DROP TABLE Stores_Diet CASCADE CONSTRAINTS;
+
+
+CREATE TABLE User_Location (
+   Longitude NUMBER(9, 6),
+   Latitude NUMBER(9, 6),
+   Record_Date DATE,
+   Record_Time TIMESTAMP,
+   PRIMARY KEY (Longitude, Latitude)
+);
+
+/* ASSERTION NEEDED - to ensure each user MUST be associated with a single User_Location */
+CREATE TABLE User_Has (
+    Username VARCHAR2(30) PRIMARY KEY,
+    First_Name VARCHAR2(30),
+    Last_Name VARCHAR2(30),
+    Email VARCHAR2(30) NOT NULL UNIQUE,
+    User_Longitude NUMBER(9, 6) NOT NULL,
+    User_Latitude NUMBER(9, 6) NOT NULL,
+    CONSTRAINT fk_user_location FOREIGN KEY (User_Longitude, User_Latitude)
+        REFERENCES User_Location(Longitude, Latitude)
+            ON DELETE CASCADE
+);
+
+CREATE TABLE Restaurant (
+    Id VARCHAR2(30) PRIMARY KEY,
+    Cuisine_Type VARCHAR2(30),
+    Restaurant_Name VARCHAR2(30),
+    Average_Price NUMBER(10, 0) CHECK (Average_Price >= 0)
+);
+
+/* ASSERTION NEEDED - to ensure Restaurant_Location MUST be associated with AT LEAST 1 menu */
+CREATE TABLE Restaurant_Location_Has (
+   Restaurant_Id VARCHAR2(30),
+   Longitude NUMBER(9, 6),
+   Latitude NUMBER(9, 6),
+   City VARCHAR2(30),
+   Province_or_State VARCHAR2(2),
+   Street_Address VARCHAR2(50) NOT NULL UNIQUE,
+   Postal_Code CHAR(6),
+   Location_Name VARCHAR2(30),
+   Phone_Number VARCHAR2(15) UNIQUE,
+   Average_Rating NUMBER(3, 2) CHECK (Average_Rating BETWEEN 0 AND 5),
+   PRIMARY KEY (Longitude, Latitude),
+   CONSTRAINT fk_restaurant FOREIGN KEY (Restaurant_Id)
+       REFERENCES Restaurant(Id)
+);
+
+/* ASSERTION NEEDED - to ensure Review MUST be associated with a single User */
+CREATE TABLE Review_For_Makes (
+    Id VARCHAR2(30) PRIMARY KEY,
+    Content VARCHAR2(200) NOT NULL,
+    Rating NUMBER(10, 0) CHECK (Rating BETWEEN 0 AND 5),
+    Record_Date DATE,
+    Record_Time TIMESTAMP,
+    Username VARCHAR2(30) NOT NULL,
+    Restaurant_Longitude NUMBER(9, 6),
+    Restaurant_Latitude NUMBER(9, 6),
+    CONSTRAINT fk_user_review FOREIGN KEY (Username)
+        REFERENCES User_Has(Username),
+    CONSTRAINT fk_restaurant_location FOREIGN KEY (Restaurant_Longitude, Restaurant_Latitude)
+        REFERENCES Restaurant_Location_Has(Longitude, Latitude)
+);
+
+CREATE TABLE Distance_From (
+   User_Longitude DECIMAL(9, 6),
+   User_Latitude DECIMAL(9, 6),
+   Restaurant_Longitude DECIMAL(9, 6),
+   Restaurant_Latitude DECIMAL(9, 6),
+   Distance_Difference_KM DECIMAL(10, 6),
+   PRIMARY KEY (User_Longitude, User_Latitude, Restaurant_Longitude, Restaurant_Latitude),
+   FOREIGN KEY (User_Longitude, User_Latitude)
+       REFERENCES User_Location(Longitude, Latitude),
+   FOREIGN KEY (Restaurant_Longitude, Restaurant_Latitude)
+       REFERENCES Restaurant_Location_Has(Longitude, Latitude)
+);
+
+/* ASSERTION NEEDED - to ensure Menu MUST be associated with a single Restaurant_Location */
+CREATE TABLE Menu_Serves (
+   Id VARCHAR2(30) PRIMARY KEY,
+   Food_Type VARCHAR2(30),
+   Restaurant_Latitude NUMBER(9, 6) NOT NULL,
+   Restaurant_Longitude NUMBER(9, 6) NOT NULL,
+   CONSTRAINT fk_menu_restaurant FOREIGN KEY (Restaurant_Latitude, Restaurant_Longitude)
+       REFERENCES Restaurant_Location_Has(Latitude, Longitude)
+);
+
+/* ASSERTION NEEDED - to ensure Menu_Item MUST be associated with a single Menu */
+CREATE TABLE Menu_Item_On (
+    Menu_Name VARCHAR2(60),
+    Menu_Id VARCHAR2(30) NOT NULL,
+    Description VARCHAR2(100),
+    Menu_Type VARCHAR2(30),
+    Price NUMBER(9, 2),
+    PRIMARY KEY (Menu_Name, Menu_Id),
+    CONSTRAINT fk_menu_item FOREIGN KEY (Menu_Id) REFERENCES Menu_Serves(Id)
+);
+
+CREATE TABLE Diet (
+    Diet_Type VARCHAR2(30) PRIMARY KEY
+);
+
+CREATE TABLE Allergen (
+    Allergen_Type VARCHAR2(30) PRIMARY KEY
+);
+
+CREATE TABLE Contains_Diet (
+   Diet_Type VARCHAR2(30),
+   Menu_Item_Name VARCHAR2(60),
+   Menu_Id VARCHAR2(30),
+   PRIMARY KEY (Diet_Type, Menu_Item_Name, Menu_Id),
+   CONSTRAINT fk_diet FOREIGN KEY (Diet_Type) REFERENCES Diet(Diet_Type),
+   CONSTRAINT fk_menu_diet FOREIGN KEY (Menu_Item_Name, Menu_Id) REFERENCES Menu_Item_On(Menu_Name, Menu_Id)
+);
+
+/* ASSERTION NEEDED - to ensure Dietary_Profile MUST be associated with a single User */
+CREATE TABLE Dietary_Profile_Can_Save (
+    Profile_Name VARCHAR2(30),
+    Username VARCHAR2(30) NOT NULL,
+    PRIMARY KEY (Profile_Name, Username),
+    CONSTRAINT fk_user_profile FOREIGN KEY (Username) REFERENCES User_Has(Username)
+);
+
+CREATE TABLE Stores_Diet (
+   Dietary_Profile_Name VARCHAR2(30),
+   User_Username VARCHAR2(30) NOT NULL,
+   Diet_Type VARCHAR2(30),
+   PRIMARY KEY (Dietary_Profile_Name, User_Username, Diet_Type),
+   CONSTRAINT fk_diet_user FOREIGN KEY (Diet_Type) REFERENCES Diet(Diet_Type),
+   CONSTRAINT fk_dietary_profile_Diet FOREIGN KEY (Dietary_Profile_Name, User_Username) REFERENCES Dietary_Profile_Can_Save(Profile_Name, Username)
+);
+
+CREATE TABLE Contains_Allergen (
+   Allergen_Type VARCHAR2(30),
+   Menu_Item_Name VARCHAR2(60),
+   Menu_Id VARCHAR2(30),
+   PRIMARY KEY (Allergen_Type, Menu_Item_Name, Menu_Id),
+   CONSTRAINT fk_allergen FOREIGN KEY (Allergen_Type) REFERENCES Allergen(Allergen_Type),
+   CONSTRAINT fk_menu_allergen FOREIGN KEY (Menu_Item_Name, Menu_Id) REFERENCES Menu_Item_On(Menu_Name, Menu_Id)
+);
+
+CREATE TABLE Stores_Allergen (
+   Dietary_Profile_Name VARCHAR2(30),
+   User_Username VARCHAR2(30),
+   Allergen_Type VARCHAR2(30),
+   PRIMARY KEY (Dietary_Profile_Name, User_Username, Allergen_Type),
+   CONSTRAINT fk_allergen_user FOREIGN KEY (Allergen_Type) REFERENCES Allergen(Allergen_Type),
+   CONSTRAINT fk_dietary_profile_Allergen FOREIGN KEY (Dietary_Profile_Name, User_Username) REFERENCES Dietary_Profile_Can_Save(Profile_Name, Username)
+);
+
+-- Insertion statements
+
 INSERT INTO User_Location VALUES (-123.1207, 49.2827, DATE '2024-10-30', TIMESTAMP '2024-10-30 08:30:00');
 INSERT INTO User_Location VALUES (-122.4194, 37.7749, DATE '2024-10-31', TIMESTAMP '2024-10-31 15:45:00');
 INSERT INTO User_Location VALUES (-123.120735, 49.282730, DATE '2024-11-01', TIMESTAMP '2024-11-01 16:45:00');
@@ -43,17 +211,32 @@ INSERT INTO Review_For_Makes VALUES ('4', 'Fantastic ambiance and great food!', 
 INSERT INTO Review_For_Makes VALUES ('5', 'Fresh ingredients, but portions were small.', 3, DATE '2024-11-03', TIMESTAMP '2024-11-03 14:00:00', 'hedie', -123.252471, 49.266564);
 INSERT INTO Review_For_Makes VALUES ('6', 'Friendly staff, but the coffee was too bitter.', 2, DATE '2024-11-04', TIMESTAMP '2024-11-04 09:30:00', 'oreo', -123.255589, 49.269235);
 INSERT INTO Review_For_Makes VALUES ('7', 'Loved the pizza, will definitely come back!', 5, DATE '2024-11-05', TIMESTAMP '2024-11-05 18:45:00', 'alovelace', -123.251791, 49.262884);
+INSERT INTO Review_For_Makes VALUES ('8', 'The matcha was soooo yummy!', 5, DATE '2024-11-06', TIMESTAMP '2024-11-06 08:20:00', 'hedie', -123.250050, 49.267470);
+INSERT INTO Review_For_Makes VALUES ('9', 'Sometimes the salmon is a little chewy', 3, DATE '2024-11-07', TIMESTAMP '2024-11-07 17:30:00', 'hedie', -123.252471, 49.266564);
+INSERT INTO Review_For_Makes VALUES ('10', 'I got the hamburger Spongebob gave the health inspector', 0, DATE '2024-11-10', TIMESTAMP '2024-11-10 17:36:00', 'hedie', -122.429400, 37.784900);
+INSERT INTO Review_For_Makes VALUES ('11', 'Pizza can be soggy', 3, DATE '2024-11-08', TIMESTAMP '2024-11-08 18:10:00', 'jdoe', -123.251791, 49.262884);
+INSERT INTO Review_For_Makes VALUES ('12', 'Lots of waiting but sandwiches are worth it', 4, DATE '2024-11-09', TIMESTAMP '2024-11-09 12:10:00', 'jdoe', -123.253154, 49.267726);
+INSERT INTO Review_For_Makes VALUES ('13', 'My sandwich was ice cold!!! >:(', 1, DATE '2024-11-11', TIMESTAMP '2024-11-11 09:39:00', 'jdoe', -123.246559, 49.261271);
 
-INSERT INTO Distance_From VALUES (-123.12073, 49.282735, -122.4294, 37.7849, 1.2);
-INSERT INTO Distance_From VALUES (-122.4194, 37.7749, -123.253154, 49.267726, 1.5);
+
+INSERT INTO Distance_From VALUES (-123.120730, 49.282735, -123.255589, 49.269235, 9.9);
+INSERT INTO Distance_From VALUES (-122.4194, 37.7749, -123.253154, 49.267726, 1279.7);
+INSERT INTO Distance_From VALUES (-123.120730, 49.282735, -123.248266, 49.261233, 9.5);
+INSERT INTO Distance_From VALUES (-123.120744, 49.282740, -123.252471, 49.266564, 9.7);
+INSERT INTO Distance_From VALUES (-123.120739, 49.282728, -123.250510, 49.265480, 9.6);
 
 INSERT INTO Menu_Serves VALUES ('M001', 'Lunch', 49.290000, -123.130000);
 INSERT INTO Menu_Serves VALUES ('M002', 'Appetizer', 49.290000, -123.130000);
-INSERT INTO Menu_Serves VALUES ('M003', 'Main Course', 49.261233, -123.248266);
+INSERT INTO Menu_Serves VALUES ('M003', 'Snack', 49.262884, -123.251791);
 INSERT INTO Menu_Serves VALUES ('M004', 'Breakfast', 49.266564, -123.252471);
 INSERT INTO Menu_Serves VALUES ('M005', 'Beverage', 49.269235, -123.255589);
-INSERT INTO Menu_Serves VALUES ('M006', 'Snack', 49.262884, -123.251791);
+INSERT INTO Menu_Serves VALUES ('M006', 'Main Course', 49.261233, -123.248266);
+INSERT INTO Menu_Serves VALUES ('M007', 'Appetizer', 49.269235, -123.255589); 
 
+
+INSERT INTO Menu_Item_On VALUES ('Seafood Special', 'M003', 'A pizza with pesto, shrimp, scallops, and fresh mozarella', 'Main Course', 19.95);
+INSERT INTO Menu_Item_On VALUES ('Soju', 'M005', 'Delicious peach soju', 'Beverage', 8.99);
+INSERT INTO Menu_Item_On VALUES ('Lemonade', 'M005', 'Refreshing glass of Lemonade', 'Beverage', 0.99);
 INSERT INTO Menu_Item_On VALUES ('Burger', 'M001', 'Beef burger with fries', 'Main Course', 12.99);
 INSERT INTO Menu_Item_On VALUES ('Salad', 'M002', 'Fresh green salad', 'Appetizer', 8.99);
 INSERT INTO Menu_Item_On VALUES ('Tortellini', 'M003', 'Cheese Tortellini with pesto', 'Main Course', 11.99);
@@ -144,11 +327,11 @@ INSERT INTO Menu_Item_On VALUES ('Protein Box (Eggs , Cheese)', 'M005', 'Hard-bo
 INSERT INTO Menu_Item_On VALUES ('Greek Yogurt Parfait', 'M005', 'Greek yogurt with berries and granola', 'Snack', 3.95);
 INSERT INTO Menu_Item_On VALUES ('Granola Bar', 'M005', 'A bar with oats, nuts, and dried fruits', 'Snack', 2.5);
 
-
 INSERT INTO Diet VALUES ('Vegetarian');
 INSERT INTO Diet VALUES ('Vegan');
 INSERT INTO Diet VALUES ('Kosher');
 INSERT INTO Diet VALUES ('Halal');
+INSERT INTO Diet VALUES ('Pescatarian');
 
 INSERT INTO Allergen VALUES ('Soy');
 INSERT INTO Allergen VALUES ('Egg');
@@ -217,6 +400,8 @@ INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Hot Chocolate', 'M005');
 INSERT INTO Contains_Diet VALUES ('Vegetarian', 'White Hot Chocolate', 'M005');
 INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Pumpkin Spice Latte', 'M005');
 INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Peppermint Mocha', 'M005');
+INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Bacon, Gouda , Egg Sandwich', 'M005');
+INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Sausage, Cheddar , Egg Sandwich', 'M005');
 INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Impossible™ Breakfast Sandwich', 'M005');
 INSERT INTO Contains_Diet VALUES ('Vegan', 'Impossible™ Breakfast Sandwich', 'M005');
 INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Avocado Spread', 'M005');
@@ -239,7 +424,11 @@ INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Protein Box (Eggs , Cheese)', '
 INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Greek Yogurt Parfait', 'M005');
 INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Granola Bar', 'M005');
 
-
+INSERT INTO Contains_Allergen VALUES ('Dairy', 'Seafood Special', 'M003');
+INSERT INTO Contains_Allergen VALUES ('Gluten', 'Seafood Special', 'M003');
+INSERT INTO Contains_Allergen VALUES ('Nuts', 'Seafood Special', 'M003');
+INSERT INTO Contains_Allergen VALUES ('Shellfish', 'Seafood Special', 'M003');
+INSERT INTO Contains_Allergen VALUES ('Alcohol', 'Soju', 'M005');
 INSERT INTO Contains_Allergen VALUES ('Gluten', 'Burger', 'M001');
 INSERT INTO Contains_Allergen VALUES ('Nuts', 'Tortellini', 'M003');
 INSERT INTO Contains_Allergen VALUES ('Dairy', 'Tortellini', 'M003');
@@ -361,4 +550,5 @@ INSERT INTO Stores_Diet VALUES ('Vegan_Vibes', 'alovelace', 'Vegan');
 INSERT INTO Stores_Diet VALUES ('Halal_Friends', 'hedie', 'Halal');
 INSERT INTO Stores_Diet VALUES ('Kosher_Options', 'oreo', 'Kosher');
 INSERT INTO Stores_Diet VALUES ('Helenas_Profile', 'hesoru', 'Vegan');
+
 
