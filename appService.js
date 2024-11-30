@@ -249,7 +249,8 @@ async function fetchRestaurantsServingAllDietsFromDb() {
         GROUP BY 
             R.Restaurant_Name, R.Cuisine_Type
         HAVING 
-            COUNT(DISTINCT D.Diet_Type) = (SELECT COUNT(*) FROM Diet)`,
+            COUNT(DISTINCT D.Diet_Type) = (SELECT COUNT(*) FROM Diet)`
+            ,
             []
         );
         console.log("after connecting", result.rows)

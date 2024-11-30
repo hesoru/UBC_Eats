@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { filterFoods } from "../scripts";
 
 const FindFood = () => {
-    const dietOptions = ['Vegan', 'Vegetarian', 'Kosher', 'Halal'];
+    const dietOptions = ['Vegan', 'Vegetarian', 'Kosher', 'Halal', 'Pescatarian'];
     const allergenOptions = ['Dairy', 'Gluten', 'Egg', 'Nuts', 'Soy', "Shellfish", "Alcohol", "Chickpeas"];
 
     const [selectedDietTypes, setSelectedDietTypes] = useState([]);

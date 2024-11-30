@@ -326,6 +326,7 @@ INSERT INTO Menu_Item_On VALUES ('Chocolate Chip Cookie', 'M005', 'Large cookie 
 INSERT INTO Menu_Item_On VALUES ('Protein Box (Eggs, Cheese)', 'M005', 'Hard-boiled eggs, cheese, apples, and peanut butter', 'Snack', 5.75);
 INSERT INTO Menu_Item_On VALUES ('Greek Yogurt Parfait', 'M005', 'Greek yogurt with berries and granola', 'Snack', 3.95);
 INSERT INTO Menu_Item_On VALUES ('Granola Bar', 'M005', 'A bar with oats, nuts, and dried fruits', 'Snack', 2.5);
+INSERT INTO Menu_Item_On VALUES ('Water', 'M005', 'water to drink', 'Drink', 2.5);
 
 INSERT INTO Diet VALUES ('Vegetarian');
 INSERT INTO Diet VALUES ('Vegan');
@@ -342,10 +343,15 @@ INSERT INTO Allergen VALUES ('Shellfish');
 INSERT INTO Allergen VALUES ('Alcohol');
 INSERT INTO Allergen VALUES ('Chickpeas');
 
+INSERT INTO Contains_Diet VALUES ('Vegan', 'Water', 'M005');
+INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Water', 'M005');
+INSERT INTO Contains_Diet VALUES ('Pescatarian', 'Water', 'M005');
+INSERT INTO Contains_Diet VALUES ('Halal', 'Water', 'M005');
+INSERT INTO Contains_Diet VALUES ('Kosher', 'Water', 'M005');
+INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Margherita', 'M003');
 INSERT INTO Contains_Diet VALUES ('Vegan', 'Salad', 'M002');
 INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Tortellini', 'M003');
 INSERT INTO Contains_Diet VALUES ('Halal', 'Pesto Pollo', 'M003');
-INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Margherita', 'M003');
 INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Bianca', 'M003');
 INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Ortolana', 'M003');
 INSERT INTO Contains_Diet VALUES ('Vegan', 'Vegan Feature', 'M003');
