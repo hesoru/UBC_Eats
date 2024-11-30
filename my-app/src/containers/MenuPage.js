@@ -19,7 +19,7 @@ const MenuPage = () => {
                 name: item[0],
                 description: item[1],
                 price: item[2],
-                diet: item[3],
+                diet: item[4],
                 allergens: item[4]
             };
         });
