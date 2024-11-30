@@ -232,8 +232,9 @@ INSERT INTO Menu_Serves VALUES ('M003', 'Snack', 49.262884, -123.251791);
 INSERT INTO Menu_Serves VALUES ('M004', 'Breakfast', 49.266564, -123.252471);
 INSERT INTO Menu_Serves VALUES ('M005', 'Beverage', 49.269235, -123.255589);
 INSERT INTO Menu_Serves VALUES ('M006', 'Main Course', 49.261233, -123.248266);
-INSERT INTO Menu_Serves VALUES ('M007', 'Appetizer', 49.269235, -123.255589); 
+INSERT INTO Menu_Serves VALUES ('M007', 'Appetizer', 49.269235, -123.255589);
 
+INSERT INTO Menu_Item_On VALUES ('Seamoss Marsh', 'M003', 'Refreshing organic seamoss', 'Beverage', 5.5);
 INSERT INTO Menu_Item_On VALUES ('Seafood Special', 'M003', 'A pizza with pesto, shrimp, scallops, and fresh mozarella', 'Main Course', 19.95);
 INSERT INTO Menu_Item_On VALUES ('Soju', 'M005', 'Delicious peach soju', 'Beverage', 8.99);
 INSERT INTO Menu_Item_On VALUES ('Lemonade', 'M005', 'Refreshing glass of Lemonade', 'Beverage', 0.99);
@@ -343,6 +344,12 @@ INSERT INTO Allergen VALUES ('Shellfish');
 INSERT INTO Allergen VALUES ('Alcohol');
 INSERT INTO Allergen VALUES ('Chickpeas');
 
+
+INSERT INTO Contains_Diet VALUES ('Vegan', 'Seamoss Marsh', 'M003');
+INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Seamoss Marsh', 'M003');
+INSERT INTO Contains_Diet VALUES ('Kosher', 'Seamoss Marsh', 'M003');
+INSERT INTO Contains_Diet VALUES ('Pescatarian', 'Seamoss Marsh', 'M003');
+INSERT INTO Contains_Diet VALUES ('Halal', 'Seamoss Marsh', 'M003');
 INSERT INTO Contains_Diet VALUES ('Vegan', 'Water', 'M005');
 INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Water', 'M005');
 INSERT INTO Contains_Diet VALUES ('Pescatarian', 'Water', 'M005');
@@ -379,6 +386,10 @@ INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Plant Based Yogurt', 'M004');
 INSERT INTO Contains_Diet VALUES ('Vegan', 'Plant Based Yogurt', 'M004');
 INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Granola', 'M004');
 INSERT INTO Contains_Diet VALUES ('Vegan', 'Granola', 'M004');
+INSERT INTO Contains_Diet VALUES ('Halal', 'Granola', 'M004');
+INSERT INTO Contains_Diet VALUES ('Kosher', 'Granola', 'M004');
+INSERT INTO Contains_Diet VALUES ('Pescatarian', 'Granola', 'M004');
+
 INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Latte', 'M005');
 INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Caramel Macchiato', 'M005');
 INSERT INTO Contains_Diet VALUES ('Vegetarian', 'Americano', 'M005');
