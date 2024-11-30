@@ -197,6 +197,26 @@ export async function filterFoods(dietTypes, allergenTypes) {
     }
 }
 
+export async function filterFoodFromDescription(description) {
+    try {
+        //console.log(dietTypes, allergenTypes.type)
+        const response = await fetch(`${host}/fetch-food-having/${description}`, {
+            method: "GET",
+        });
+        //console.log("response: " + response);
+        if (!response.ok) {
+            throw new Error(`Request failed with status ${response.status}: ${response.statusText}`);
+        }
+
+        return await response.json();
+
+    } catch (error) {
+        console.error("Error fetching food items:", error.message);
+        return [];
+    }
+}
+
+
 export async function isValidUserName(userName) {
     try {
         console.log("response: " + userName);

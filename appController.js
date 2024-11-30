@@ -197,4 +197,15 @@ router.get("/check-unique/:username/:email", async (req, res) => {
     // }
 });
 
+
+router.get("/fetch-food-having/:description", async (req, res) => {
+    console.log("entered endpoint")
+    const description = req.params.description;
+    const isUnique = await appService.fetchFoodFromDescription(description);
+    console.log("unique: " + isUnique);
+    console.log("success");
+    res.json({ success: true, result: isUnique});
+
+});
+
 module.exports = router;

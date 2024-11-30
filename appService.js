@@ -142,6 +142,36 @@ async function fetchAllReviewsFromUser(userName) {
         return [];
     });
 }
+
+async function fetchFoodFromDescription(description) {
+    return await withOracleDB(async (connection) => {
+        const query = `
+            SELECT MENU_NAME, r.RESTAURANT_NAME, PRICE, DESCRIPTION, MENU_TYPE, MENU_ID
+            FROM MENU_ITEM_ON mi
+                     JOIN
+                 Menu_Serves ms ON mi.Menu_Id = ms.Id
+                     JOIN
+                 Restaurant_Location_Has rlh ON ms.Restaurant_Latitude = rlh.Latitude
+                     AND ms.Restaurant_Longitude = rlh.Longitude
+                     JOIN
+                 Restaurant r ON r.Id = rlh.Restaurant_Id
+            GROUP BY MENU_TYPE, MENU_ID, MENU_NAME, DESCRIPTION, PRICE, r.RESTAURANT_NAME
+            HAVING DESCRIPTION LIKE '%' || :description || '%'
+            ORDER BY MENU_TYPE
+        `;
+
+        console.log("before connecting");
+        console.log(query);
+
+        const result = await connection.execute(query, { description });
+        console.log("after connecting");
+
+        return result;
+    }).catch(() => {
+        return [];
+    });
+}
+
 async function fetchAllRestaurantsFromDb() {
     return await withOracleDB(async (connection) => {
         console.log("before connecting")
@@ -513,5 +543,6 @@ module.exports = {
     fetchRestaurantMenuFromDb,
     fetchMenuProfile,
     checkUserName,
-    checkUserProfileUnique
+    checkUserProfileUnique,
+    fetchFoodFromDescription
 };
