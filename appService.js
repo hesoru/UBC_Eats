@@ -395,6 +395,7 @@ async function fetchMenuProfile(dietTypes, allergenTypes) {
         let whereClause = '';
         let dietCondition = '';
         let allergenCondition = '';
+        let groupByClause = '';
 
         // Handle diet types
         if (dietTypes.length > 0) {
@@ -405,6 +406,7 @@ async function fetchMenuProfile(dietTypes, allergenTypes) {
         // Handle allergen types
         if (allergenTypes.length > 0) {
             allergenCondition = allergenTypes.map((_, index) => `:allergenCondition${index}`).join(', ');
+            groupByClause = `HAVING SUM(CASE WHEN ca.ALLERGEN_TYPE IN (${allergenCondition}) THEN 1 ELSE 0 END) = 0`;
         }
 
         const query = `
@@ -413,6 +415,7 @@ async function fetchMenuProfile(dietTypes, allergenTypes) {
                 r.Restaurant_Name,
                 mi.PRICE
             FROM
+                CONTAINS_ALLERGEN ca,
                 Contains_Diet cd
                     JOIN
                 Menu_Item_On mi ON cd.Menu_Item_Name = mi.Menu_Name AND
@@ -424,13 +427,12 @@ async function fetchMenuProfile(dietTypes, allergenTypes) {
                                                  AND ms.Restaurant_Longitude = rlh.Longitude
                     JOIN
                 Restaurant r ON r.Id = rlh.Restaurant_Id
-                    JOIN
-                Contains_Allergen ca ON ca.Menu_Item_Name = mi.Menu_Name AND
-                                            mi.MENU_ID = ca.MENU_ID
+        
             ${whereClause}
             GROUP BY
                 mi.Menu_Name, r.Restaurant_Name, mi.PRICE
-            ${allergenCondition ? `HAVING SUM(CASE WHEN ca.ALLERGEN_TYPE IN (${allergenCondition}) THEN 1 ELSE 0 END) = 0` : ''}
+            ${groupByClause}
+           
             ORDER BY
                 mi.Menu_Name
         `;

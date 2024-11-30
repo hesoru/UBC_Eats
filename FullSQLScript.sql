@@ -326,7 +326,7 @@ INSERT INTO Menu_Item_On VALUES ('Chocolate Chip Cookie', 'M005', 'Large cookie 
 INSERT INTO Menu_Item_On VALUES ('Protein Box (Eggs, Cheese)', 'M005', 'Hard-boiled eggs, cheese, apples, and peanut butter', 'Snack', 5.75);
 INSERT INTO Menu_Item_On VALUES ('Greek Yogurt Parfait', 'M005', 'Greek yogurt with berries and granola', 'Snack', 3.95);
 INSERT INTO Menu_Item_On VALUES ('Granola Bar', 'M005', 'A bar with oats, nuts, and dried fruits', 'Snack', 2.5);
-INSERT INTO Menu_Item_On VALUES ('Water', 'M005', 'water to drink', 'Drink', 2.5);
+INSERT INTO Menu_Item_On VALUES ('Water', 'M005', 'water to drink', 'Beverage', 2.5);
 
 INSERT INTO Diet VALUES ('Vegetarian');
 INSERT INTO Diet VALUES ('Vegan');
