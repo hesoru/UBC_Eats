@@ -156,7 +156,7 @@ async function fetchFoodFromDescription(description) {
                      JOIN
                  Restaurant r ON r.Id = rlh.Restaurant_Id
             GROUP BY MENU_TYPE, MENU_ID, MENU_NAME, DESCRIPTION, PRICE, r.RESTAURANT_NAME
-            HAVING DESCRIPTION LIKE '%' || :description || '%'
+            HAVING (LOWER(DESCRIPTION) LIKE '%' || LOWER(:description) || '%') OR LOWER(MENU_NAME) LIKE ( '%' || LOWER(:description) || '%')
             ORDER BY MENU_TYPE
         `;
 
